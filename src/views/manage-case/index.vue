@@ -44,31 +44,72 @@
       <el-table-column align="center" prop="created_at" label="操作" width="200">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.$index, scope.$index)"></el-button>
-            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.$index, scope.$index)"></el-button>
+            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.$index, scope.$index)" />
+            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.$index, scope.$index)" />
           </el-button-group>
         </template>
       </el-table-column>
     </el-table>
     <el-dialog
       :visible="wordsDialogVisible"
-      :title="dialogTitle"
-      width="60%"
+      :title="wordsDialogTitle"
+      width="50%"
       center
-      append-to-body
     >
       <el-form :model="form">
         <el-form-item label="病例名称" label-width="120px">
-          <el-input v-model="form.caseName" autocomplete="off"></el-input>
+          <el-input v-model="form.caseName" autocomplete="off" />
         </el-form-item>
         <el-form-item label="病例描述" label-width="120px">
-          <el-input v-model="form.caseDescribe" autocomplete="off"></el-input>
+          <el-input v-model="form.caseDescribe" autocomplete="off" />
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="wordsDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="wordsDialogVisible = false">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog
+      :visible="mediaDialogVisible"
+      :title="mediaDialogTitle"
+      width="50%"
+      center
+    >
+      <div class="demo-image">
+        <el-image
+          style="width: 300px; height: 300px; margin-left: auto"
+          :src="imageUrl"
+          :visible="mediaContentVisible"
+          fit="cover"
+        >
+          <template #error>
+            <div class="image-slot">
+              <i class="el-icon-picture-outline"/>
+            </div>
+          </template>
+        </el-image>
+      </div>
+      <el-upload
+        class="upload-demo"
+        :action="postUrl"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        multiple
+        :limit="3"
+        :on-exceed="handleExceed"
+        :file-list="fileList"
+      >
+        <el-button size="small" type="primary" style="margin-left: auto">点击上传</el-button>
+        <template #tip>
+          <div class="el-upload__tip">只能上传 jpg/png 文件，且不超过 500kb</div>
+        </template>
+      </el-upload>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="mediaDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="mediaDialogVisible = false">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -95,11 +136,16 @@ export default {
       list: null,
       listLoading: true,
       wordsDialogVisible: false,
-      dialogTitle: null,
+      mediaDialogVisible: false,
+      mediaContentVisible: true,
+      wordsDialogTitle: '',
+      mediaDialogTitle: '',
       form: {
         caseName: '',
         caseDescribe: ''
-      }
+      },
+      imageUrl: '',
+      postUrl: ''
     }
   },
   created() {
@@ -126,20 +172,35 @@ export default {
       })
     },
     onEditClicked(case_id, case_index) {
-      this.dialogTitle = '编辑病例'
+      this.wordsDialogTitle = '编辑病例'
       this.form.caseName = this.list[case_index].author
       this.form.caseDescribe = this.list[case_index].title
       this.wordsDialogVisible = true
     },
     onImageClicked(case_id, case_index) {
+      this.mediaDialogVisible = true
+      this.mediaContentVisible = true
+      this.mediaDialogTitle = '病例图片'
       getImageById(case_id).then(response => {
         console.log('image open')
       })
     },
     onVideoClicked(case_id, case_index) {
+      this.mediaContentVisible = false
+      this.mediaDialogTitle = '病例视频'
+      this.mediaDialogVisible = true
       getVideoById(case_id).then(response => {
-        console.log('image open')
+        console.log('video open')
       })
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     }
   }
 }

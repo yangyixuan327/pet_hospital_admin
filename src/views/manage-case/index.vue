@@ -52,12 +52,19 @@
     </el-table>
     <el-dialog
       :visible="wordsDialogVisible"
-      :title="dialogSettings.title"
-      width="30%"
+      :title="dialogTitle"
+      width="60%"
       center
       append-to-body
     >
-      <span>{{ dialogSettings.content }}</span>
+      <el-form :model="form">
+        <el-form-item label="病例名称" label-width="120px">
+          <el-input v-model="form.caseName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="病例描述" label-width="120px">
+          <el-input v-model="form.caseDescribe" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="wordsDialogVisible = false">取 消</el-button>
@@ -88,9 +95,10 @@ export default {
       list: null,
       listLoading: true,
       wordsDialogVisible: false,
-      dialogSettings: {
-        title: 'test title',
-        content: 'test content'
+      dialogTitle: null,
+      form: {
+        caseName: '',
+        caseDescribe: ''
       }
     }
   },
@@ -118,8 +126,9 @@ export default {
       })
     },
     onEditClicked(case_id, case_index) {
-      this.dialogSettings.title = 'title from edit'
-      this.dialogSettings.content = 'content from edit'
+      this.dialogTitle = '编辑病例'
+      this.form.caseName = this.list[case_index].author
+      this.form.caseDescribe = this.list[case_index].title
       this.wordsDialogVisible = true
     },
     onImageClicked(case_id, case_index) {

@@ -181,7 +181,6 @@ export default {
         changeMode: this.wordsDialog.changeMode
       }
       submitWordsDialogResult(params).then(response => {
-        console.log('上传完成')
         this.wordsDialog.visible = false
       })
     },

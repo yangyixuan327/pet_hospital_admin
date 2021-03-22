@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <el-button type="primary" @click="onCreateNewClicked">新建<i class="el-icon-plus el-icon--right"/></el-button>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -41,8 +42,8 @@
       </el-table-column>
     </el-table>
     <el-dialog
-      :visible="wordsDialogVisible"
-      :title="wordsDialogTitle"
+      :visible="wordsDialog.visible"
+      :title="wordsDialog.title"
       width="50%"
       center
     >
@@ -56,18 +57,18 @@
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="wordsDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="wordsDialogVisible = false">确 定</el-button>
+          <el-button @click="wordsDialog.visible = false">取 消</el-button>
+          <el-button type="primary" @click="wordsDialogConfirmOnClicked">确 定</el-button>
         </span>
       </template>
     </el-dialog>
     <el-dialog
-      :visible="mediaDialogVisible"
-      :title="mediaDialogTitle"
+      :visible="mediaDialog.visible"
+      :title="mediaDialog.title"
       width="50%"
       center
     >
-      <div class="case-image" :visible="mediaContentVisible">
+      <div class="case-image" :visible="mediaDialog.contentVisible">
         <el-image v-for="url in imageUrls" :key="url" :src="url" lazy>
           <template #error>
             <div class="image-slot">
@@ -88,13 +89,13 @@
       >
         <el-button size="small" type="primary" style="margin-left: auto; margin-top: 40px">点击上传</el-button>
         <template #tip>
-          <div class="el-upload__tip">只能上传 jpg/png 文件，且不超过 500kb</div>
+          <div class="el-upload__tip">{{ uploadTip }}</div>
         </template>
       </el-upload>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="mediaDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="mediaDialogVisible = false">确 定</el-button>
+          <el-button @click="mediaDialog.visible = false">取 消</el-button>
+          <el-button type="primary" @click="mediaDialog.visible = false">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -103,18 +104,23 @@
 
 <script>
 import { getList } from '@/api/table'
-import { deleteCaseById, getImageById, getVideoById } from '@/api/case'
+import { deleteCaseById, getImageById, getVideoById, submitWordsDialogResult } from '@/api/case'
 
 export default {
   data() {
     return {
       list: null,
       listLoading: true,
-      wordsDialogVisible: false,
-      mediaDialogVisible: false,
-      mediaContentVisible: true,
-      wordsDialogTitle: '',
-      mediaDialogTitle: '',
+      wordsDialog: {
+        visible: false,
+        title: '',
+        changeMode: 'add' // has two value: 'add' and 'update'
+      },
+      mediaDialog: {
+        visible: false,
+        contentVisible: true,
+        title: ''
+      },
       form: {
         caseName: '',
         caseDescribe: ''
@@ -128,7 +134,9 @@ export default {
         'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
         'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg'
       ],
-      postUrl: ''
+      postUrl: '',
+      uploadTip: '',
+      fileList: []
     }
   },
   created() {
@@ -154,24 +162,43 @@ export default {
         }
       })
     },
+    onCreateNewClicked() {
+      this.wordsDialog.visible = true
+      this.wordsDialog.title = '创建病例'
+      this.wordsDialog.changeMode = 'add'
+    },
     onEditClicked(case_id, case_index) {
-      this.wordsDialogTitle = '编辑病例'
+      this.wordsDialog.title = '编辑病例'
       this.form.caseName = this.list[case_index].author
       this.form.caseDescribe = this.list[case_index].title
-      this.wordsDialogVisible = true
+      this.wordsDialog.visible = true
+      this.wordsDialog.changeMode = 'update'
+    },
+    wordsDialogConfirmOnClicked() {
+      const params = {
+        caseName: this.form.caseName,
+        caseDescribe: this.form.caseDescribe,
+        changeMode: this.wordsDialog.changeMode
+      }
+      submitWordsDialogResult(params).then(response => {
+        console.log('上传完成')
+        this.wordsDialog.visible = false
+      })
     },
     onImageClicked(case_id, case_index) {
-      this.mediaDialogVisible = true
-      this.mediaContentVisible = true
-      this.mediaDialogTitle = '病例图片'
+      this.mediaDialog.visible = true
+      this.mediaDialog.contentVisible = true
+      this.mediaDialog.title = '病例图片'
+      this.uploadTip = '上传图片please，太大了不收'
       getImageById(case_id).then(response => {
         console.log('image open')
       })
     },
     onVideoClicked(case_id, case_index) {
-      this.mediaContentVisible = false
-      this.mediaDialogTitle = '病例视频'
-      this.mediaDialogVisible = true
+      this.mediaDialog.contentVisible = false
+      this.mediaDialog.title = '病例视频'
+      this.mediaDialog.visible = true
+      this.uploadTip = '上传视频please，太大了不收'
       getVideoById(case_id).then(response => {
         console.log('video open')
       })

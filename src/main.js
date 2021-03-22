@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import axios from 'axios'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
@@ -28,9 +27,6 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
-
-// axios挂载到vue原型链上
-Vue.prototype.$axios = axios
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })

@@ -42,6 +42,7 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+
   {
     path: '/',
     component: Layout,
@@ -50,173 +51,117 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '主页', icon: 'el-icon-s-home' }
+      meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
-  }
-]
+  },
 
-// 异步挂载的路由
-// 动态需要根据权限加载的路由表
-export const asyncRoutes = [
   {
-    path: '/user_manage',
+    path: '/example',
     component: Layout,
-    name: 'UserManage',
+    redirect: '/example/table',
+    name: 'Example',
+    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/table/index'),
+        meta: { title: 'Table', icon: 'table' }
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/tree/index'),
+        meta: { title: 'Tree', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
+    path: '/form',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('@/views/form/index'),
+        meta: { title: 'Form', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/nested',
+    component: Layout,
+    redirect: '/nested/menu1',
+    name: 'Nested',
     meta: {
-      roles: ['admin']
+      title: 'Nested',
+      icon: 'nested'
     },
     children: [
       {
-        path: 'index',
-        name: 'UserManageIndex',
-        component: () => import('@/views/manage-user/index'),
-        meta: {
-          title: '用户管理',
-          icon: 'user'
-        }
-      }
-    ]
-  },
-  {
-    path: '/test_manage',
-    component: Layout,
-    name: 'TestManage',
-    meta: {
-      title: '测试管理',
-      icon: 'form',
-      roles: ['admin']
-    },
-    children: [
-      {
-        path: 'question_manage',
-        name: 'QuestionManage',
-        component: () => import('@/views/manage-test/manage-question/index'),
-        meta: { title: '试题管理' }
+        path: 'menu1',
+        component: () => import('@/views/nested/menu1/index'), // Parent router-view
+        name: 'Menu1',
+        meta: { title: 'Menu1' },
+        children: [
+          {
+            path: 'menu1-1',
+            component: () => import('@/views/nested/menu1/menu1-1'),
+            name: 'Menu1-1',
+            meta: { title: 'Menu1-1' }
+          },
+          {
+            path: 'menu1-2',
+            component: () => import('@/views/nested/menu1/menu1-2'),
+            name: 'Menu1-2',
+            meta: { title: 'Menu1-2' },
+            children: [
+              {
+                path: 'menu1-2-1',
+                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
+                name: 'Menu1-2-1',
+                meta: { title: 'Menu1-2-1' }
+              },
+              {
+                path: 'menu1-2-2',
+                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
+                name: 'Menu1-2-2',
+                meta: { title: 'Menu1-2-2' }
+              }
+            ]
+          },
+          {
+            path: 'menu1-3',
+            component: () => import('@/views/nested/menu1/menu1-3'),
+            name: 'Menu1-3',
+            meta: { title: 'Menu1-3' }
+          }
+        ]
       },
       {
-        path: 'paper_manage',
-        name: 'PaperManage',
-        component: () => import('@/views/manage-test/manage-paper/index'),
-        meta: { title: '试卷管理' }
-      },
-      {
-        path: 'select_questions',
-        name: 'SelectQuestions',
-        component: () => import('@/views/manage-test/manage-paper/selectQuestions'),
-        meta: { title: '配置试卷题目' },
-        hidden: true
-      },
-      {
-        path: 'exam_manage',
-        name: 'ExamManage',
-        component: () => import('@/views/manage-test/manage-exam/index'),
-        meta: { title: '考试管理' }
+        path: 'menu2',
+        component: () => import('@/views/nested/menu2/index'),
+        name: 'Menu2',
+        meta: { title: 'menu2' }
       }
     ]
   },
+
   {
-    path: '/case_manage',
+    path: 'external-link',
     component: Layout,
-    name: 'CaseManage',
-    meta: {
-      roles: ['admin']
-    },
     children: [
       {
-        path: 'index',
-        name: 'CaseManageIndex',
-        component: () => import('@/views/manage-case/index'),
-        meta: { title: '病例管理', icon: 'el-icon-s-management' }
+        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+        meta: { title: 'External Link', icon: 'link' }
       }
     ]
   },
-  {
-    path: '/structure_manage',
-    component: Layout,
-    name: 'StructureManage',
-    meta: {
-      roles: ['admin']
-    },
-    children: [
-      {
-        path: 'index',
-        name: 'StructureManageIndex',
-        component: () => import('@/views/manage-structure/index'),
-        meta: { title: '结构管理', icon: 'tree' }
-      }
-    ]
-  },
-  {
-    path: '/test_user',
-    component: Layout,
-    name: 'TestUser',
-    meta: { title: '进行考试', icon: 'el-icon-document-checked', roles: ['user'] },
-    children: [
-      {
-        path: 'take_test',
-        name: 'TakeTest',
-        component: () => import('@/views/user-test/user-takeTest/index'),
-        meta: { title: '参加考试' }
-      },
-      {
-        path: 'check_result',
-        name: 'CheckResult',
-        component: () => import('@/views/user-test/user-checkResult/index'),
-        meta: { title: '查看结果' }
-      }
-    ]
-  },
-  {
-    path: '/test_user/inTest',
-    component: () => import('@/views/user-test/user-takeTest/inTest')
-  },
-  {
-    path: '/test_manage/exam_manage/pick_user',
-    component: () => import('@/views/manage-test/manage-exam/pickUser')
-  },
-  {
-    path: '/case_front',
-    component: Layout,
-    name: 'CaseFront',
-    redirect: '/case_front',
-    meta: { title: '病例学习', icon: 'el-icon-first-aid-kit' ,roles: ['user']},
-    children: [
-      {
-        path: 'index',
-        name: 'CaseFrontInner',
-        component: () => import('@/views/front-case/index'),
-        meta: { title: '病例学习', breadcrumb: false }
-      },
-      {
-        path: 'detail/caseId/:caseId',
-        name: 'CaseDetailInner',
-        component: () => import('@/views/front-case/detail'),
-        meta: { title: '病例详情', breadcrumb: true },
-        hidden: true
-      }
-    ]
-  },
-  {
-    path: '/hospital_navigation',
-    component: Layout,
-    name: 'HospitalNavigation',
-    redirect: '/hospital_navigation/index',
-    meta: { roles: ['user']},
-    children: [
-      {
-        path: 'index',
-        name: 'HospitalNavigationIndex',
-        component: () => import('@/views/hospital_navigation/index'),
-        meta: { title: '3D医院导览',icon:"el-icon-guide" }
-      }
-    ]
-  },
-  // 404一定要放在最后!
-  {
-    path: '*',
-    redirect: '/404',
-    hidden: true
-  }
+
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

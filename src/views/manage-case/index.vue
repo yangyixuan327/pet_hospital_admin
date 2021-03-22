@@ -1,42 +1,53 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="onCreateNewClicked">新建<i class="el-icon-plus el-icon--right"/></el-button>
+    <el-button type="primary" style="margin-bottom: 10px;" @click="onCreateNewClicked">新建<i
+      class="el-icon-plus el-icon--right"
+    /></el-button>
     <el-table
       v-loading="listLoading"
       :data="list"
+      :span-method="rowSpanMethod"
       element-loading-text="Loading"
       border
       fit
       highlight-current-row
     >
       <el-table-column align="center" label="病例ID" width="95">
-        <template slot-scope="scope">
-          {{ scope.$index }}
+        <template slot-scope="scope" >
+          {{ scope.row.caseId }}
         </template>
       </el-table-column>
-      <el-table-column label="病例描述">
+      <el-table-column label="病例名称">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.caseName }}
         </template>
       </el-table-column>
-      <el-table-column label="病例名称" width="110" align="center">
+      <el-table-column label="接诊">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span v-if="scope.row.type==='words'">{{ scope.row.jieZhen }}</span>
+          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.$index, scope.$index)">图片</el-button>
+          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.$index, scope.$index)">视频</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="多媒体" width="200">
+      <el-table-column label="诊断方案">
         <template slot-scope="scope">
-          <el-button-group>
-            <el-button type="primary" @click="onImageClicked(scope.$index, scope.$index)">图片</el-button>
-            <el-button type="primary" @click="onVideoClicked(scope.$index, scope.$index)">视频</el-button>
-          </el-button-group>
+          <span v-if="scope.row.type==='words'">{{ scope.row.zhenDuan }}</span>
+          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.$index, scope.$index)">图片</el-button>
+          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.$index, scope.$index)">视频</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="治疗方案">
+        <template slot-scope="scope">
+          <span v-if="scope.row.type==='words'">{{ scope.row.zhiLiao }}</span>
+          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.$index, scope.$index)">图片</el-button>
+          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.$index, scope.$index)">视频</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="操作" width="200">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.$index, scope.$index)" />
-            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.$index, scope.$index)" />
+            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.$index, scope.$index)"/>
+            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.$index, scope.$index)"/>
           </el-button-group>
         </template>
       </el-table-column>
@@ -49,10 +60,10 @@
     >
       <el-form :model="form">
         <el-form-item label="病例名称" label-width="120px">
-          <el-input v-model="form.caseName" autocomplete="off" />
+          <el-input v-model="form.caseName" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="病例描述" label-width="120px">
-          <el-input v-model="form.caseDescribe" autocomplete="off" />
+          <el-input v-model="form.caseDescribe" autocomplete="off"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -146,9 +157,67 @@ export default {
     fetchData() {
       this.listLoading = true
       getList().then(response => {
-        this.list = response.data.items
+        const data = [{
+          caseId: 1,
+          type: 'words',
+          caseName: '病例名1',
+          jieZhen: '接诊文字A',
+          zhenDuan: '诊断方案文字A',
+          zhiLiao: '治疗方案文字A'
+        }, {
+          caseId: 1,
+          type: 'image',
+          caseName: '病例名1',
+          jieZhen: '接诊图片B',
+          zhenDuan: '诊断方案图片B',
+          zhiLiao: '治疗方案图片B'
+        }, {
+          caseId: 1,
+          type: 'video',
+          caseName: '病例名1',
+          jieZhen: '接诊视频C',
+          zhenDuan: '诊断方案视频C',
+          zhiLiao: '治疗方案视频C'
+        }, {
+          caseId: 2,
+          type: 'words',
+          caseName: '病例名2',
+          jieZhen: '接诊文字A',
+          zhenDuan: '诊断方案文字A',
+          zhiLiao: '治疗方案文字A'
+        }, {
+          caseId: 2,
+          type: 'image',
+          caseName: '病例名',
+          jieZhen: '接诊图片B',
+          zhenDuan: '诊断方案图片B',
+          zhiLiao: '治疗方案图片B'
+        }, {
+          caseId: 2,
+          caseName: '病例名2',
+          type: 'video',
+          jieZhen: '接诊视频C',
+          zhenDuan: '诊断方案视频C',
+          zhiLiao: '治疗方案视频C'
+        }]
+        this.list = data
         this.listLoading = false
       })
+    },
+    rowSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0 || columnIndex === 1 || columnIndex === 5) {
+        if (rowIndex % 3 === 0) {
+          return {
+            rowspan: 3,
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          }
+        }
+      }
     },
     onDeleteClicked(case_id, case_index) {
       deleteCaseById(case_id).then(response => {

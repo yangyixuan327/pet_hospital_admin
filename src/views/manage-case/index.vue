@@ -13,7 +13,7 @@
       highlight-current-row
     >
       <el-table-column align="center" label="病例ID" width="95">
-        <template slot-scope="scope" >
+        <template slot-scope="scope">
           {{ scope.row.caseId }}
         </template>
       </el-table-column>
@@ -139,6 +139,8 @@ export default {
         title: ''
       },
       form: {
+        caseId: -1,
+        caseIndex: -1,
         caseName: '',
         jieZhen: '',
         zhenDuan: '',
@@ -233,7 +235,7 @@ export default {
         // eslint-disable-next-line no-constant-condition
         if (true) {
           console.log('delete case success')
-          this.list.splice(case_index, 1)
+          this.list.splice(case_index, 3)
         } else {
           // console.log('删除失败')
         }
@@ -242,11 +244,17 @@ export default {
     onCreateNewClicked() {
       this.wordsDialog.visible = true
       this.wordsDialog.title = '创建病例'
+      this.form.caseName = ''
+      this.form.jieZhen = ''
+      this.form.zhenDuan = ''
+      this.form.zhiLiao = ''
       this.wordsDialog.changeMode = 'add'
     },
     onEditClicked(case_id, case_index) {
       this.wordsDialog.title = '编辑病例'
-      this.form.caseName = this.list[case_index].author
+      this.form.caseId = case_id
+      this.form.caseIndex = case_index
+      this.form.caseName = this.list[case_index].caseName
       this.form.jieZhen = this.list[case_index].jieZhen
       this.form.zhenDuan = this.list[case_index].zhenDuan
       this.form.zhiLiao = this.list[case_index].zhiLiao
@@ -255,6 +263,8 @@ export default {
     },
     wordsDialogConfirmOnClicked() {
       const params = {
+        caseId: this.form.caseId,
+        caseIndex: this.form.caseIndex,
         caseName: this.form.caseName,
         jieZhen: this.form.jieZhen,
         zhenDuan: this.form.zhenDuan,
@@ -262,6 +272,41 @@ export default {
         changeMode: this.wordsDialog.changeMode
       }
       submitWordsDialogResult(params).then(response => {
+        const caseIndex = this.form.caseIndex
+        const changeMode = this.wordsDialog.changeMode
+        if (changeMode === 'update') {
+          if (caseIndex != null && caseIndex >= 0) {
+            this.list[caseIndex].caseName = this.form.caseName
+            this.list[caseIndex].jieZhen = this.form.jieZhen
+            this.list[caseIndex].zhenDuan = this.form.zhenDuan
+            this.list[caseIndex].zhiLiao = this.form.zhiLiao
+          }
+        } else if (changeMode === 'add') {
+          this.list.push(
+            {
+              caseId: 12,
+              type: 'words',
+              caseName: this.form.caseName,
+              jieZhen: this.form.jieZhen,
+              zhenDuan: this.form.zhenDuan,
+              zhiLiao: this.form.zhiLiao
+            }, {
+              caseId: 1,
+              type: 'image',
+              caseName: this.form.caseName,
+              jieZhen: '',
+              zhenDuan: '',
+              zhiLiao: ''
+            }, {
+              caseId: 1,
+              type: 'video',
+              caseName: this.form.caseName,
+              jieZhen: '',
+              zhenDuan: '',
+              zhiLiao: ''
+            }
+          )
+        }
         this.wordsDialog.visible = false
       })
     },

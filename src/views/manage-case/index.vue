@@ -62,8 +62,14 @@
         <el-form-item label="病例名称" label-width="120px">
           <el-input v-model="form.caseName" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="病例描述" label-width="120px">
-          <el-input v-model="form.caseDescribe" autocomplete="off"/>
+        <el-form-item label="接诊文字A" label-width="120px">
+          <el-input v-model="form.jieZhen" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item label="诊断文字A" label-width="120px">
+          <el-input v-model="form.zhenDuan" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item label="治疗文字A" label-width="120px">
+          <el-input v-model="form.zhiLiao" autocomplete="off"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -134,7 +140,9 @@ export default {
       },
       form: {
         caseName: '',
-        caseDescribe: ''
+        jieZhen: '',
+        zhenDuan: '',
+        zhiLiao: ''
       },
       imageUrls: [
         'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
@@ -239,14 +247,18 @@ export default {
     onEditClicked(case_id, case_index) {
       this.wordsDialog.title = '编辑病例'
       this.form.caseName = this.list[case_index].author
-      this.form.caseDescribe = this.list[case_index].title
+      this.form.jieZhen = this.list[case_index].jieZhen
+      this.form.zhenDuan = this.list[case_index].zhenDuan
+      this.form.zhiLiao = this.list[case_index].zhiLiao
       this.wordsDialog.visible = true
       this.wordsDialog.changeMode = 'update'
     },
     wordsDialogConfirmOnClicked() {
       const params = {
         caseName: this.form.caseName,
-        caseDescribe: this.form.caseDescribe,
+        jieZhen: this.form.jieZhen,
+        zhenDuan: this.form.zhenDuan,
+        zhiLiao: this.form.zhiLiao,
         changeMode: this.wordsDialog.changeMode
       }
       submitWordsDialogResult(params).then(response => {

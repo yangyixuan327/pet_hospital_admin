@@ -8,29 +8,19 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column align="center" label="病例ID" width="95">
         <template slot-scope="scope">
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="病例描述">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="病例名称" width="110" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="多媒体" width="200">
@@ -77,13 +67,8 @@
       width="50%"
       center
     >
-      <div class="demo-image">
-        <el-image
-          style="width: 300px; height: 300px; margin-left: auto"
-          :src="imageUrl"
-          :visible="mediaContentVisible"
-          fit="cover"
-        >
+      <div class="case-image" :visible="mediaContentVisible">
+        <el-image v-for="url in imageUrls" :key="url" :src="url" lazy>
           <template #error>
             <div class="image-slot">
               <i class="el-icon-picture-outline"/>
@@ -92,7 +77,7 @@
         </el-image>
       </div>
       <el-upload
-        class="upload-demo"
+        class="media-upload"
         :action="postUrl"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
@@ -101,7 +86,7 @@
         :on-exceed="handleExceed"
         :file-list="fileList"
       >
-        <el-button size="small" type="primary" style="margin-left: auto">点击上传</el-button>
+        <el-button size="small" type="primary" style="margin-left: auto; margin-top: 40px">点击上传</el-button>
         <template #tip>
           <div class="el-upload__tip">只能上传 jpg/png 文件，且不超过 500kb</div>
         </template>
@@ -121,16 +106,6 @@ import { getList } from '@/api/table'
 import { deleteCaseById, getImageById, getVideoById } from '@/api/case'
 
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
       list: null,
@@ -144,7 +119,15 @@ export default {
         caseName: '',
         caseDescribe: ''
       },
-      imageUrl: '',
+      imageUrls: [
+        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
+        'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
+        'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
+        'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
+        'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
+        'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
+        'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg'
+      ],
       postUrl: ''
     }
   },

@@ -78,6 +78,62 @@ export const constantRoutes = [
   },
 
   {
+    path: '/user_manage',
+    component: Layout,
+    name: 'UserManage',
+    children: [
+      {
+        path: 'index',
+        name: 'UserManage',
+        component: () => import('@/views/manage-user/index'),
+        meta: { title: '用户管理', icon: 'table' }
+      }
+    ]
+  },
+
+  {
+    path: '/test_manage',
+    component: Layout,
+    name: 'TestManage',
+    children: [
+      {
+        path: 'index',
+        name: 'UserManage',
+        component: () => import('@/views/manage-test/index'),
+        meta: { title: '测试管理', icon: 'table' }
+      }
+    ]
+  },
+
+  {
+    path: '/case_manage',
+    component: Layout,
+    name: 'CaseManage',
+    children: [
+      {
+        path: 'index',
+        name: 'CaseManage',
+        component: () => import('@/views/manage-case/index'),
+        meta: { title: '病例管理', icon: 'table' }
+      }
+    ]
+  },
+
+  {
+    path: '/structure_manage',
+    component: Layout,
+    name: 'StructureManage',
+    children: [
+      {
+        path: 'index',
+        name: 'StructureManage',
+        component: () => import('@/views/manage-structure/index'),
+        meta: { title: '结构管理', icon: 'table' }
+      }
+    ]
+  },
+
+  {
     path: '/form',
     component: Layout,
     children: [

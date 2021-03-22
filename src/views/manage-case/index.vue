@@ -25,22 +25,22 @@
       <el-table-column label="接诊">
         <template slot-scope="scope">
           <span v-if="scope.row.type==='words'">{{ scope.row.jieZhen }}</span>
-          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.$index, scope.$index)">图片</el-button>
-          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.$index, scope.$index)">视频</el-button>
+          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.row.caseId, scope.row.jieZhen)">图片</el-button>
+          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.row.caseId, scope.row.jieZhen)">视频</el-button>
         </template>
       </el-table-column>
       <el-table-column label="诊断方案">
         <template slot-scope="scope">
           <span v-if="scope.row.type==='words'">{{ scope.row.zhenDuan }}</span>
-          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.$index, scope.$index)">图片</el-button>
-          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.$index, scope.$index)">视频</el-button>
+          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.row.caseId, scope.row.zhenDuan)">图片</el-button>
+          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.row.caseId, scope.row.zhenDuan)">视频</el-button>
         </template>
       </el-table-column>
       <el-table-column label="治疗方案">
         <template slot-scope="scope">
           <span v-if="scope.row.type==='words'">{{ scope.row.zhiLiao }}</span>
-          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.$index, scope.$index)">图片</el-button>
-          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.$index, scope.$index)">视频</el-button>
+          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.row.caseId, scope.row.zhiLiao)">图片</el-button>
+          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.row.caseId, scope.row.zhiLiao)">视频</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="操作" width="200">
@@ -253,20 +253,24 @@ export default {
         this.wordsDialog.visible = false
       })
     },
-    onImageClicked(case_id, case_index) {
+    onImageClicked(case_id, image_urls) {
       this.mediaDialog.visible = true
       this.mediaDialog.contentVisible = true
       this.mediaDialog.title = '病例图片'
       this.uploadTip = '上传图片please，太大了不收'
+      console.log('case_id: ' + case_id)
+      console.log('image_urls: ' + image_urls)
       getImageById(case_id).then(response => {
         console.log('image open')
       })
     },
-    onVideoClicked(case_id, case_index) {
+    onVideoClicked(case_id, video_url) {
       this.mediaDialog.contentVisible = false
       this.mediaDialog.title = '病例视频'
       this.mediaDialog.visible = true
       this.uploadTip = '上传视频please，太大了不收'
+      console.log('case_id: ' + case_id)
+      console.log('image_urls: ' + video_url)
       getVideoById(case_id).then(response => {
         console.log('video open')
       })

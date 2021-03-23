@@ -1,3 +1,12 @@
+# 本项目为pet-hospital的管理员页面前端仓库
+
+## 分工
+
+- 病例管理：郭省吾
+- 考试管理：袁非凡
+- 结构管理：周星宇
+- 用户管理：罗亦翔
+
 # vue-admin-template
 
 English | [简体中文](./README-zh.md)

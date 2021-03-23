@@ -95,12 +95,25 @@ export const constantRoutes = [
     path: '/test_manage',
     component: Layout,
     name: 'TestManage',
+    meta: { title: '测试管理', icon: 'form' },
     children: [
       {
-        path: 'index',
-        name: 'UserManage',
-        component: () => import('@/views/manage-test/index'),
-        meta: { title: '测试管理', icon: 'table' }
+        path: 'question_manage',
+        name: 'QuestionManage',
+        component: () => import('@/views/manage-test/manage-question/index'),
+        meta: { title: '试题管理' }
+      },
+      {
+        path: 'paper_manage',
+        name: 'PaperManage',
+        component: () => import('@/views/manage-test/manage-paper/index'),
+        meta: { title: '试卷管理' }
+      },
+      {
+        path: 'exam_manage',
+        name: 'ExamManage',
+        component: () => import('@/views/manage-test/manage-exam/index'),
+        meta: { title: '考试管理' }
       }
     ]
   },

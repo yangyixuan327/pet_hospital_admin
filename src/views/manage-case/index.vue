@@ -10,7 +10,7 @@
       element-loading-text="Loading"
       border
       fit
-      highlight-current-row
+      style="pointer-events: none"
     >
       <el-table-column align="center" label="病例ID" width="95">
         <template slot-scope="scope">
@@ -57,6 +57,7 @@
       :title="wordsDialog.title"
       width="50%"
       center
+      @close="wordsDialog.visible = false"
     >
       <el-form :model="form">
         <el-form-item label="病例名称" label-width="120px">
@@ -84,6 +85,7 @@
       :title="mediaDialog.title"
       width="50%"
       center
+      @close="mediaDialog.visible = false"
     >
       <div class="case-image" :visible="mediaDialog.contentVisible">
         <el-image v-for="url in imageUrls" :key="url" :src="url" lazy>

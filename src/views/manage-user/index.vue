@@ -37,10 +37,10 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="Action" width="200">
-        <template slot-scope="{ row }">
+        <template slot-scope="{row,$index}">
           <el-button-group>
-            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(row)"/>
-            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(row)"/>
+            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(row,$index)"/>
+            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(row,$index)"/>
           </el-button-group>
         </template>
       </el-table-column>
@@ -54,19 +54,19 @@
     >
       <el-form :model="form">
         <el-form-item label="账号" label-width="120px">
-          <el-input v-model="form.caseName" autocomplete="off"/>
+          <el-input v-model="form.account" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="用户名" label-width="120px">
-          <el-input v-model="form.jieZhen" autocomplete="off"/>
+          <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="密码" label-width="120px">
-          <el-input v-model="form.zhenDuan" autocomplete="off"/>
+          <el-input v-model="form.password" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="账号类型" label-width="120px">
-          <el-input v-model="form.zhiLiao" autocomplete="off"/>
+          <el-input v-model="form.type" autocomplete="off"/>
         </el-form-item>
       </el-form>
-      <template #footer>
+      <template #footer >
         <span class="dialog-footer">
           <el-button @click="editDialog.visible = false">取 消</el-button>
           <el-button type="primary" @click="editDialogConfirmOnClicked">确 定</el-button>
@@ -79,6 +79,7 @@
 
 <script>
 import {getList} from "../../api/table";
+import {submitEditDialogResult} from "@/api/user";
 
 export default {
   data() {
@@ -96,6 +97,7 @@ export default {
       },
       form: {
           userId: -1,
+          index: -1,
           name: '',
           account: '',
           password: '',
@@ -142,16 +144,65 @@ export default {
           this.form.type = ''
           this.editDialog.changeMode = 'add'
       },
-      onEditClicked(row) {
+      onEditClicked(row, index) {
+          this.form.index = index
           this.form.name = row.name
           this.form.account = row.account
           this.form.password = row.password
           this.form.type = row.type
           this.editDialog.title = '修改账户'
           this.editDialog.visible = true
-          this.editDialog.title = '新建账户'
           this.editDialog.changeMode = 'update'
       },
+      onDeleteClicked(row, index) {
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.list.splice(index, 1)
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        },
+      editDialogConfirmOnClicked(index) {
+        const params = {
+          name: this.form.name,
+          account: this.form.account,
+          password: this.form.password,
+          type: this.form.type,
+          index: this.form.index,
+          changeMode: this.editDialog.changeMode
+        }
+        submitEditDialogResult(params).then(response => {
+          const index = this.form.index
+          const changeMode = this.editDialog.changeMode
+          if (changeMode === 'update') {
+            if (index != null && index >= 0) {
+              this.list[index].name = this.form.name
+              this.list[index].account = this.form.account
+              this.list[index].password = this.form.password
+              this.list[index].type = this.form.type
+            }
+          } else if (changeMode === 'add') {
+            this.list.push({
+                name: this.form.name,
+                account: this.form.account,
+                password: this.form.password,
+                type: this.form.type
+              }
+            )
+          }
+          this.editDialog.visible = false
+        })
+      }
   // async getList() {
   //       this.listLoading = true
   //       const { data } = await fetchList(this.listQuery)

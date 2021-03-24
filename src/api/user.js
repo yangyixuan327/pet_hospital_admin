@@ -30,3 +30,23 @@ export function logout() {
     method: 'post'
   })
 }
+export function submitEditDialogResult(params) {
+  console.log(params)
+  if (params.changeMode != null) {
+    if (params.changeMode === 'add') {
+      // 添加账户
+      return request({
+        url: '/vue-admin-template/table/list',
+        method: 'get',
+        params
+      })
+    } else {
+      // 修改账户
+      return request({
+        url: '/vue-admin-template/table/list',
+        method: 'get',
+        params
+      })
+    }
+  }
+}

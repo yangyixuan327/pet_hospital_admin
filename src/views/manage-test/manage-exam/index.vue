@@ -59,6 +59,15 @@
           </el-button-group>
         </template>
       </el-table-column>
+
+      <el-table-column align="center" prop="created_at" label="操作" width="200">
+        <template slot-scope="scope">
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.$index, scope.$index)" />
+            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.$index, scope.$index)" />
+          </el-button-group>
+        </template>
+      </el-table-column>
     </el-table>
 
     <el-dialog

@@ -10,7 +10,6 @@
       element-loading-text="Loading"
       border
       fit
-      style="pointer-events: none"
     >
       <el-table-column align="center" label="病例ID" width="95">
         <template slot-scope="scope">

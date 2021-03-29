@@ -78,8 +78,9 @@
 </template>
 
 <script>
-import {getList} from "../../api/table";
-import {submitEditDialogResult} from "@/api/user";
+
+import {submitEditDialogResult} from "../../api/user";
+import {getList} from "../../api/user";
 
 export default {
   data() {

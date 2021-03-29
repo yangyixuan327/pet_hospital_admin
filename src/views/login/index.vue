@@ -6,6 +6,7 @@
         <h3 class="title">Login Form</h3>
       </div>
 
+
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -42,6 +43,11 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+
+      <div style="margin-top: 0px; margin-bottom: 20px">
+        <el-radio v-model="userType" label="user" border size="medium" class="chooseUser">普通用户</el-radio>
+        <el-radio v-model="userType" label="admin" border size="medium" class="chooseUser">管理员</el-radio>
+      </div>
 
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
@@ -83,7 +89,8 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      userType: 'user'
     }
   },
   watch: {
@@ -232,6 +239,13 @@ $light_gray:#eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+
+  .chooseUser{
+    width: 220px;
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
   }
 }
 </style>

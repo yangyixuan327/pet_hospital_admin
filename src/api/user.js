@@ -14,7 +14,7 @@ export function getAdminList() {
 
   })
 }
-export function getUserList() {
+export function getList() {
   return request({
     url: '/admin/user/getAll',
     method: 'get'
@@ -54,26 +54,6 @@ export function changeRole(data) {
     method: 'post',
     data // userId + role
   })
-}
-export function submitEditDialogResult(params) {
-  console.log(params)
-  if (params.changeMode != null) {
-    if (params.changeMode === 'add') {
-      // 添加账户
-      return request({
-        url: '/vue-admin-template/table/list',
-        method: 'get',
-        params
-      })
-    } else {
-      // 修改账户
-      return request({
-        url: '/vue-admin-template/table/list',
-        method: 'get',
-        params
-      })
-    }
-  }
 }
 export function login(data) {
   return request({

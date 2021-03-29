@@ -121,8 +121,8 @@
 </template>
 
 <script>
-import { getList } from '@/api/table'
-import { deleteCaseById, getImageById, getVideoById, submitWordsDialogResult } from '@/api/case'
+import {getList} from '@/api/table'
+import { fetchCaseList, deleteCaseById, getImageById, getVideoById, submitWordsDialogResult } from '@/api/case'
 
 export default {
   data() {
@@ -167,7 +167,8 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList().then(response => {
+      fetchCaseList().then(response => {
+        console.log(response.data.responseMap)
         const data = [{
           caseId: 1,
           type: 'words',

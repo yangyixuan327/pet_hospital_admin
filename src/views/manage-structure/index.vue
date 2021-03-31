@@ -765,67 +765,30 @@ export default {
         this.column5 = '医师功能描述'
         this.column6 = '科室图片'
         getStructureInfo(command).then(response => {
-          this.list = [
-            {
-              id: 1,
-              name: '档案室',
-              description1: '前台的档案室',
-              description2: '医助的档案室',
-              description3: '医师的档案室',
-              description4: 'image'
-            },
-            {
-              id: 2,
-              name: '免疫室',
-              description1: '前台的免疫室',
-              description2: '医助的免疫室',
-              description3: '医师的免疫室',
-              description4: 'image'
-            },
-            {
-              id: 3,
-              name: '化验室',
-              description1: '前台的化验室',
-              description2: '医助的化验室',
-              description3: '医师的化验室',
-              description4: 'image'
-            }
-          ]
+          const resultList = response.data.responseMap.result
+          console.log(resultList)
+          for (let i = 0; i < resultList.length; i++) {
+            this.list[i].id = resultList[i].sectionId
+            this.list[i].name = resultList[i].sectionName
+            this.list[i].description1 = resultList[i].recDescrip
+            this.list[i].description2 = resultList[i].docDescrip
+            this.list[i].description3 = resultList[i].assisDescrip
+            this.list[i].description4 = resultList[i].sectionImageUrl
+          }
         })
       } else if (command === 'medicine') {
         this.tag = '药品管理'
         this.column1 = '药品ID'
         this.column2 = '药品名'
         this.column3 = '功能描述'
-        this.column5 = ''
-        this.column6 = ''
         getStructureInfo(command).then(response => {
-          this.list = [
-            {
-              id: 1,
-              name: '阿莫西林',
-              description1: '这是阿莫西林',
-              description2: 'null',
-              description3: 'null',
-              description4: 'null'
-            },
-            {
-              id: 2,
-              name: '敌敌畏',
-              description1: '这是敌敌畏',
-              description2: 'null',
-              description3: 'null',
-              description4: 'null'
-            },
-            {
-              id: 3,
-              name: '维他命',
-              description1: '这是维他命',
-              description2: 'null',
-              description3: 'null',
-              description4: 'null'
-            }
-          ]
+          const resultList = response.data.responseMap.result
+          console.log(resultList)
+          for (let i = 0; i < resultList.length; i++) {
+            this.list[i].id = resultList[i].medId
+            this.list[i].name = resultList[i].medName
+            this.list[i].description1 = resultList[i].medDescrip
+          }
         })
       } else if (command === 'fee') {
         this.tag = '收费管理'
@@ -833,107 +796,43 @@ export default {
         this.column2 = '收费项目名'
         this.column3 = '价格'
         this.column4 = '收费描述'
-        this.column5 = ''
-        this.column6 = ''
         getStructureInfo(command).then(response => {
-          this.list = [
-            {
-              id: 1,
-              name: '打针',
-              description1: '50',
-              description2: '打针描述',
-              description3: 'null',
-              description4: 'null'
-            },
-            {
-              id: 2,
-              name: '验血',
-              description1: '25',
-              description2: '验血描述',
-              description3: 'null',
-              description4: 'null'
-            },
-            {
-              id: 3,
-              name: 'B超',
-              description1: '100',
-              description2: 'B超描述',
-              description3: 'null',
-              description4: 'null'
-            }
-          ]
+          const resultList = response.data.responseMap.result
+          console.log(resultList)
+          for (let i = 0; i < resultList.length; i++) {
+            this.list[i].id = resultList[i].feeId
+            this.list[i].name = resultList[i].feeName
+            this.list[i].description1 = resultList[i].feePrice
+            this.list[i].description2 = resultList[i].feeDescrip
+          }
         })
       } else if (command === 'examination') {
         this.tag = '化验项目管理'
         this.column1 = '化验项目ID'
         this.column2 = '化验项目名'
         this.column3 = '化验描述'
-        this.column4 = ''
-        this.column5 = ''
-        this.column6 = ''
         getStructureInfo(command).then(response => {
-          this.list = [
-            {
-              id: 1,
-              name: '验血',
-              description1: '抽血验血',
-              description2: 'null',
-              description3: 'null',
-              description4: 'null'
-            },
-            {
-              id: 2,
-              name: '尿检',
-              description1: '撒尿验尿',
-              description2: 'null',
-              description3: 'null',
-              description4: 'null'
-            },
-            {
-              id: 3,
-              name: '尸检',
-              description1: '死亡验尸',
-              description2: 'null',
-              description3: 'null',
-              description4: 'null'
-            }
-          ]
+          const resultList = response.dataresponseMap.result
+          console.log(resultList.length)
+          for (let i = 0; i < resultList.length; i++) {
+            this.list[i].id = resultList[i].examId
+            this.list[i].name = resultList[i].examName
+            this.list[i].description1 = resultList[i].examDescrip
+          }
         })
       } else if (command === 'vaccine') {
         this.tag = '疫苗管理'
         this.column1 = '疫苗ID'
         this.column2 = '疫苗名'
         this.column3 = '疫苗描述'
-        this.column4 = ''
-        this.column5 = ''
-        this.column6 = ''
         getStructureInfo(command).then(response => {
-          this.list = [
-            {
-              id: 1,
-              name: '天花疫苗',
-              description1: '防天花',
-              description2: 'null',
-              description3: 'null',
-              description4: 'null'
-            },
-            {
-              id: 2,
-              name: '新冠疫苗',
-              description1: '防新冠',
-              description2: 'null',
-              description3: 'null',
-              description4: 'null'
-            },
-            {
-              id: 3,
-              name: '霍乱疫苗',
-              description1: '防霍乱',
-              description2: 'null',
-              description3: 'null',
-              description4: 'null'
-            }
-          ]
+          const resultList = response.data.responseMap.result
+          console.log(resultList)
+          for (let i = 0; i < resultList.length; i++) {
+            this.list[i].id = resultList[i].vacId
+            this.list[i].name = resultList[i].vacName
+            this.list[i].description1 = resultList[i].vacDescrip
+          }
         })
       } else if (command === 'hospitalize') {
         this.tag = '住院管理'
@@ -942,34 +841,16 @@ export default {
         this.column3 = '病名'
         this.column4 = '入院日期'
         this.column5 = '出院日期'
-        this.column6 = ''
         getStructureInfo(command).then(response => {
-          this.list = [
-            {
-              id: 1,
-              name: '李明',
-              description1: '割包皮',
-              description2: '2010/1/1',
-              description3: '2010/1/8',
-              description4: 'null'
-            },
-            {
-              id: 2,
-              name: '李华',
-              description1: '鼻塞',
-              description2: '2018/2/1',
-              description3: '2018/2/29',
-              description4: 'null'
-            },
-            {
-              id: 3,
-              name: '小红',
-              description1: '便秘',
-              description2: '2022/5/5',
-              description3: '2077/9/1',
-              description4: 'null'
-            }
-          ]
+          const resultList = response.data.responseMap.result
+          console.log(resultList)
+          for (let i = 0; i < resultList.length; i++) {
+            this.list[i].id = resultList[i].hosId
+            this.list[i].name = resultList[i].hosAnimalName
+            this.list[i].description1 = resultList[i].disease
+            this.list[i].description2 = resultList[i].inDate
+            this.list[i].description3 = resultList[i].outDate
+          }
         })
       }
     }

@@ -230,11 +230,17 @@
       @close="hosDialog.visible = false"
     >
       <el-form :model="hosForm">
-        <el-form-item label="疫苗名" label-width="120px">
+        <el-form-item label="动物名" label-width="120px">
           <el-input v-model="hosForm.hosName" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="疫苗描述" label-width="120px">
+        <el-form-item label="病名" label-width="120px">
           <el-input v-model="hosForm.hosDesc" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="入院日期" label-width="120px">
+          <el-input v-model="hosForm.inDate" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="出院日期" label-width="120px">
+          <el-input v-model="hosForm.outDate" autocomplete="off" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -365,7 +371,9 @@ export default {
         hosId: -1,
         hosIndex: -1,
         hosName: '',
-        hosDesc: ''
+        hosDesc: '',
+        inDate: '',
+        outDate: ''
       }
     }
   },
@@ -412,6 +420,8 @@ export default {
         this.hosDialog.title = '创建住院'
         this.hosForm.hosName = ''
         this.hosForm.hosDesc = ''
+        this.hosForm.inDate = ''
+        this.hosForm.outDate = ''
         this.hosDialog.changeMode = 'add'
       }
     },
@@ -461,11 +471,13 @@ export default {
         this.vacDialog.changeMode = 'update'
       } else if (this.tag === '住院管理') {
         this.hosDialog.visible = true
-        this.hosDialog.title = '编辑疫苗'
+        this.hosDialog.title = '编辑住院信息'
         this.hosForm.hosId = edit_id
         this.hosForm.hosIndex = edit_index
         this.hosForm.hosName = this.list[edit_index].name
         this.hosForm.hosDesc = this.list[edit_index].description1
+        this.hosForm.inDate = this.list[edit_index].description2
+        this.hosForm.outDate = this.list[edit_index].description3
         this.hosDialog.changeMode = 'update'
       }
     },
@@ -705,6 +717,8 @@ export default {
         hosIndex: this.hosForm.hosIndex,
         hosName: this.hosForm.hosName,
         hosDesc: this.hosForm.hosDesc,
+        inDate: this.hosForm.inDate,
+        outDate: this.hosForm.outDate,
         changeMode: this.hosDialog.changeMode
       }
       submitHosDialogResult(params).then(response => {
@@ -714,13 +728,17 @@ export default {
           if (hosIndex != null && hosIndex >= 0) {
             this.list[hosIndex].name = this.hosForm.hosName
             this.list[hosIndex].description1 = this.hosForm.hosDesc
+            this.list[hosIndex].description2 = this.hosForm.inDate
+            this.list[hosIndex].description3 = this.hosForm.outDate
           }
         } else if (changeMode === 'add') {
           this.list.push(
             {
               id: 55,
               name: this.hosForm.hosName,
-              description1: this.hosForm.hosDesc
+              description1: this.hosForm.hosDesc,
+              description2: this.hosForm.inDate,
+              description3: this.hosForm.outDate
             }
           )
         }

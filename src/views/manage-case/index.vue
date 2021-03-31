@@ -146,15 +146,7 @@ export default {
         zhenDuan: '',
         zhiLiao: ''
       },
-      imageUrls: [
-        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-        'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
-        'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-        'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-        'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
-        'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
-        'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg'
-      ],
+      imageUrls: [],
       postUrl: '',
       uploadTip: '',
       fileList: []
@@ -187,19 +179,18 @@ export default {
             caseId: item.caseId,
             type: 'image',
             caseName: item.caseName,
-            jieZhen: item.caseConsultId,
-            zhenDuan: item.caseDiagId,
-            zhiLiao: item.caseTherapyId
+            jieZhen: 'jieZhen',
+            zhenDuan: 'zhenDuan',
+            zhiLiao: 'zhiLiao'
           })
           data.push({
             caseId: item.caseId,
             type: 'video',
             caseName: item.caseName,
-            jieZhen: item.caseConsultId,
-            zhenDuan: item.caseDiagId,
-            zhiLiao: item.caseTherapyId
+            jieZhen: 'jieZhen',
+            zhenDuan: 'zhenDuan',
+            zhiLiao: 'zhiLiao'
           })
-          console.log(data.length)
         }
         this.list = data
         this.listLoading = false
@@ -301,15 +292,14 @@ export default {
         this.wordsDialog.visible = false
       })
     },
-    onImageClicked(case_id, image_urls) {
+    onImageClicked(caseId, type) {
       this.mediaDialog.visible = true
       this.mediaDialog.contentVisible = true
       this.mediaDialog.title = '病例图片'
       this.uploadTip = '上传图片please，太大了不收'
-      console.log('case_id: ' + case_id)
-      console.log('image_urls: ' + image_urls)
-      getImageById(case_id).then(response => {
-        console.log('image open')
+      getImageById(caseId, type).then(response => {
+        const imageUrl = response.data.responseMap.result.consultImageUrl
+        this.imageUrls = [imageUrl]
       })
     },
     onVideoClicked(case_id, video_url) {
@@ -317,11 +307,9 @@ export default {
       this.mediaDialog.title = '病例视频'
       this.mediaDialog.visible = true
       this.uploadTip = '上传视频please，太大了不收'
-      console.log('case_id: ' + case_id)
-      console.log('image_urls: ' + video_url)
-      getVideoById(case_id).then(response => {
-        console.log('video open')
-      })
+      // getVideoById(case_id).then(response => {
+      //   console.log('video open')
+      // })
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)

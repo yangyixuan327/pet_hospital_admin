@@ -32,15 +32,18 @@ export function getVideoById(case_id) {
   })
 }
 
-export function getImageById(case_id) {
-  const params = {
-    'case_id': case_id
+export function getImageById(caseId, type) {
+  let url = '/admin/case/' + caseId + '/'
+  if (type === 'jieZhen') {
+    url = url + 'consult'
+  } else if (type === 'zhenDuan') {
+    url = url + 'diag'
+  } else if (type === 'zhiLiao') {
+    url = url + 'therapy'
   }
-  // todo 修改api
-  return request({
-    url: '/vue-admin-template/table/list',
-    method: 'get',
-    params
+  return request_admin({
+    url: url,
+    method: 'get'
   })
 }
 

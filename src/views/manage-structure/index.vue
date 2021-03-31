@@ -767,14 +767,18 @@ export default {
         getStructureInfo(command).then(response => {
           const resultList = response.data.responseMap.result
           console.log(resultList)
+          const tempList = []
           for (let i = 0; i < resultList.length; i++) {
-            this.list[i].id = resultList[i].sectionId
-            this.list[i].name = resultList[i].sectionName
-            this.list[i].description1 = resultList[i].recDescrip
-            this.list[i].description2 = resultList[i].docDescrip
-            this.list[i].description3 = resultList[i].assisDescrip
-            this.list[i].description4 = resultList[i].sectionImageUrl
+            tempList.push({
+              id: resultList[i].sectionId,
+              name: resultList[i].sectionName,
+              description1: resultList[i].recDescrip,
+              description2: resultList[i].docDescrip,
+              description3: resultList[i].assisDescrip,
+              description4: resultList[i].sectionImageUrl
+            })
           }
+          this.list = tempList
         })
       } else if (command === 'medicine') {
         this.tag = '药品管理'
@@ -784,11 +788,15 @@ export default {
         getStructureInfo(command).then(response => {
           const resultList = response.data.responseMap.result
           console.log(resultList)
+          const tempList = []
           for (let i = 0; i < resultList.length; i++) {
-            this.list[i].id = resultList[i].medId
-            this.list[i].name = resultList[i].medName
-            this.list[i].description1 = resultList[i].medDescrip
+            tempList.push({
+              id: resultList[i].medId,
+              name: resultList[i].medName,
+              description1: resultList[i].medDescrip
+            })
           }
+          this.list = tempList
         })
       } else if (command === 'fee') {
         this.tag = '收费管理'
@@ -799,12 +807,16 @@ export default {
         getStructureInfo(command).then(response => {
           const resultList = response.data.responseMap.result
           console.log(resultList)
+          const tempList = []
           for (let i = 0; i < resultList.length; i++) {
-            this.list[i].id = resultList[i].feeId
-            this.list[i].name = resultList[i].feeName
-            this.list[i].description1 = resultList[i].feePrice
-            this.list[i].description2 = resultList[i].feeDescrip
+            tempList.push({
+              id: resultList[i].feeId,
+              name: resultList[i].feeName,
+              description1: resultList[i].feePrice,
+              description2: resultList[i].feeDescrip
+            })
           }
+          this.list = tempList
         })
       } else if (command === 'examination') {
         this.tag = '化验项目管理'
@@ -812,13 +824,17 @@ export default {
         this.column2 = '化验项目名'
         this.column3 = '化验描述'
         getStructureInfo(command).then(response => {
-          const resultList = response.dataresponseMap.result
-          console.log(resultList.length)
+          const resultList = response.data.responseMap.result
+          console.log(resultList)
+          const tempList = []
           for (let i = 0; i < resultList.length; i++) {
-            this.list[i].id = resultList[i].examId
-            this.list[i].name = resultList[i].examName
-            this.list[i].description1 = resultList[i].examDescrip
+            tempList.push({
+              id: resultList[i].examId,
+              name: resultList[i].examName,
+              description1: resultList[i].examDescrip
+            })
           }
+          this.list = tempList
         })
       } else if (command === 'vaccine') {
         this.tag = '疫苗管理'
@@ -828,11 +844,15 @@ export default {
         getStructureInfo(command).then(response => {
           const resultList = response.data.responseMap.result
           console.log(resultList)
+          const tempList = []
           for (let i = 0; i < resultList.length; i++) {
-            this.list[i].id = resultList[i].vacId
-            this.list[i].name = resultList[i].vacName
-            this.list[i].description1 = resultList[i].vacDescrip
+            tempList.push({
+              id: resultList[i].vacId,
+              name: resultList[i].vacName,
+              description1: resultList[i].vacDescrip
+            })
           }
+          this.list = tempList
         })
       } else if (command === 'hospitalize') {
         this.tag = '住院管理'
@@ -844,13 +864,17 @@ export default {
         getStructureInfo(command).then(response => {
           const resultList = response.data.responseMap.result
           console.log(resultList)
+          const tempList = []
           for (let i = 0; i < resultList.length; i++) {
-            this.list[i].id = resultList[i].hosId
-            this.list[i].name = resultList[i].hosAnimalName
-            this.list[i].description1 = resultList[i].disease
-            this.list[i].description2 = resultList[i].inDate
-            this.list[i].description3 = resultList[i].outDate
+            tempList.push({
+              id: resultList[i].hosId,
+              name: resultList[i].hosAnimalName,
+              description1: resultList[i].disease,
+              description2: resultList[i].inDate,
+              description3: resultList[i].outDate
+            })
           }
+          this.list = tempList
         })
       }
     }

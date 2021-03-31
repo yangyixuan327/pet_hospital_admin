@@ -1,55 +1,56 @@
 import request from '@/utils/request'
+import request_admin from "@/utils/request_admin";
 
 export function getUserList() {
-  return request({
+  return request_admin({
     url: '/admin/user/getNormal',
     method: 'get'
 
   })
 }
 export function getAdminList() {
-  return request({
+  return request_admin({
     url: '/admin/user/getAdmins',
     method: 'get'
 
   })
 }
 export function getList() {
-  return request({
+  return request_admin({
     url: '/admin/user/getAll',
     method: 'get'
   })
 }
 export function getUser(data) {
-  return request({
+  return request_admin({
     url: '/admin/user/getById',
     method: 'get',
     data //userId
   })
 }
 export function newUser(data) {
-  return request({
+  return request_admin({
     url: '/admin/user/newUser',
     method: 'put',
     data //user
   })
 }
 export function updateUser(data) {
-  return request({
+  return request_admin({
     url: '/admin/user/updateInfo',
     method: 'post',
     data // userId用于验证用户是否存在
   })
 }
 export function deleteUser(data) {
-  return request({
+  return request_admin({
     url: '/admin/user/delete',
     method: 'delete',
     data // userId
   })
 }
 export function changeRole(data) {
-  return request({
+  return request_admin({
     url: '/admin/user/updateInfo',
     method: 'post',
     data // userId + role

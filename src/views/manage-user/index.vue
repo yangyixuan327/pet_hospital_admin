@@ -33,7 +33,7 @@
       </el-table-column>
       <el-table-column label="Type" width="200" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.type }}</span>
+          <span>{{ scope.row.role }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="Action" width="200">
@@ -63,7 +63,7 @@
           <el-input v-model="form.password" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="账号类型" label-width="120px">
-          <el-input v-model="form.type" autocomplete="off"/>
+          <el-input v-model="form.role" autocomplete="off"/>
         </el-form-item>
       </el-form>
       <template #footer >
@@ -102,7 +102,7 @@ export default {
           name: '',
           account: '',
           password: '',
-          type: ''
+          role: ''
       },
     }
   },
@@ -112,29 +112,51 @@ export default {
   methods: {
     fetchData() {
         this.listLoading = false
+      // async getList() {
+      //       this.listLoading = true
+      //       const { data } = await fetchList(this.listQuery)
+      //       const items = data.items
+      //       this.list = items.map(v => {
+      //         this.$set(v, 'edit', false) //
+      //         v.originalTitle = v.title //  will be used when user click the cancel botton
+      //         return v
+      //       })
+      //       this.listLoading = false
+      //     },
+      //   fetchData() {
+      //     this.listLoading = true
+      //     getUserList().then(response => {
+      //       this.list = response.data.items
+      //       this.listLoading = false
+      //     })
+      //   }
         getList().then(response => {
-            const data = [{
-                userId: 1,
-                name: 'LYX',
-                account: 'admin123',
-                password: '111111',
-                type: 'admin',
-            }, {
-                userId: 2,
-                name: 'GXW',
-                account: 'admin456',
-                password: '222222',
-                type: 'admin',
-            },{
-                userId: 3,
-                name: 'YFF',
-                account: 'user123',
-                password: '333333',
-                type: 'user',
-            }]
-            this.list = data
-            this.listLoading = false
+          console.log(response)
+          this.list = response.data.responseMap.result
+          this.listLoading = false
         })
+        //     const data = [{
+        //         userId: 1,
+        //         name: 'LYX',
+        //         account: 'admin123',
+        //         password: '111111',
+        //         type: 'admin',
+        //     }, {
+        //         userId: 2,
+        //         name: 'GXW',
+        //         account: 'admin456',
+        //         password: '222222',
+        //         type: 'admin',
+        //     },{
+        //         userId: 3,
+        //         name: 'YFF',
+        //         account: 'user123',
+        //         password: '333333',
+        //         type: 'user',
+        //     }]
+        //     this.list = data
+        //     this.listLoading = false
+        // })
     },
       onCreateNewClicked() {
           this.editDialog.visible = true
@@ -204,24 +226,7 @@ export default {
           this.editDialog.visible = false
         })
       }
-  // async getList() {
-  //       this.listLoading = true
-  //       const { data } = await fetchList(this.listQuery)
-  //       const items = data.items
-  //       this.list = items.map(v => {
-  //         this.$set(v, 'edit', false) //
-  //         v.originalTitle = v.title //  will be used when user click the cancel botton
-  //         return v
-  //       })
-  //       this.listLoading = false
-  //     },
-  //   fetchData() {
-  //     this.listLoading = true
-  //     getUserList().then(response => {
-  //       this.list = response.data.items
-  //       this.listLoading = false
-  //     })
-  //   }
+
   }
 }
 </script>

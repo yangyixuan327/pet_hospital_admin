@@ -8,15 +8,15 @@ export function fetchCaseList() {
   })
 }
 
-export function deleteCaseById(case_id) {
+export function deleteCaseById(caseId) {
   const params = {
-    'case_id': case_id
+    'caseId': caseId
   }
   // todo 修改api
-  return request({
-    url: '/vue-admin-template/table/list',
-    method: 'get',
-    params
+  return request_admin({
+    url: '/admin/case',
+    method: 'delete',
+    params: params
   })
 }
 

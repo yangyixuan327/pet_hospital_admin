@@ -46,7 +46,7 @@
         <template slot-scope="scope">
           <el-button-group>
             <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.$index, scope.$index)"/>
-            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.$index, scope.$index)"/>
+            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.row.caseId, scope.$index)"/>
           </el-button-group>
         </template>
       </el-table-column>
@@ -211,16 +211,23 @@ export default {
         }
       }
     },
-    onDeleteClicked(case_id, case_index) {
-      deleteCaseById(case_id).then(response => {
-        // if (response.data.result === 200) {
-        // eslint-disable-next-line no-constant-condition
-        if (true) {
-          console.log('delete case success')
-          this.list.splice(case_index, 3)
-        } else {
-          // console.log('删除失败')
-        }
+    onDeleteClicked(caseId, caseIndex) {
+      this.$confirm('是否删除？', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteCaseById(caseId).then(response => {
+          console.log(response.data)
+          if (response.data.status === 200) {
+            this.$message('删除成功')
+            this.list.splice(caseIndex, 3)
+          } else {
+            this.$message('删除失败 请重试')
+          }
+        })
+      }).catch(() => {
+        this.$message('取消删除')
       })
     },
     onCreateNewClicked() {

@@ -48,74 +48,50 @@ export function getImageById(section_id) {
 }
 
 export function deleteSectionById(section_id) {
-  const params = {
-    'section_id': section_id
-  }
-  // todo 修改api
-  return request({
-    url: '/vue-admin-template/table/list',
-    method: 'get',
-    params
+  return request_admin({
+    url: '/admin/structure/section',
+    method: 'delete',
+    params: section_id
   })
 }
 
 export function deleteMedicineById(medicine_id) {
-  const params = {
-    'medicine_id': medicine_id
-  }
-  // todo 修改api
-  return request({
-    url: '/vue-admin-template/table/list',
-    method: 'get',
-    params
+  return request_admin({
+    url: '/admin/structure/medicine',
+    method: 'delete',
+    params: medicine_id
   })
 }
 
 export function deleteFeeById(fee_id) {
-  const params = {
-    'fee_id': fee_id
-  }
-  // todo 修改api
-  return request({
-    url: '/vue-admin-template/table/list',
-    method: 'get',
-    params
+  return request_admin({
+    url: '/admin/structure/fee',
+    method: 'delete',
+    params: fee_id
   })
 }
 
 export function deleteExamById(exam_id) {
-  const params = {
-    'exam_id': exam_id
-  }
-  // todo 修改api
-  return request({
-    url: '/vue-admin-template/table/list',
-    method: 'get',
-    params
+  return request_admin({
+    url: '/admin/structure/examination',
+    method: 'delete',
+    params: exam_id
   })
 }
 
 export function deleteVacById(vac_id) {
-  const params = {
-    'vac_id': vac_id
-  }
-  // todo 修改api
-  return request({
-    url: '/vue-admin-template/table/list',
-    method: 'get',
-    params
+  return request_admin({
+    url: '/admin/structure/vaccine',
+    method: 'delete',
+    params: vac_id
   })
 }
 
 export function deleteHosById(hos_id) {
-  const params = {
-    'hos_id': hos_id
-  }
-  // todo 修改api
-  return request({
-    url: '/vue-admin-template/table/list',
-    method: 'get',
-    params
+  return request_admin({
+    url: '/admin/structure/hospitalize',
+    method: 'delete',
+    params: hos_id
   })
 }
 

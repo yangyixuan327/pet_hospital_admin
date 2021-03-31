@@ -60,7 +60,7 @@
         <template slot-scope="scope">
           <el-button-group>
             <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.$index, scope.$index)" />
-            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.$index, scope.$index)" />
+            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.row, scope.$index)" />
           </el-button-group>
         </template>
       </el-table-column>
@@ -304,7 +304,8 @@ export default {
         sectionName: '',
         recDesc: '',
         assissDesc: '',
-        docDesc: ''
+        docDesc: '',
+        sectionImageUrl: ''
       },
       sectionImageDialog: {
         visible: false,
@@ -481,74 +482,78 @@ export default {
         this.hosDialog.changeMode = 'update'
       }
     },
-    onDeleteClicked(del_id, del_index) {
-      if (this.tag === '科室管理') {
-        deleteSectionById(del_id).then(response => {
-          // if (response.data.result === 200) {
-          // eslint-disable-next-line no-constant-condition
-          if (true) {
-            console.log(this.list)
-            this.list.splice(del_index, 1)
-          } else {
-            // console.log('删除失败')
+    onDeleteClicked(row, del_index) {
+      console.log(del_index)
+      this.$confirm('此操作将永久删除此记录，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        if (this.tag === '科室管理') {
+          const params = {
+            sectionId: row.id
           }
-        })
-      } else if (this.tag === '药品管理') {
-        deleteMedicineById(del_id).then(response => {
-          // if (response.data.result === 200) {
-          // eslint-disable-next-line no-constant-condition
-          if (true) {
-            console.log(this.list)
+          deleteSectionById(params).then(response => {
+            console.log(response)
+            console.log(params)
             this.list.splice(del_index, 1)
-          } else {
-            // console.log('删除失败')
+          })
+        } else if (this.tag === '药品管理') {
+          const params = {
+            medId: row.id
           }
-        })
-      } else if (this.tag === '收费管理') {
-        deleteFeeById(del_id).then(response => {
-          // if (response.data.result === 200) {
-          // eslint-disable-next-line no-constant-condition
-          if (true) {
-            console.log(this.list)
+          deleteMedicineById(params).then(response => {
+            console.log(response)
+            console.log(params)
             this.list.splice(del_index, 1)
-          } else {
-            // console.log('删除失败')
+          })
+        } else if (this.tag === '收费管理') {
+          const params = {
+            feeId: row.id
           }
-        })
-      } else if (this.tag === '化验项目管理') {
-        deleteExamById(del_id).then(response => {
-          // if (response.data.result === 200) {
-          // eslint-disable-next-line no-constant-condition
-          if (true) {
-            console.log(this.list)
+          deleteFeeById(params).then(response => {
+            console.log(response)
+            console.log(params)
             this.list.splice(del_index, 1)
-          } else {
-            // console.log('删除失败')
+          })
+        } else if (this.tag === '化验项目管理') {
+          const params = {
+            examId: row.id
           }
-        })
-      } else if (this.tag === '疫苗管理') {
-        deleteVacById(del_id).then(response => {
-          // if (response.data.result === 200) {
-          // eslint-disable-next-line no-constant-condition
-          if (true) {
-            console.log(this.list)
+          deleteExamById(params).then(response => {
+            console.log(response)
+            console.log(params)
             this.list.splice(del_index, 1)
-          } else {
-            // console.log('删除失败')
+          })
+        } else if (this.tag === '疫苗管理') {
+          const params = {
+            vacId: row.id
           }
-        })
-      } else if (this.tag === '住院管理') {
-        deleteHosById(del_id).then(response => {
-          // if (response.data.result === 200) {
-          // eslint-disable-next-line no-constant-condition
-          if (true) {
-            console.log(this.list)
+          deleteVacById(params).then(response => {
+            console.log(response)
+            console.log(params)
             this.list.splice(del_index, 1)
-          } else {
-            // console.log('删除失败')
+          })
+        } else if (this.tag === '住院管理') {
+          const params = {
+            hosId: row.id
           }
+          deleteHosById(params).then(response => {
+            console.log(response)
+            console.log(params)
+            this.list.splice(del_index, 1)
+          })
+        }
+        this.$message({
+          type: 'success',
+          message: '删除成功！'
         })
-      }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     onImageClicked(case_id, image_urls) {
       this.sectionImageDialog.visible = true
@@ -578,8 +583,8 @@ export default {
           if (sectionIndex != null && sectionIndex >= 0) {
             this.list[sectionIndex].name = this.secForm.sectionName
             this.list[sectionIndex].description1 = this.secForm.recDesc
-            this.list[sectionIndex].description3 = this.secForm.docDesc
             this.list[sectionIndex].description2 = this.secForm.assissDesc
+            this.list[sectionIndex].description3 = this.secForm.docDesc
           }
         } else if (changeMode === 'add') {
           this.list.push(
@@ -588,8 +593,7 @@ export default {
               name: this.secForm.sectionName,
               description1: this.secForm.recDesc,
               description2: this.secForm.assissDesc,
-              description3: this.secForm.docDesc,
-              description4: ''
+              description3: this.secForm.docDesc
             }
           )
         }

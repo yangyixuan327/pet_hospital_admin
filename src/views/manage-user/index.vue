@@ -31,7 +31,7 @@
           <span>{{ scope.row.password }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Type" width="200" align="center">
+      <el-table-column label="Role" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.role }}</span>
         </template>
@@ -62,8 +62,8 @@
         <el-form-item label="密码" label-width="120px">
           <el-input v-model="form.password" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="账号类型" label-width="120px">
-          <el-input v-model="form.role" autocomplete="off"/>
+        <el-form-item label="管理员" label-width="120px">
+          <el-switch v-model="form.role"></el-switch>
         </el-form-item>
       </el-form>
       <template #footer >
@@ -79,7 +79,7 @@
 
 <script>
 
-import {submitEditDialogResult} from "../../api/user";
+    import {deleteUser, newUser, submitEditDialogResult, updateUser} from "../../api/user";
 import {getList} from "../../api/user";
 
 export default {
@@ -140,19 +140,19 @@ export default {
         //         name: 'LYX',
         //         account: 'admin123',
         //         password: '111111',
-        //         type: 'admin',
+        //         role: 'admin',
         //     }, {
         //         userId: 2,
         //         name: 'GXW',
         //         account: 'admin456',
         //         password: '222222',
-        //         type: 'admin',
+        //         role: 'admin',
         //     },{
         //         userId: 3,
         //         name: 'YFF',
         //         account: 'user123',
         //         password: '333333',
-        //         type: 'user',
+        //         role: 'user',
         //     }]
         //     this.list = data
         //     this.listLoading = false
@@ -164,7 +164,7 @@ export default {
           this.form.name = ''
           this.form.account = ''
           this.form.password = ''
-          this.form.type = ''
+          this.form.role = false
           this.editDialog.changeMode = 'add'
       },
       onEditClicked(row, index) {
@@ -172,22 +172,35 @@ export default {
           this.form.name = row.name
           this.form.account = row.account
           this.form.password = row.password
-          this.form.type = row.type
+          if(row.role === "admin"){
+              this.form.role = true
+          }
+          else{
+              this.form.role = false
+          }
+
           this.editDialog.title = '修改账户'
           this.editDialog.visible = true
           this.editDialog.changeMode = 'update'
       },
       onDeleteClicked(row, index) {
+          const temp = {
+              userId: row.userId
+          };
           this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            deleteUser(temp).then(response => {
+                console.log(response)
+                console.log(temp)
+                this.list.splice(index, 1)
+            })
             this.$message({
               type: 'success',
               message: '删除成功!'
             });
-            this.list.splice(index, 1)
           }).catch(() => {
             this.$message({
               type: 'info',
@@ -200,26 +213,45 @@ export default {
           name: this.form.name,
           account: this.form.account,
           password: this.form.password,
-          type: this.form.type,
+          role: this.form.role,
           index: this.form.index,
           changeMode: this.editDialog.changeMode
         }
         submitEditDialogResult(params).then(response => {
           const index = this.form.index
           const changeMode = this.editDialog.changeMode
+          if (this.form.role === true){
+              this.form.role = "admin"
+          }
+          else{
+              this.form.role = "user"
+          }
+          const temp = {
+              name: this.form.name,
+              account: this.form.account,
+              password: this.form.password,
+              role: this.form.role
+          };
           if (changeMode === 'update') {
             if (index != null && index >= 0) {
               this.list[index].name = this.form.name
               this.list[index].account = this.form.account
               this.list[index].password = this.form.password
-              this.list[index].type = this.form.type
+              this.list[index].role = this.form.role
+              updateUser(temp).then(response => {
+                  console.log("Updated user" + temp)
+              })
+
             }
           } else if (changeMode === 'add') {
+              newUser(temp).then(response => {
+                  console.log("Create new user" + temp)
+              })
             this.list.push({
                 name: this.form.name,
                 account: this.form.account,
                 password: this.form.password,
-                type: this.form.type
+                role: this.form.role
               }
             )
           }

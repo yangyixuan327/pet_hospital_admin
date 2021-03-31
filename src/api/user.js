@@ -21,39 +21,39 @@ export function getList() {
     method: 'get'
   })
 }
-export function getUser(data) {
+export function getUser(userId) {
   return request_admin({
     url: '/admin/user/getById',
     method: 'get',
-    data //userId
+    params: userId
   })
 }
-export function newUser(data) {
+export function newUser(user) {
   return request_admin({
     url: '/admin/user/newUser',
     method: 'put',
-    data //user
+    data: user //user
   })
 }
-export function updateUser(data) {
+export function updateUser(user) {
   return request_admin({
     url: '/admin/user/updateInfo',
     method: 'post',
-    data // userId用于验证用户是否存在
+    data: user // userId用于验证用户是否存在
   })
 }
-export function deleteUser(data) {
+export function deleteUser(userId) {
   return request_admin({
     url: '/admin/user/delete',
     method: 'delete',
-    data // userId
+    params: userId
   })
 }
 export function changeRole(data) {
   return request_admin({
     url: '/admin/user/updateInfo',
     method: 'post',
-    data // userId + role
+    params: data // userId + role
   })
 }
 export function login(data) {

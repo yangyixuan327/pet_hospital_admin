@@ -4,8 +4,7 @@ import request_admin from '@/utils/request_admin'
 export function fetchCaseList() {
   return request_admin({
     url: '/admin/case',
-    method: 'get',
-    params: null
+    method: 'get'
   })
 }
 

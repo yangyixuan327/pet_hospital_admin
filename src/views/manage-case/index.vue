@@ -121,7 +121,6 @@
 </template>
 
 <script>
-import {getList} from '@/api/table'
 import { fetchCaseList, deleteCaseById, getImageById, getVideoById, submitWordsDialogResult } from '@/api/case'
 
 export default {
@@ -169,49 +168,39 @@ export default {
       this.listLoading = true
       fetchCaseList().then(response => {
         console.log(response.data.responseMap)
-        const data = [{
-          caseId: 1,
-          type: 'words',
-          caseName: '病例名1',
-          jieZhen: '接诊文字A',
-          zhenDuan: '诊断方案文字A',
-          zhiLiao: '治疗方案文字A'
-        }, {
-          caseId: 1,
-          type: 'image',
-          caseName: '病例名1',
-          jieZhen: '接诊图片B',
-          zhenDuan: '诊断方案图片B',
-          zhiLiao: '治疗方案图片B'
-        }, {
-          caseId: 1,
-          type: 'video',
-          caseName: '病例名1',
-          jieZhen: '接诊视频C',
-          zhenDuan: '诊断方案视频C',
-          zhiLiao: '治疗方案视频C'
-        }, {
-          caseId: 2,
-          type: 'words',
-          caseName: '病例名2',
-          jieZhen: '接诊文字A',
-          zhenDuan: '诊断方案文字A',
-          zhiLiao: '治疗方案文字A'
-        }, {
-          caseId: 2,
-          type: 'image',
-          caseName: '病例名',
-          jieZhen: '接诊图片B',
-          zhenDuan: '诊断方案图片B',
-          zhiLiao: '治疗方案图片B'
-        }, {
-          caseId: 2,
-          caseName: '病例名2',
-          type: 'video',
-          jieZhen: '接诊视频C',
-          zhenDuan: '诊断方案视频C',
-          zhiLiao: '治疗方案视频C'
-        }]
+        const result = response.data.responseMap.result
+        const description = response.data.responseMap.descrip
+        const itemCount = response.data.responseMap.count
+        console.log('item count: ' + itemCount)
+        var data = []
+        for (let i = 0; i < result.length; i++) {
+          const item = result[i]
+          data.push({
+            caseId: item.caseId,
+            type: 'words',
+            caseName: item.caseName,
+            jieZhen: description[i][0],
+            zhenDuan: description[i][1],
+            zhiLiao: description[i][2]
+          })
+          data.push({
+            caseId: item.caseId,
+            type: 'image',
+            caseName: item.caseName,
+            jieZhen: item.caseConsultId,
+            zhenDuan: item.caseDiagId,
+            zhiLiao: item.caseTherapyId
+          })
+          data.push({
+            caseId: item.caseId,
+            type: 'video',
+            caseName: item.caseName,
+            jieZhen: item.caseConsultId,
+            zhenDuan: item.caseDiagId,
+            zhiLiao: item.caseTherapyId
+          })
+          console.log(data.length)
+        }
         this.list = data
         this.listLoading = false
       })

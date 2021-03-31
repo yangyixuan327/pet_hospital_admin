@@ -41,12 +41,12 @@
           <span>{{ scope.row.description1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="tag==='科室管理' || tag==='收费管理'" :label="column4" align="center">
+      <el-table-column v-if="tag==='科室管理' || tag==='收费管理' || tag==='住院管理'" :label="column4" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.description2 }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="tag==='科室管理'" :label="column5" align="center">
+      <el-table-column v-if="tag==='科室管理' || tag==='住院管理'" :label="column5" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.description3 }}</span>
         </template>
@@ -70,6 +70,7 @@
       :title="sectionWordsDialog.title"
       width="50%"
       center
+      @close="sectionWordsDialog.visible = false"
     >
       <el-form :model="secForm">
         <el-form-item label="科室名" label-width="120px">
@@ -97,6 +98,7 @@
       :title="sectionImageDialog.title"
       width="50%"
       center
+      @close="sectionImageDialog.visible = false"
     >
       <div class="case-image" :visible="sectionImageDialog.contentVisible">
         <el-image v-for="url in imageUrls" :key="url" :src="url" lazy>
@@ -134,6 +136,7 @@
       :title="medicineDialog.title"
       width="50%"
       center
+      @close="medicineDialog.visible = false"
     >
       <el-form :model="medForm">
         <el-form-item label="药品名" label-width="120px">
@@ -155,6 +158,7 @@
       :title="feeDialog.title"
       width="50%"
       center
+      @close="feeDialog.visible = false"
     >
       <el-form :model="feeForm">
         <el-form-item label="收费项目名" label-width="120px">
@@ -179,6 +183,7 @@
       :title="examDialog.title"
       width="50%"
       center
+      @close="examDialog.visible = false"
     >
       <el-form :model="examForm">
         <el-form-item label="化验项目名" label-width="120px">
@@ -200,6 +205,7 @@
       :title="vacDialog.title"
       width="50%"
       center
+      @close="vacDialog.visible = false"
     >
       <el-form :model="vacForm">
         <el-form-item label="疫苗名" label-width="120px">
@@ -221,6 +227,7 @@
       :title="hosDialog.title"
       width="50%"
       center
+      @close="hosDialog.visible = false"
     >
       <el-form :model="hosForm">
         <el-form-item label="疫苗名" label-width="120px">
@@ -915,8 +922,8 @@ export default {
         this.column1 = 'ID'
         this.column2 = '动物名字'
         this.column3 = '病名'
-        this.column4 = ''
-        this.column5 = ''
+        this.column4 = '入院日期'
+        this.column5 = '出院日期'
         this.column6 = ''
         getStructureInfo(command).then(response => {
           this.list = [
@@ -924,24 +931,24 @@ export default {
               id: 1,
               name: '李明',
               description1: '割包皮',
-              description2: 'null',
-              description3: 'null',
+              description2: '2010/1/1',
+              description3: '2010/1/8',
               description4: 'null'
             },
             {
               id: 2,
               name: '李华',
               description1: '鼻塞',
-              description2: 'null',
-              description3: 'null',
+              description2: '2018/2/1',
+              description3: '2018/2/29',
               description4: 'null'
             },
             {
               id: 3,
               name: '小红',
               description1: '便秘',
-              description2: 'null',
-              description3: 'null',
+              description2: '2022/5/5',
+              description3: '2077/9/1',
               description4: 'null'
             }
           ]

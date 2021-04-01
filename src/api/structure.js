@@ -115,6 +115,22 @@ export function submitSectionWordsDialogResult(params) {
   }
 }
 
+export function updateSection(sectionId, params) {
+  return request_admin({
+    url: '/admin/structure/section/' + sectionId,
+    method: 'post',
+    data: params
+  })
+}
+
+export function newSection(sectionId, params) {
+  return request_admin({
+    url: '/admin/structure/section',
+    method: 'put',
+    data: params
+  })
+}
+
 export function submitMedicineDialogResult(params) {
   if (params.changeMode != null) {
     if (params.changeMode === 'add') {
@@ -133,6 +149,14 @@ export function submitMedicineDialogResult(params) {
       })
     }
   }
+}
+
+export function updateMedicine(medId, params) {
+  return request_admin({
+    url: '/admin/structure/medicine/' + medId,
+    method: 'post',
+    data: params
+  })
 }
 
 export function submitFeeDialogResult(params) {
@@ -155,6 +179,14 @@ export function submitFeeDialogResult(params) {
   }
 }
 
+export function updateFee(feeId, params) {
+  return request_admin({
+    url: '/admin/structure/fee/' + feeId,
+    method: 'post',
+    data: params
+  })
+}
+
 export function submitExamDialogResult(params) {
   if (params.changeMode != null) {
     if (params.changeMode === 'add') {
@@ -173,6 +205,14 @@ export function submitExamDialogResult(params) {
       })
     }
   }
+}
+
+export function updateExam(examId, params) {
+  return request_admin({
+    url: '/admin/structure/examination/' + examId,
+    method: 'post',
+    data: params
+  })
 }
 
 export function submitVacDialogResult(params) {
@@ -195,6 +235,14 @@ export function submitVacDialogResult(params) {
   }
 }
 
+export function updateVaccine(vacId, params) {
+  return request_admin({
+    url: '/admin/structure/vaccine/' + vacId,
+    method: 'post',
+    data: params
+  })
+}
+
 export function submitHosDialogResult(params) {
   if (params.changeMode != null) {
     if (params.changeMode === 'add') {
@@ -213,5 +261,13 @@ export function submitHosDialogResult(params) {
       })
     }
   }
+}
+
+export function updateHospitalize(hosId, params) {
+  return request_admin({
+    url: '/admin/structure/hospitalize/' + hosId,
+    method: 'post',
+    data: params
+  })
 }
 

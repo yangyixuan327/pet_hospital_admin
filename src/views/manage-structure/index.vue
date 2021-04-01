@@ -59,7 +59,7 @@
       <el-table-column align="center" prop="created_at" label="操作" width="200">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.$index, scope.$index)" />
+            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.row.id, scope.$index)" />
             <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.row, scope.$index)" />
           </el-button-group>
         </template>
@@ -268,7 +268,13 @@ import {
   deleteVacById,
   submitVacDialogResult,
   deleteHosById,
-  submitHosDialogResult
+  submitHosDialogResult,
+  updateSection,
+  updateExam,
+  updateFee,
+  updateHospitalize,
+  updateMedicine,
+  updateVaccine
 } from '@/api/structure'
 
 export default {
@@ -435,6 +441,7 @@ export default {
         this.secForm.recDesc = this.list[edit_index].description1
         this.secForm.assissDesc = this.list[edit_index].description2
         this.secForm.docDesc = this.list[edit_index].description3
+        this.secForm.sectionImageUrl = this.list[edit_index].description4
         this.sectionWordsDialog.changeMode = 'update'
         this.sectionWordsDialog.visible = true
       } else if (this.tag === '药品管理') {
@@ -569,11 +576,11 @@ export default {
     sectionWordsDialogConfirmOnClicked() {
       const params = {
         sectionId: this.secForm.sectionId,
-        sectionIndex: this.secForm.sectionIndex,
         sectionName: this.secForm.sectionName,
-        recDesc: this.secForm.recDesc,
-        docDesc: this.secForm.docDesc,
-        assissDesc: this.secForm.assissDesc,
+        recDescrip: this.secForm.recDesc,
+        docDescrip: this.secForm.docDesc,
+        assisDescrip: this.secForm.assissDesc,
+        sectionImageUrl: this.secForm.sectionImageUrl,
         changeMode: this.sectionWordsDialog.changeMode
       }
       submitSectionWordsDialogResult(params).then(response => {
@@ -585,6 +592,19 @@ export default {
             this.list[sectionIndex].description1 = this.secForm.recDesc
             this.list[sectionIndex].description2 = this.secForm.assissDesc
             this.list[sectionIndex].description3 = this.secForm.docDesc
+            this.list[sectionIndex].description4 = this.secForm.sectionImageUrl
+            const sectionId = params.sectionId
+            const temp = {
+              sectionId: this.secForm.sectionId,
+              sectionName: this.secForm.sectionName,
+              recDescrip: this.secForm.recDesc,
+              docDescrip: this.secForm.docDesc,
+              assisDescrip: this.secForm.assissDesc,
+              sectionImageUrl: this.secForm.sectionImageUrl
+            }
+            updateSection(sectionId, temp).then(response => {
+              console.log('updated section' + temp)
+            })
           }
         } else if (changeMode === 'add') {
           this.list.push(
@@ -611,8 +631,17 @@ export default {
       submitMedicineDialogResult(params).then(response => {
         const medicineIndex = this.medForm.medIndex
         const changeMode = this.medicineDialog.changeMode
+        const medId = this.medForm.medId
         if (changeMode === 'update') {
           if (medicineIndex != null && medicineIndex >= 0) {
+            const temp = {
+              medId: this.medForm.medId,
+              medName: this.medForm.medName,
+              medDescrip: this.medForm.medDesc
+            }
+            updateMedicine(medId, temp).then(response => {
+              console.log('updated medicine' + temp)
+            })
             this.list[medicineIndex].name = this.medForm.medName
             this.list[medicineIndex].description1 = this.medForm.medDesc
           }
@@ -640,11 +669,21 @@ export default {
       submitFeeDialogResult(params).then(response => {
         const feeIndex = this.feeForm.feeIndex
         const changeMode = this.feeDialog.changeMode
+        const feeId = this.feeForm.feeId
+        const temp = {
+          feeId: this.feeForm.feeId,
+          feeName: this.feeForm.feeName,
+          feePrice: this.feeForm.price,
+          feeDescrip: this.feeForm.feeDesc
+        }
         if (changeMode === 'update') {
           if (feeIndex != null && feeIndex >= 0) {
             this.list[feeIndex].name = this.feeForm.feeName
             this.list[feeIndex].description1 = this.feeForm.price
             this.list[feeIndex].description2 = this.feeForm.feeDesc
+            updateFee(feeId, temp).then(response => {
+              console.log('updated fee' + temp)
+            })
           }
         } else if (changeMode === 'add') {
           this.list.push(
@@ -670,10 +709,19 @@ export default {
       submitExamDialogResult(params).then(response => {
         const examIndex = this.examForm.examIndex
         const changeMode = this.examDialog.changeMode
+        const examId = this.examForm.examId
+        const temp = {
+          examId: this.examForm.examId,
+          examName: this.examForm.examName,
+          examDescrip: this.examForm.examDesc
+        }
         if (changeMode === 'update') {
           if (examIndex != null && examIndex >= 0) {
             this.list[examIndex].name = this.examForm.examName
             this.list[examIndex].description1 = this.examForm.examDesc
+            updateExam(examId, temp).then(response => {
+              console.log('updated examination' + temp)
+            })
           }
         } else if (changeMode === 'add') {
           this.list.push(
@@ -698,10 +746,19 @@ export default {
       submitVacDialogResult(params).then(response => {
         const vacIndex = this.vacForm.vacIndex
         const changeMode = this.vacDialog.changeMode
+        const vacId = this.vacForm.vacId
+        const temp = {
+          vacId: this.vacForm.vacId,
+          vacName: this.vacForm.vacName,
+          vacDescrip: this.vacForm.vacDesc
+        }
         if (changeMode === 'update') {
           if (vacIndex != null && vacIndex >= 0) {
             this.list[vacIndex].name = this.vacForm.vacName
             this.list[vacIndex].description1 = this.vacForm.vacDesc
+            updateVaccine(vacId, temp).then(response => {
+              console.log('updated vaccine' + temp)
+            })
           }
         } else if (changeMode === 'add') {
           this.list.push(
@@ -728,12 +785,23 @@ export default {
       submitHosDialogResult(params).then(response => {
         const hosIndex = this.hosForm.hosIndex
         const changeMode = this.hosDialog.changeMode
+        const hosId = this.hosForm.hosId
+        const temp = {
+          hosId: this.hosForm.hosId,
+          hosAnimalName: this.hosForm.hosName,
+          disease: this.hosForm.hosDesc,
+          inDate: this.hosForm.inDate,
+          outDate: this.hosForm.outDate
+        }
         if (changeMode === 'update') {
           if (hosIndex != null && hosIndex >= 0) {
             this.list[hosIndex].name = this.hosForm.hosName
             this.list[hosIndex].description1 = this.hosForm.hosDesc
             this.list[hosIndex].description2 = this.hosForm.inDate
             this.list[hosIndex].description3 = this.hosForm.outDate
+            updateHospitalize(hosId, temp).then(response => {
+              console.log(temp)
+            })
           }
         } else if (changeMode === 'add') {
           this.list.push(
@@ -777,8 +845,8 @@ export default {
               id: resultList[i].sectionId,
               name: resultList[i].sectionName,
               description1: resultList[i].recDescrip,
-              description2: resultList[i].docDescrip,
-              description3: resultList[i].assisDescrip,
+              description2: resultList[i].assisDescrip,
+              description3: resultList[i].docDescrip,
               description4: resultList[i].sectionImageUrl
             })
           }

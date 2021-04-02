@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-dropdown @command="handleCommand">
       <el-button type="primary">
-        {{ tag }}<i class="el-icon-arrow-down el-icon--right"></i>
+        {{ tag }}<i class="el-icon-arrow-down el-icon--right" />
       </el-button>
       <el-button type="primary" style="margin-bottom: 10px;" align="right" @click="onCreateNewClicked">新建<i
         class="el-icon-plus el-icon--right"
@@ -104,7 +104,7 @@
         <el-image v-for="url in imageUrls" :key="url" :src="url" lazy>
           <template #error>
             <div class="image-slot">
-              <i class="el-icon-picture-outline"/>
+              <i class="el-icon-picture-outline" />
             </div>
           </template>
         </el-image>
@@ -231,10 +231,10 @@
     >
       <el-form :model="hosForm">
         <el-form-item label="动物名" label-width="120px">
-          <el-input v-model="hosForm.hosName" autocomplete="off" />
+          <el-input v-model="hosForm.hosAnimalName" autocomplete="off" />
         </el-form-item>
         <el-form-item label="病名" label-width="120px">
-          <el-input v-model="hosForm.hosDesc" autocomplete="off" />
+          <el-input v-model="hosForm.disease" autocomplete="off" />
         </el-form-item>
         <el-form-item label="入院日期" label-width="120px">
           <el-input v-model="hosForm.inDate" autocomplete="off" />
@@ -276,6 +276,17 @@ import {
   updateMedicine,
   updateVaccine
 } from '@/api/structure'
+
+function dateFormat(time) {
+  const date = new Date(time)
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+  const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+  const hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+  const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+  const seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+  return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
+}
 
 export default {
   filters: {
@@ -377,8 +388,8 @@ export default {
       hosForm: {
         hosId: -1,
         hosIndex: -1,
-        hosName: '',
-        hosDesc: '',
+        hosAnimalName: '',
+        disease: '',
         inDate: '',
         outDate: ''
       }
@@ -425,8 +436,8 @@ export default {
       } else if (this.tag === '住院管理') {
         this.hosDialog.visible = true
         this.hosDialog.title = '创建住院'
-        this.hosForm.hosName = ''
-        this.hosForm.hosDesc = ''
+        this.hosForm.hosAnimalName = ''
+        this.hosForm.disease = ''
         this.hosForm.inDate = ''
         this.hosForm.outDate = ''
         this.hosDialog.changeMode = 'add'
@@ -482,8 +493,8 @@ export default {
         this.hosDialog.title = '编辑住院信息'
         this.hosForm.hosId = edit_id
         this.hosForm.hosIndex = edit_index
-        this.hosForm.hosName = this.list[edit_index].name
-        this.hosForm.hosDesc = this.list[edit_index].description1
+        this.hosForm.hosAnimalName = this.list[edit_index].name
+        this.hosForm.disease = this.list[edit_index].description1
         this.hosForm.inDate = this.list[edit_index].description2
         this.hosForm.outDate = this.list[edit_index].description3
         this.hosDialog.changeMode = 'update'
@@ -776,8 +787,8 @@ export default {
       const params = {
         hosId: this.hosForm.hosId,
         hosIndex: this.hosForm.hosIndex,
-        hosName: this.hosForm.hosName,
-        hosDesc: this.hosForm.hosDesc,
+        hosAnimalName: this.hosForm.hosAnimalName,
+        disease: this.hosForm.disease,
         inDate: this.hosForm.inDate,
         outDate: this.hosForm.outDate,
         changeMode: this.hosDialog.changeMode
@@ -788,17 +799,18 @@ export default {
         const hosId = this.hosForm.hosId
         const temp = {
           hosId: this.hosForm.hosId,
-          hosAnimalName: this.hosForm.hosName,
-          disease: this.hosForm.hosDesc,
-          inDate: this.hosForm.inDate,
-          outDate: this.hosForm.outDate
+          hosAnimalName: this.hosForm.hosAnimalName,
+          disease: this.hosForm.disease,
+          inDate: dateFormat(this.hosForm.inDate),
+          outDate: dateFormat(this.hosForm.outDate)
         }
+        console.log(temp)
         if (changeMode === 'update') {
           if (hosIndex != null && hosIndex >= 0) {
-            this.list[hosIndex].name = this.hosForm.hosName
-            this.list[hosIndex].description1 = this.hosForm.hosDesc
-            this.list[hosIndex].description2 = this.hosForm.inDate
-            this.list[hosIndex].description3 = this.hosForm.outDate
+            this.list[hosIndex].name = this.hosForm.hosAnimalName
+            this.list[hosIndex].description1 = this.hosForm.disease
+            this.list[hosIndex].description2 = dateFormat(this.hosForm.inDate)
+            this.list[hosIndex].description3 = dateFormat(this.hosForm.outDate)
             updateHospitalize(hosId, temp).then(response => {
               console.log(temp)
             })
@@ -807,8 +819,8 @@ export default {
           this.list.push(
             {
               id: 55,
-              name: this.hosForm.hosName,
-              description1: this.hosForm.hosDesc,
+              name: this.hosForm.hosAnimalName,
+              description1: this.hosForm.disease,
               description2: this.hosForm.inDate,
               description3: this.hosForm.outDate
             }
@@ -942,8 +954,8 @@ export default {
               id: resultList[i].hosId,
               name: resultList[i].hosAnimalName,
               description1: resultList[i].disease,
-              description2: resultList[i].inDate,
-              description3: resultList[i].outDate
+              description2: dateFormat(resultList[i].inDate),
+              description3: dateFormat(resultList[i].outDate)
             })
           }
           this.list = tempList

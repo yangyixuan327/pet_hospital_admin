@@ -45,7 +45,7 @@
       <el-table-column align="center" prop="created_at" label="操作" width="200">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.$index, scope.$index)"/>
+            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.row.caseId, scope.$index)"/>
             <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.row.caseId, scope.$index)"/>
           </el-button-group>
         </template>
@@ -101,7 +101,7 @@
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         multiple
-        :limit="3"
+        :limit="1"
         :on-exceed="handleExceed"
         :file-list="fileList"
       >
@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import { fetchCaseList, deleteCaseById, getImageById, getVideoById, submitWordsDialogResult } from '@/api/case'
+import { fetchCaseList, deleteCaseById, getImageById, updateCaseWordsInfo, addNewCase, addNewCaseInfo } from '@/api/case'
 
 export default {
   data() {
@@ -251,6 +251,7 @@ export default {
       this.wordsDialog.changeMode = 'update'
     },
     wordsDialogConfirmOnClicked() {
+      const this_ = this
       const params = {
         caseId: this.form.caseId,
         caseIndex: this.form.caseIndex,
@@ -260,44 +261,74 @@ export default {
         zhiLiao: this.form.zhiLiao,
         changeMode: this.wordsDialog.changeMode
       }
-      submitWordsDialogResult(params).then(response => {
-        const caseIndex = this.form.caseIndex
-        const changeMode = this.wordsDialog.changeMode
-        if (changeMode === 'update') {
-          if (caseIndex != null && caseIndex >= 0) {
-            this.list[caseIndex].caseName = this.form.caseName
-            this.list[caseIndex].jieZhen = this.form.jieZhen
-            this.list[caseIndex].zhenDuan = this.form.zhenDuan
-            this.list[caseIndex].zhiLiao = this.form.zhiLiao
+      if (params.changeMode === 'add') {
+        addNewCase(params).then(response => {
+          console.log(response)
+          if (response.data.status === 200) {
+            params.caseId = response.data.responseMap.result
+            addNewCaseInfo(params).then(this_.$axios.spread(function(responseJieZhen, responseZhenDuan, responseZhiLiao) {
+              if (responseJieZhen.data.status === 200 &&
+                responseZhenDuan.data.status === 200 &&
+                responseZhiLiao.data.status === 200) {
+                this_.$message('添加成功')
+                console.log('add success')
+                this_.list.push(
+                  {
+                    caseId: response.data.responseMap.caseId,
+                    type: 'words',
+                    caseName: this_.form.caseName,
+                    jieZhen: this_.form.jieZhen,
+                    zhenDuan: this_.form.zhenDuan,
+                    zhiLiao: this_.form.zhiLiao
+                  }, {
+                    caseId: response.data.responseMap.caseId,
+                    type: 'image',
+                    caseName: this_.form.caseName,
+                    jieZhen: '',
+                    zhenDuan: '',
+                    zhiLiao: ''
+                  }, {
+                    caseId: response.data.responseMap.caseId,
+                    type: 'video',
+                    caseName: this_.form.caseName,
+                    jieZhen: '',
+                    zhenDuan: '',
+                    zhiLiao: ''
+                  }
+                )
+              } else {
+                this_.$message('病例文字信息添加失败 请重试')
+              }
+            }))
+          } else {
+            this_.$message('病例添加失败 请重试')
           }
-        } else if (changeMode === 'add') {
-          this.list.push(
-            {
-              caseId: 12,
-              type: 'words',
-              caseName: this.form.caseName,
-              jieZhen: this.form.jieZhen,
-              zhenDuan: this.form.zhenDuan,
-              zhiLiao: this.form.zhiLiao
-            }, {
-              caseId: 1,
-              type: 'image',
-              caseName: this.form.caseName,
-              jieZhen: '',
-              zhenDuan: '',
-              zhiLiao: ''
-            }, {
-              caseId: 1,
-              type: 'video',
-              caseName: this.form.caseName,
-              jieZhen: '',
-              zhenDuan: '',
-              zhiLiao: ''
+          this_.wordsDialog.visible = false
+        })
+      } else if (params.changeMode === 'update') {
+        updateCaseWordsInfo(params).then(this_.$axios.spread(function(responseName, responseDesc) {
+          const caseIndex = params.caseIndex
+          if (responseName.data.status === 200 && responseDesc.data.status === 200) {
+            this_.$message('更新成功')
+            console.log('update success')
+            if (caseIndex != null && caseIndex >= 0) {
+              this.list[caseIndex].caseName = this_.form.caseName
+              this.list[caseIndex].jieZhen = this_.form.jieZhen
+              this.list[caseIndex].zhenDuan = this_.form.zhenDuan
+              this.list[caseIndex].zhiLiao = this_.form.zhiLiao
             }
-          )
-        }
-        this.wordsDialog.visible = false
-      })
+          } else {
+            if (responseName.data.status !== 200) {
+              console.log('name update fail')
+              this_.$message('病例名更新失败 请重试')
+            } else if (responseDesc.data.status !== 200) {
+              console.log('desc update fail')
+              this_.$message('病例信息更新失败 请重试')
+            }
+          }
+          this_.wordsDialog.visible = false
+        }))
+      }
     },
     onImageClicked(caseId, type) {
       this.mediaDialog.visible = true

@@ -56,6 +56,7 @@
       :title="wordsDialog.title"
       width="50%"
       center
+      destroy-on-close
       @close="wordsDialog.visible = false"
     >
       <el-form :model="form">
@@ -84,9 +85,10 @@
       :title="mediaDialog.title"
       width="50%"
       center
+      destroy-on-close
       @close="mediaDialog.visible = false"
     >
-      <div class="case-image" :visible="mediaDialog.contentVisible">
+      <div v-if="mediaDialog.imageVisible" class="case-image" style="width: 90%; height: 90%; margin: 0 auto">
         <el-image v-for="url in imageUrls" :key="url" :src="url" lazy>
           <template #error>
             <div class="image-slot">
@@ -95,10 +97,18 @@
           </template>
         </el-image>
       </div>
+      <div v-if="mediaDialog.videoVisible" class="case-video" style="width: 90%; height: 90%; margin: 0 auto">
+        <video
+          v-if="videoUrl !== ''"
+          style="width: 100%; height: 100%"
+          :src="videoUrl"
+          controls="controls"
+        />
+      </div>
       <el-upload
         class="media-upload"
         :action="postUrl"
-        name="image"
+        :name="uploadParamName"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         multiple
@@ -122,7 +132,7 @@
 </template>
 
 <script>
-import { fetchCaseList, deleteCaseById, getImageById, updateCaseWordsInfo, addNewCase, addNewCaseInfo } from '@/api/case'
+import { fetchCaseList, deleteCaseById, getInfoByIdAndType, updateCaseWordsInfo, addNewCase, addNewCaseInfo } from '@/api/case'
 
 export default {
   data() {
@@ -136,7 +146,8 @@ export default {
       },
       mediaDialog: {
         visible: false,
-        contentVisible: true,
+        imageVisible: false,
+        videoVisible: false,
         title: ''
       },
       form: {
@@ -148,8 +159,10 @@ export default {
         zhiLiao: ''
       },
       imageUrls: [],
+      videoUrl: '',
       postUrl: '',
       uploadTip: '',
+      uploadParamName: 'image',
       fileList: []
     }
   },
@@ -321,9 +334,11 @@ export default {
           } else {
             if (responseName.data.status !== 200) {
               console.log('name update fail')
+              console.log(responseName)
               this_.$message('病例名更新失败 请重试')
             } else if (responseDesc.data.status !== 200) {
               console.log('desc update fail')
+              console.log(responseDesc)
               this_.$message('病例信息更新失败 请重试')
             }
           }
@@ -333,9 +348,11 @@ export default {
     },
     onImageClicked(caseId, type) {
       this.mediaDialog.visible = true
-      this.mediaDialog.contentVisible = true
+      this.mediaDialog.imageVisible = true
+      this.mediaDialog.videoVisible = false
       this.mediaDialog.title = '病例图片'
       this.uploadTip = '上传图片please，太大了不收'
+      this.uploadParamName = 'image'
       const base_url = 'http://47.101.217.16:8080'
       if (type === 'jieZhen') {
         this.postUrl = base_url + '/admin/case/' + caseId + '/consult/image'
@@ -344,20 +361,50 @@ export default {
       } else if (type === 'zhiLiao') {
         this.postUrl = base_url + '/admin/case/' + caseId + '/therapy/image'
       }
-      getImageById(caseId, type).then(response => {
-        const imageUrl = response.data.responseMap.result.consultImageUrl
+      getInfoByIdAndType(caseId, type).then(response => {
+        console.log(response)
+        var imageUrl = ''
+        if (type === 'jieZhen') {
+          imageUrl = 'http://' + response.data.responseMap.result.consultImageUrl
+        } else if (type === 'zhenDuan') {
+          imageUrl = 'http://' + response.data.responseMap.result.diagImageUrl
+        } else if (type === 'zhiLiao') {
+          imageUrl = 'http://' + response.data.responseMap.result.therapyImageUrl
+        }
         console.log(imageUrl)
         this.imageUrls = [imageUrl]
       })
     },
-    onVideoClicked(case_id, video_url) {
-      this.mediaDialog.contentVisible = false
-      this.mediaDialog.title = '病例视频'
+    onVideoClicked(caseId, type) {
       this.mediaDialog.visible = true
+      this.mediaDialog.imageVisible = false
+      this.mediaDialog.videoVisible = true
+      this.mediaDialog.title = '病例视频'
       this.uploadTip = '上传视频please，太大了不收'
-      // getVideoById(case_id).then(response => {
-      //   console.log('video open')
-      // })
+      this.uploadParamName = 'video'
+      const base_url = 'http://47.101.217.16:8080'
+      if (type === 'jieZhen') {
+        this.postUrl = base_url + '/admin/case/' + caseId + '/consult/video'
+      } else if (type === 'zhenDuan') {
+        this.postUrl = base_url + '/admin/case/' + caseId + '/diag/video'
+      } else if (type === 'zhiLiao') {
+        this.postUrl = base_url + '/admin/case/' + caseId + '/therapy/video'
+      }
+      getInfoByIdAndType(caseId, type).then(response => {
+        console.log(response)
+        this.videoUrl = 'https://v-cdn.zjol.com.cn/280443.mp4'
+        var videoUrl = ''
+        if (type === 'jieZhen') {
+          videoUrl = 'http://' + response.data.responseMap.result.consultVideoUrl
+        } else if (type === 'zhenDuan') {
+          videoUrl = 'http://' + response.data.responseMap.result.diagVideoUrl
+        } else if (type === 'zhiLiao') {
+          videoUrl = 'http://' + response.data.responseMap.result.therapyVideoUrl
+        }
+        console.log(videoUrl)
+        // todo 有数据之后注释去掉
+        // this.videoUrl = videoUrl
+      })
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)

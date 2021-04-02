@@ -1,4 +1,3 @@
-import request from '@/utils/request'
 import request_admin from '@/utils/request_admin'
 import axios from 'axios'
 
@@ -21,19 +20,7 @@ export function deleteCaseById(caseId) {
   })
 }
 
-export function getVideoById(case_id) {
-  const params = {
-    'case_id': case_id
-  }
-  // todo 修改api
-  return request({
-    url: '/vue-admin-template/table/list',
-    method: 'get',
-    params
-  })
-}
-
-export function getImageById(caseId, type) {
+export function getInfoByIdAndType(caseId, type) {
   let url = '/admin/case/' + caseId + '/'
   if (type === 'jieZhen') {
     url = url + 'consult'

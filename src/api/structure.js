@@ -123,11 +123,11 @@ export function updateSection(sectionId, params) {
   })
 }
 
-export function newSection(sectionId, params) {
+export function newSection(sectionName) {
   return request_admin({
     url: '/admin/structure/section',
     method: 'put',
-    data: params
+    params: sectionName
   })
 }
 
@@ -159,6 +159,14 @@ export function updateMedicine(medId, params) {
   })
 }
 
+export function newMedicine(medName, medDescrip) {
+  return request_admin({
+    url: '/admin/structure/medicine',
+    method: 'put',
+    params: { medName, medDescrip }
+  })
+}
+
 export function submitFeeDialogResult(params) {
   if (params.changeMode != null) {
     if (params.changeMode === 'add') {
@@ -184,6 +192,14 @@ export function updateFee(feeId, params) {
     url: '/admin/structure/fee/' + feeId,
     method: 'post',
     data: params
+  })
+}
+
+export function newFee(feeName, feePrice, feeDescrip) {
+  return request_admin({
+    url: '/admin/structure/fee',
+    method: 'put',
+    params: { feeName, feePrice, feeDescrip }
   })
 }
 
@@ -215,6 +231,14 @@ export function updateExam(examId, params) {
   })
 }
 
+export function newExam(examName, examDescrip) {
+  return request_admin({
+    url: '/admin/structure/examination',
+    method: 'put',
+    params: { examName, examDescrip }
+  })
+}
+
 export function submitVacDialogResult(params) {
   if (params.changeMode != null) {
     if (params.changeMode === 'add') {
@@ -240,6 +264,14 @@ export function updateVaccine(vacId, params) {
     url: '/admin/structure/vaccine/' + vacId,
     method: 'post',
     data: params
+  })
+}
+
+export function newVaccine(vacName, vacDescrip) {
+  return request_admin({
+    url: '/admin/structure/vaccine',
+    method: 'put',
+    params: { vacName, vacDescrip }
   })
 }
 
@@ -271,3 +303,10 @@ export function updateHospitalize(hosId, params) {
   })
 }
 
+export function newHospitalize(hosName, disease, inDate) {
+  return request_admin({
+    url: '/admin/structure/hospitalize',
+    method: 'put',
+    params: { hosName, disease, inDate }
+  })
+}

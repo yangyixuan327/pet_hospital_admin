@@ -66,6 +66,25 @@
       </el-table-column>
     </el-table>
     <el-dialog
+      :visible="addSectionDialog.visible"
+      :title="addSectionDialog.title"
+      width="50%"
+      center
+      @close="addSectionDialog.visible = false"
+    >
+      <el-form :model="addSectionForm">
+        <el-form-item label="科室名" label-width="120px">
+          <el-input v-model="addSectionForm.secName" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="addSectionDialog.visible = false">取 消</el-button>
+          <el-button type="primary" @click="addSectionDialogConfirmOnClicked">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog
       :visible="sectionWordsDialog.visible"
       :title="sectionWordsDialog.title"
       width="50%"
@@ -223,6 +242,31 @@
       </template>
     </el-dialog>
     <el-dialog
+      :visible="addHosDialog.visible"
+      :title="addHosDialog.title"
+      width="50%"
+      center
+      @close="addHosDialog.visible = false"
+    >
+      <el-form :model="addHosForm">
+        <el-form-item label="动物名" label-width="120px">
+          <el-input v-model="addHosForm.hosAnimalName" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="病名" label-width="120px">
+          <el-input v-model="addHosForm.disease" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="入院日期" label-width="120px">
+          <el-input v-model="addHosForm.inDate" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="addHosDialog.visible = false">取 消</el-button>
+          <el-button type="primary" @click="addHosDialogConfirmOnClicked">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog
       :visible="hosDialog.visible"
       :title="hosDialog.title"
       width="50%"
@@ -274,7 +318,13 @@ import {
   updateFee,
   updateHospitalize,
   updateMedicine,
-  updateVaccine
+  updateVaccine,
+  newSection,
+  newMedicine,
+  newFee,
+  newExam,
+  newVaccine,
+  newHospitalize
 } from '@/api/structure'
 
 function dateFormat(time) {
@@ -310,6 +360,13 @@ export default {
       column5: 'column5',
       column6: 'column6',
       tag: '选择结构',
+      addSectionDialog: {
+        visible: false,
+        title: ''
+      },
+      addSectionForm: {
+        secName: ''
+      },
       sectionWordsDialog: {
         visible: false,
         title: '',
@@ -355,7 +412,7 @@ export default {
         feeId: -1,
         feeIndex: -1,
         feeName: '',
-        price: 10,
+        price: 10.00,
         feeDesc: ''
       },
       examDialog: {
@@ -380,6 +437,15 @@ export default {
         vacName: '',
         vacDesc: ''
       },
+      addHosForm: {
+        hosAnimalName: '',
+        disease: '',
+        inDate: ''
+      },
+      addHosDialog: {
+        visible: false,
+        title: ''
+      },
       hosDialog: {
         visible: false,
         title: '',
@@ -401,13 +467,9 @@ export default {
   methods: {
     onCreateNewClicked() {
       if (this.tag === '科室管理') {
-        this.sectionWordsDialog.visible = true
-        this.sectionWordsDialog.title = '创建科室'
-        this.secForm.sectionName = ''
-        this.secForm.recDesc = ''
-        this.secForm.assissDesc = ''
-        this.secForm.docDesc = ''
-        this.sectionWordsDialog.changeMode = 'add'
+        this.addSectionDialog.visible = true
+        this.addSectionDialog.title = '创建科室'
+        this.addSectionForm.secName = ''
       } else if (this.tag === '药品管理') {
         this.medicineDialog.visible = true
         this.medicineDialog.title = '创建药品'
@@ -418,7 +480,7 @@ export default {
         this.feeDialog.visible = true
         this.feeDialog.title = '创建收费项目'
         this.feeForm.feeName = ''
-        this.feeForm.price = ''
+        this.feeForm.price = 0.00
         this.feeForm.feeDesc = ''
         this.feeDialog.changeMode = 'add'
       } else if (this.tag === '化验项目管理') {
@@ -434,13 +496,11 @@ export default {
         this.vacForm.vacDesc = ''
         this.vacDialog.changeMode = 'add'
       } else if (this.tag === '住院管理') {
-        this.hosDialog.visible = true
-        this.hosDialog.title = '创建住院'
-        this.hosForm.hosAnimalName = ''
-        this.hosForm.disease = ''
-        this.hosForm.inDate = ''
-        this.hosForm.outDate = ''
-        this.hosDialog.changeMode = 'add'
+        this.addHosDialog.visible = true
+        this.addHosDialog.title = '创建住院'
+        this.addHosForm.hosAnimalName = ''
+        this.addHosForm.disease = ''
+        this.addHosForm.inDate = ''
       }
     },
     onEditClicked(edit_id, edit_index) {
@@ -584,6 +644,15 @@ export default {
         console.log('image open')
       })
     },
+    addSectionDialogConfirmOnClicked() {
+      const params = {
+        sectionName: this.addSectionForm.secName
+      }
+      newSection(params).then(response => {
+        console.log('created new section' + params.sectionName)
+      })
+      this.addSectionDialog.visible = false
+    },
     sectionWordsDialogConfirmOnClicked() {
       const params = {
         sectionId: this.secForm.sectionId,
@@ -613,20 +682,11 @@ export default {
               assisDescrip: this.secForm.assissDesc,
               sectionImageUrl: this.secForm.sectionImageUrl
             }
+            console.log(temp)
             updateSection(sectionId, temp).then(response => {
               console.log('updated section' + temp)
             })
           }
-        } else if (changeMode === 'add') {
-          this.list.push(
-            {
-              id: 55,
-              name: this.secForm.sectionName,
-              description1: this.secForm.recDesc,
-              description2: this.secForm.assissDesc,
-              description3: this.secForm.docDesc
-            }
-          )
         }
         this.sectionWordsDialog.visible = false
       })
@@ -657,13 +717,12 @@ export default {
             this.list[medicineIndex].description1 = this.medForm.medDesc
           }
         } else if (changeMode === 'add') {
-          this.list.push(
-            {
-              id: 55,
-              name: this.medForm.medName,
-              description1: this.medForm.medDesc
-            }
-          )
+          const medName = this.medForm.medName
+          const medDescrip = this.medForm.medDesc
+          console.log(medName + medDescrip)
+          newMedicine(medName, medDescrip).then(response => {
+            console.log('created new medicine' + medName + medDescrip)
+          })
         }
         this.medicineDialog.visible = false
       })
@@ -697,14 +756,21 @@ export default {
             })
           }
         } else if (changeMode === 'add') {
-          this.list.push(
-            {
-              id: 55,
-              name: this.feeForm.feeName,
-              description1: this.feeForm.price,
-              description2: this.feeForm.feeDesc
-            }
-          )
+          const feeName = this.feeForm.feeName
+          const feePrice = this.feeForm.price
+          const feeDescrip = this.feeForm.feeDesc
+          console.log(feeName + feePrice + feeDescrip)
+          newFee(feeName, feePrice, feeDescrip).then(response => {
+            console.log('created new fee' + feeName + feePrice + feeDescrip)
+          })
+          // this.list.push(
+          //   {
+          //     id: 55,
+          //     name: this.feeForm.feeName,
+          //     description1: this.feeForm.price,
+          //     description2: this.feeForm.feeDesc
+          //   }
+          // )
         }
         this.feeDialog.visible = false
       })
@@ -735,13 +801,18 @@ export default {
             })
           }
         } else if (changeMode === 'add') {
-          this.list.push(
-            {
-              id: 55,
-              name: this.examForm.examName,
-              description1: this.examForm.examDesc
-            }
-          )
+          const examName = this.examForm.examName
+          const examDescrip = this.examForm.examDesc
+          newExam(examName, examDescrip).then(response => {
+            console.log('created new exam' + examName + examDescrip)
+          })
+          // this.list.push(
+          //   {
+          //     id: 55,
+          //     name: this.examForm.examName,
+          //     description1: this.examForm.examDesc
+          //   }
+          // )
         }
         this.examDialog.visible = false
       })
@@ -772,16 +843,30 @@ export default {
             })
           }
         } else if (changeMode === 'add') {
-          this.list.push(
-            {
-              id: 55,
-              name: this.vacForm.vacName,
-              description1: this.vacForm.vacDesc
-            }
-          )
+          const vacName = this.vacForm.vacName
+          const vacDescrip = this.vacForm.vacDesc
+          newVaccine(vacName, vacDescrip).then(response => {
+            console.log('created new vaccine' + vacName + vacDescrip)
+          })
+          // this.list.push(
+          //   {
+          //     id: 55,
+          //     name: this.vacForm.vacName,
+          //     description1: this.vacForm.vacDesc
+          //   }
+          // )
         }
         this.vacDialog.visible = false
       })
+    },
+    addHosDialogConfirmOnClicked() {
+      const hosAnimalName = this.addHosForm.hosAnimalName
+      const disease = this.addHosForm.disease
+      const inDate = this.addHosForm.inDate
+      newHospitalize(hosAnimalName, disease, inDate).then(response => {
+        console.log('created new hospitalize' + hosAnimalName + disease + inDate)
+      })
+      this.addHosDialog.visible = false
     },
     hosDialogConfirmOnClicked() {
       const params = {
@@ -815,16 +900,6 @@ export default {
               console.log(temp)
             })
           }
-        } else if (changeMode === 'add') {
-          this.list.push(
-            {
-              id: 55,
-              name: this.hosForm.hosAnimalName,
-              description1: this.hosForm.disease,
-              description2: this.hosForm.inDate,
-              description3: this.hosForm.outDate
-            }
-          )
         }
         this.hosDialog.visible = false
       })
@@ -856,13 +931,14 @@ export default {
             tempList.push({
               id: resultList[i].sectionId,
               name: resultList[i].sectionName,
-              description1: resultList[i].recDescrip,
-              description2: resultList[i].assisDescrip,
-              description3: resultList[i].docDescrip,
-              description4: resultList[i].sectionImageUrl
+              description1: resultList[i].recDescrip != null ? resultList[i].recDescrip : '',
+              description2: resultList[i].assisDescrip != null ? resultList[i].assisDescrip : '',
+              description3: resultList[i].docDescrip != null ? resultList[i].docDescrip : '',
+              description4: resultList[i].sectionImageUrl != null ? resultList[i].sectionImageUrl : ''
             })
           }
           this.list = tempList
+          console.log(this.list)
         })
       } else if (command === 'medicine') {
         this.tag = '药品管理'

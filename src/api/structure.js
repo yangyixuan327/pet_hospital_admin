@@ -303,10 +303,10 @@ export function updateHospitalize(hosId, params) {
   })
 }
 
-export function newHospitalize(hosName, disease, inDate) {
+export function newHospitalize(hosAnimalName, disease, inDate) {
   return request_admin({
     url: '/admin/structure/hospitalize',
     method: 'put',
-    params: { hosName, disease, inDate }
+    params: { hosAnimalName, disease, inDate }
   })
 }

@@ -650,6 +650,15 @@ export default {
       }
       newSection(params).then(response => {
         console.log('created new section' + params.sectionName)
+        console.log(response.data.responseMap.result)
+        this.list.push({
+          id: response.data.responseMap.result,
+          name: params.sectionName,
+          description1: '',
+          description2: '',
+          description3: '',
+          description4: ''
+        })
       })
       this.addSectionDialog.visible = false
     },
@@ -722,6 +731,11 @@ export default {
           console.log(medName + medDescrip)
           newMedicine(medName, medDescrip).then(response => {
             console.log('created new medicine' + medName + medDescrip)
+            this.list.push({
+              id: response.data.responseMap.result,
+              name: medName,
+              description1: medDescrip
+            })
           })
         }
         this.medicineDialog.visible = false
@@ -762,15 +776,13 @@ export default {
           console.log(feeName + feePrice + feeDescrip)
           newFee(feeName, feePrice, feeDescrip).then(response => {
             console.log('created new fee' + feeName + feePrice + feeDescrip)
+            this.list.push({
+              id: response.data.responseMap.result,
+              name: feeName,
+              description1: feePrice,
+              description2: feeDescrip
+            })
           })
-          // this.list.push(
-          //   {
-          //     id: 55,
-          //     name: this.feeForm.feeName,
-          //     description1: this.feeForm.price,
-          //     description2: this.feeForm.feeDesc
-          //   }
-          // )
         }
         this.feeDialog.visible = false
       })
@@ -805,14 +817,12 @@ export default {
           const examDescrip = this.examForm.examDesc
           newExam(examName, examDescrip).then(response => {
             console.log('created new exam' + examName + examDescrip)
+            this.list.push({
+              id: response.data.responseMap.result,
+              name: examName,
+              description1: examDescrip
+            })
           })
-          // this.list.push(
-          //   {
-          //     id: 55,
-          //     name: this.examForm.examName,
-          //     description1: this.examForm.examDesc
-          //   }
-          // )
         }
         this.examDialog.visible = false
       })
@@ -847,14 +857,12 @@ export default {
           const vacDescrip = this.vacForm.vacDesc
           newVaccine(vacName, vacDescrip).then(response => {
             console.log('created new vaccine' + vacName + vacDescrip)
+            this.list.push({
+              id: response.data.responseMap.result,
+              name: vacName,
+              description1: vacDescrip
+            })
           })
-          // this.list.push(
-          //   {
-          //     id: 55,
-          //     name: this.vacForm.vacName,
-          //     description1: this.vacForm.vacDesc
-          //   }
-          // )
         }
         this.vacDialog.visible = false
       })
@@ -862,9 +870,16 @@ export default {
     addHosDialogConfirmOnClicked() {
       const hosAnimalName = this.addHosForm.hosAnimalName
       const disease = this.addHosForm.disease
-      const inDate = this.addHosForm.inDate
+      const inDate = dateFormat(this.addHosForm.inDate)
       newHospitalize(hosAnimalName, disease, inDate).then(response => {
         console.log('created new hospitalize' + hosAnimalName + disease + inDate)
+        this.list.push({
+          id: response.data.responseMap.result,
+          name: hosAnimalName,
+          description1: disease,
+          description2: inDate,
+          description3: ''
+        })
       })
       this.addHosDialog.visible = false
     },

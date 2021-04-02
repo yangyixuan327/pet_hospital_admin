@@ -53,7 +53,7 @@
       </el-table-column>
       <el-table-column v-if="tag==='科室管理'" :label="column6" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" @click="onImageClicked(scope.row.id)">图片</el-button>
+          <el-button type="primary" @click="onImageClicked(scope.row.id, )">图片</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="操作" width="200">

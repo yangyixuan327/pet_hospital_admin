@@ -98,6 +98,7 @@
       <el-upload
         class="media-upload"
         :action="postUrl"
+        name="image"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         multiple
@@ -335,8 +336,17 @@ export default {
       this.mediaDialog.contentVisible = true
       this.mediaDialog.title = '病例图片'
       this.uploadTip = '上传图片please，太大了不收'
+      const base_url = 'http://47.101.217.16:8080'
+      if (type === 'jieZhen') {
+        this.postUrl = base_url + '/admin/case/' + caseId + '/consult/image'
+      } else if (type === 'zhenDuan') {
+        this.postUrl = base_url + '/admin/case/' + caseId + '/diag/image'
+      } else if (type === 'zhiLiao') {
+        this.postUrl = base_url + '/admin/case/' + caseId + '/therapy/image'
+      }
       getImageById(caseId, type).then(response => {
         const imageUrl = response.data.responseMap.result.consultImageUrl
+        console.log(imageUrl)
         this.imageUrls = [imageUrl]
       })
     },

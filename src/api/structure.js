@@ -35,15 +35,11 @@ export function getStructureInfo(command) {
   }
 }
 
-export function getImageById(section_id) {
-  const params = {
-    'section_id': section_id
-  }
-  // todo 修改api
+export function getImageById(sectionId) {
   return request({
-    url: '/vue-admin-template/table/list',
+    url: '/admin/structure/section/' + sectionId,
     method: 'get',
-    params
+    sectionId
   })
 }
 

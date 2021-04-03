@@ -53,7 +53,7 @@
       </el-table-column>
       <el-table-column v-if="tag==='科室管理'" :label="column6" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" @click="onImageClicked(scope.row.id, )">图片</el-button>
+          <el-button type="primary" @click="onImageClicked(scope.$index, scope.row.id)">图片</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="操作" width="200">
@@ -131,6 +131,7 @@
       <el-upload
         class="media-upload"
         :action="postUrl"
+        :name="uploadParamName"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         multiple
@@ -300,7 +301,6 @@
 <script>
 import {
   getStructureInfo,
-  getImageById,
   submitSectionWordsDialogResult,
   deleteSectionById,
   deleteMedicineById,
@@ -386,10 +386,9 @@ export default {
         contentVisible: true,
         title: ''
       },
-      imageUrls: [
-        'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
-      ],
+      imageUrls: [],
       postUrl: '',
+      uploadParamName: 'image',
       uploadTip: '',
       fileList: [],
       medicineDialog: {
@@ -480,7 +479,7 @@ export default {
         this.feeDialog.visible = true
         this.feeDialog.title = '创建收费项目'
         this.feeForm.feeName = ''
-        this.feeForm.price = 0.00
+        this.feeForm.price = ''
         this.feeForm.feeDesc = ''
         this.feeDialog.changeMode = 'add'
       } else if (this.tag === '化验项目管理') {
@@ -633,16 +632,16 @@ export default {
         })
       })
     },
-    onImageClicked(case_id, image_urls) {
+    onImageClicked(index, sectionId) {
       this.sectionImageDialog.visible = true
       this.sectionImageDialog.contentVisible = true
       this.sectionImageDialog.title = '科室图片'
       this.uploadTip = '上传图片'
-      console.log('case_id: ' + case_id)
-      console.log('image_urls: ' + image_urls)
-      getImageById(case_id).then(response => {
-        console.log('image open')
-      })
+      this.uploadParamName = 'image'
+      const base_url = 'http://47.101.217.16:8080'
+      this.postUrl = base_url + '/admin/structure/section/' + sectionId + '/image'
+      console.log(index + '' + sectionId)
+      this.imageUrls = [this.list[index].description4]
     },
     addSectionDialogConfirmOnClicked() {
       const params = {

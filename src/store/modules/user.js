@@ -30,12 +30,14 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const {userName, password} = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({userName : userName.trim() , password:password}).then(response => {
         const { data } = response
+        data.token = data.responseMap.result// 临时先设置token为id
         commit('SET_TOKEN', data.token)
         setToken(data.token)
+        console.log(data)
         resolve()
       }).catch(error => {
         reject(error)
@@ -46,7 +48,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo({userId:state.token}).then(response => {
         const { data } = response
 
         if (!data) {

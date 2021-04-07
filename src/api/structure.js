@@ -36,10 +36,9 @@ export function getStructureInfo(command) {
 }
 
 export function getImageById(sectionId) {
-  return request({
+  return request_admin({
     url: '/admin/structure/section/' + sectionId,
-    method: 'get',
-    sectionId
+    method: 'get'
   })
 }
 

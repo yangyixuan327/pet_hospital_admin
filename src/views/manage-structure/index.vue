@@ -117,6 +117,7 @@
       :title="sectionImageDialog.title"
       width="50%"
       center
+      destroy-on-close
       @close="sectionImageDialog.visible = false"
     >
       <div class="case-image" :visible="sectionImageDialog.contentVisible">
@@ -134,8 +135,9 @@
         :name="uploadParamName"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
+        :on-success="handleSuccess"
         multiple
-        :limit="3"
+        :limit="1"
         :on-exceed="handleExceed"
         :file-list="fileList"
       >
@@ -324,7 +326,8 @@ import {
   newFee,
   newExam,
   newVaccine,
-  newHospitalize
+  newHospitalize,
+  getImageById
 } from '@/api/structure'
 
 function dateFormat(time) {
@@ -641,7 +644,13 @@ export default {
       const base_url = 'http://47.101.217.16:8080'
       this.postUrl = base_url + '/admin/structure/section/' + sectionId + '/image'
       console.log(index + '' + sectionId)
-      this.imageUrls = [this.list[index].description4]
+      getImageById(sectionId).then(response => {
+        let imageUrl = ''
+        imageUrl = 'http://' + response.data.responseMap.result.sectionImageUrl
+        console.log(imageUrl)
+        this.imageUrls = [imageUrl]
+        console.log(response.data.responseMap.result)
+      })
     },
     addSectionDialogConfirmOnClicked() {
       const params = {
@@ -926,6 +935,17 @@ export default {
     },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    handleSuccess(response) {
+      if (response.status === 200) {
+        this.$message({
+          message: '上传成功',
+          type: 'success'
+        })
+        console.log(response)
+        // const imageUrl = response.responseMap.result
+        // this.imageUrls = [imageUrl]
+      }
     },
     handleCommand(command) {
       // this.$message('click on item ' + command)

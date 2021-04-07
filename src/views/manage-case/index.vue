@@ -267,6 +267,7 @@ export default {
     },
     wordsDialogConfirmOnClicked() {
       const this_ = this
+      this.wordsDialog.visible = false
       const params = {
         caseId: this.form.caseId,
         caseIndex: this.form.caseIndex,
@@ -325,12 +326,13 @@ export default {
           const caseIndex = params.caseIndex
           if (responseName.data.status === 200 && responseDesc.data.status === 200) {
             this_.$message('更新成功')
-            console.log('update success')
             if (caseIndex != null && caseIndex >= 0) {
-              this.list[caseIndex].caseName = this_.form.caseName
-              this.list[caseIndex].jieZhen = this_.form.jieZhen
-              this.list[caseIndex].zhenDuan = this_.form.zhenDuan
-              this.list[caseIndex].zhiLiao = this_.form.zhiLiao
+              this_.list[caseIndex].caseName = this_.form.caseName
+              this_.list[caseIndex].jieZhen = this_.form.jieZhen
+              this_.list[caseIndex].zhenDuan = this_.form.zhenDuan
+              this_.list[caseIndex].zhiLiao = this_.form.zhiLiao
+            } else {
+              this_.$message('无法更新本地信息 请刷新')
             }
           } else {
             if (responseName.data.status !== 200) {

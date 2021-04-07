@@ -1,134 +1,30 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" style="margin-bottom: 10px;" @click="onCreateNewClicked">新建<i
-      class="el-icon-plus el-icon--right"
-    /></el-button>
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      :span-method="rowSpanMethod"
-      element-loading-text="Loading"
-      border
-      fit
-    >
-      <el-table-column align="center" label="病例ID" width="95">
-        <template slot-scope="scope">
-          {{ scope.row.caseId }}
-        </template>
-      </el-table-column>
-      <el-table-column label="病例名称">
-        <template slot-scope="scope">
-          {{ scope.row.caseName }}
-        </template>
-      </el-table-column>
-      <el-table-column label="接诊">
-        <template slot-scope="scope">
-          <span v-if="scope.row.type==='words'">{{ scope.row.jieZhen }}</span>
-          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.row.caseId, scope.row.jieZhen)">图片</el-button>
-          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.row.caseId, scope.row.jieZhen)">视频</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="诊断方案">
-        <template slot-scope="scope">
-          <span v-if="scope.row.type==='words'">{{ scope.row.zhenDuan }}</span>
-          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.row.caseId, scope.row.zhenDuan)">图片</el-button>
-          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.row.caseId, scope.row.zhenDuan)">视频</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="治疗方案">
-        <template slot-scope="scope">
-          <span v-if="scope.row.type==='words'">{{ scope.row.zhiLiao }}</span>
-          <el-button v-if="scope.row.type==='image'" type="primary" @click="onImageClicked(scope.row.caseId, scope.row.zhiLiao)">图片</el-button>
-          <el-button v-if="scope.row.type==='video'" type="primary" @click="onVideoClicked(scope.row.caseId, scope.row.zhiLiao)">视频</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="操作" width="200">
-        <template slot-scope="scope">
-          <el-button-group>
-            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.row.caseId, scope.$index)"/>
-            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.row.caseId, scope.$index)"/>
-          </el-button-group>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-dialog
-      :visible="wordsDialog.visible"
-      :title="wordsDialog.title"
-      width="50%"
-      center
-      destroy-on-close
-      @close="wordsDialog.visible = false"
-    >
-      <el-form :model="form">
-        <el-form-item label="病例名称" label-width="120px">
-          <el-input v-model="form.caseName" autocomplete="off"/>
-        </el-form-item>
-        <el-form-item label="接诊文字A" label-width="120px">
-          <el-input v-model="form.jieZhen" autocomplete="off"/>
-        </el-form-item>
-        <el-form-item label="诊断文字A" label-width="120px">
-          <el-input v-model="form.zhenDuan" autocomplete="off"/>
-        </el-form-item>
-        <el-form-item label="治疗文字A" label-width="120px">
-          <el-input v-model="form.zhiLiao" autocomplete="off"/>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="wordsDialog.visible = false">取 消</el-button>
-          <el-button type="primary" @click="wordsDialogConfirmOnClicked">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog
-      :visible="mediaDialog.visible"
-      :title="mediaDialog.title"
-      width="50%"
-      center
-      destroy-on-close
-      @close="mediaDialog.visible = false"
-    >
-      <div v-if="mediaDialog.imageVisible" class="case-image" style="width: 90%; height: 90%; margin: 0 auto">
-        <el-image v-for="url in imageUrls" :key="url" :src="url" lazy>
-          <template #error>
-            <div class="image-slot">
-              <i class="el-icon-picture-outline"/>
-            </div>
-          </template>
-        </el-image>
-      </div>
-      <div v-if="mediaDialog.videoVisible" class="case-video" style="width: 90%; height: 90%; margin: 0 auto">
-        <video
-          v-if="videoUrl !== ''"
-          style="width: 100%; height: 100%"
-          :src="videoUrl"
-          controls="controls"
-        />
-      </div>
-      <el-upload
-        class="media-upload"
-        :action="postUrl"
-        :name="uploadParamName"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :on-success="handleUploadSuccess"
-        multiple
-        :limit="1"
-        :on-exceed="handleExceed"
-        :file-list="fileList"
-      >
-        <el-button size="small" type="primary" style="margin-left: auto; margin-top: 40px">点击上传</el-button>
-        <template #tip>
-          <div class="el-upload__tip">{{ uploadTip }}</div>
-        </template>
-      </el-upload>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="mediaDialog.visible = false">取 消</el-button>
-          <el-button type="primary" @click="mediaDialog.visible = false">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <el-dropdown style="margin-bottom: 8px">
+      <el-button type="primary">
+        选择病例类别<i class="el-icon-arrow-down el-icon--right"></i>
+      </el-button>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item>传染病</el-dropdown-item>
+        <el-dropdown-item>寄生虫病</el-dropdown-item>
+        <el-dropdown-item>内科</el-dropdown-item>
+        <el-dropdown-item>外产科疾病</el-dropdown-item>
+        <el-dropdown-item>常用手术</el-dropdown-item>
+        <el-dropdown-item>免疫</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    <el-row :gutter="20">
+      <el-col v-for="item in list" :key="item.caseId" :span="12" style="margin-bottom: 8px">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>{{ item.caseName }}</span>
+          </div>
+          <div>
+            <el-button type="primary" @click="onLearnCaseClicked(item.caseId)">学习该病例</el-button>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -175,56 +71,14 @@ export default {
       this.listLoading = true
       fetchCaseList().then(response => {
         console.log(response.data.responseMap)
-        const result = response.data.responseMap.result
-        const description = response.data.responseMap.descrip
-        const itemCount = response.data.responseMap.count
-        console.log('item count: ' + itemCount)
-        var data = []
-        for (let i = 0; i < result.length; i++) {
-          const item = result[i]
-          data.push({
-            caseId: item.caseId,
-            type: 'words',
-            caseName: item.caseName,
-            jieZhen: description[i][0],
-            zhenDuan: description[i][1],
-            zhiLiao: description[i][2]
-          })
-          data.push({
-            caseId: item.caseId,
-            type: 'image',
-            caseName: item.caseName,
-            jieZhen: 'jieZhen',
-            zhenDuan: 'zhenDuan',
-            zhiLiao: 'zhiLiao'
-          })
-          data.push({
-            caseId: item.caseId,
-            type: 'video',
-            caseName: item.caseName,
-            jieZhen: 'jieZhen',
-            zhenDuan: 'zhenDuan',
-            zhiLiao: 'zhiLiao'
-          })
-        }
-        this.list = data
+        this.list = response.data.responseMap.result
         this.listLoading = false
       })
     },
-    rowSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0 || columnIndex === 1 || columnIndex === 5) {
-        if (rowIndex % 3 === 0) {
-          return {
-            rowspan: 3,
-            colspan: 1
-          }
-        } else {
-          return {
-            rowspan: 0,
-            colspan: 0
-          }
-        }
-      }
+    onLearnCaseClicked(caseId) {
+      this.$router.push({
+        path: '/case_front/detail/caseId/' + caseId
+      })
     },
     onDeleteClicked(caseId, caseIndex) {
       this.$confirm('是否删除？', '删除', {
@@ -415,9 +269,6 @@ export default {
     },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    handleUploadSuccess(res, file) {
-      console.log('upload success')
     }
   }
 }

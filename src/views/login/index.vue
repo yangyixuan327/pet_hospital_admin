@@ -44,10 +44,10 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
-      <div style="margin-top: 0px; margin-bottom: 20px">
-        <el-radio v-model="userType" label="user" border size="medium" class="chooseUser">普通用户</el-radio>
-        <el-radio v-model="userType" label="admin" border size="medium" class="chooseUser">管理员</el-radio>
-      </div>
+<!--      <div style="margin-top: 0px; margin-bottom: 20px">-->
+<!--        <el-radio v-model="userType" label="user" border size="medium" class="chooseUser">普通用户</el-radio>-->
+<!--        <el-radio v-model="userType" label="admin" border size="medium" class="chooseUser">管理员</el-radio>-->
+<!--      </div>-->
 
       <div class="tips">
         <span style="margin-right:20px;">userName: admin</span>

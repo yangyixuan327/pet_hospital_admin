@@ -1,10 +1,11 @@
-import router from './router'
+import router, {asyncRoutes, constantRoutes} from './router'
 import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import {getInfo} from "@/api/user";
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -26,15 +27,31 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
+
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
         next()
       } else {
         try {
           // get user info
-          await store.dispatch('user/getInfo')
+          await store.dispatch('user/getInfo').then(response => {
+            const { role } = response.responseMap.result
+            store.dispatch('permission/generateRoutes', role).then(() => {
+              router.addRoutes(store.getters.accessedRoutes) // 动态添加可访问路由表
+              router.options.routes.push(store.getters.accessedRoutes)
+            })
+            next({...to, replace: true})
+          })
 
-          next()
+          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+          // const { role } = await store.dispatch('user/getInfo')
+          //
+          // // generate accessible routes map based on roles
+          // const accessRoutes = await store.dispatch('permission/generateRoutes', role)
+          // // dynamically add accessible routes
+          // router.addRoutes(accessRoutes)
+          // next({...to, replace: true})
+
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')

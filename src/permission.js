@@ -36,10 +36,9 @@ router.beforeEach(async(to, from, next) => {
           // get user info
           await store.dispatch('user/getInfo').then(response => {
             const { role } = response.responseMap.result
-            store.dispatch('permission/generateRoutes', role).then(() => {
-              router.addRoutes(store.getters.accessedRoutes) // 动态添加可访问路由表
-              router.options.routes.push(store.getters.accessedRoutes)
-            })
+            store.dispatch('permission/generateRoutes', role)
+            router.addRoutes(store.getters.accessedRoutes) // 动态添加可访问路由表
+            router.options.routes = store.getters.accessedRoutes
             next({...to, replace: true})
           })
 

@@ -1,6 +1,7 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import da from "element-ui/src/locale/lang/da";
 
 const getDefaultState = () => {
   return {
@@ -61,6 +62,8 @@ const actions = {
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_ROLE', role)
+        console.log("GetInfo:")
+        console.log(data)
         resolve(data)
       }).catch(error => {
         reject(error)

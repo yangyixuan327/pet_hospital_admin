@@ -1,4 +1,4 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import {asyncRoutes, constantRoutes, userRoutes} from '@/router'
 import { getRoutes} from "@/api/auth";
 
 /**
@@ -6,11 +6,18 @@ import { getRoutes} from "@/api/auth";
  * @param roles
  * @param route
  */
+// function hasPermission(roles, route) {
+//   if (route.meta && route.meta.roles) {
+//     return roles.some(role => route.meta.roles.includes(role))
+//   } else {
+//     return true
+//   }
+// }
 function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
+  if (route.meta && route.meta.role) {
+    return roles.some(role => route.meta.role.indexOf(role) >= 0)
   } else {
-    return true
+    return false
   }
 }
 
@@ -45,18 +52,19 @@ const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
+    state.accessedRoutes = state.routes
   }
 }
 
 const actions = {
-  generateRoutes: async function({ commit }, roles) {
+  generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let res = getRoutes()
       let accessedRoutes // 用于存放可以访问的路由
       if (roles.includes('admin')) { //判断当前角色是否包含admin
         accessedRoutes = res || [] //所有路由都可以被访问
       } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+        accessedRoutes = userRoutes || []
       }
       //提交路由
       commit('SET_ROUTES', accessedRoutes)

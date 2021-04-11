@@ -49,10 +49,10 @@
 <!--        <el-radio v-model="userType" label="admin" border size="medium" class="chooseUser">管理员</el-radio>-->
 <!--      </div>-->
 
-      <div class="tips">
-        <span style="margin-right:20px;">userName: admin</span>
-        <span> password: any</span>
-      </div>
+<!--      <div class="tips">-->
+<!--        <span style="margin-right:20px;">userName: admin</span>-->
+<!--        <span> password: any</span>-->
+<!--      </div>-->
 
     </el-form>
   </div>
@@ -117,7 +117,7 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+            this.$router.push({ path: '/' })
             this.loading = false
           }).catch(() => {
             this.loading = false

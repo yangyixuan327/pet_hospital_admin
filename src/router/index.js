@@ -122,6 +122,7 @@ export const constantRoutes = [
     path: '/case_manage',
     component: Layout,
     name: 'CaseManage',
+    meta: { title: '测试管理', icon: 'form' },
     children: [
       {
         path: 'index',

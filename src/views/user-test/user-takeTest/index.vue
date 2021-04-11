@@ -81,8 +81,8 @@ export default {
     },
     onclick(exam_id, exam_index) {
       this.$router.push({
-        path: 'yourPath',
-        name: '要跳转的路径的 name,在 router 文件夹下的 index.js 文件内找',
+        path: '/test_user/inTest',
+        // name: '要跳转的路径的 name,在 router 文件夹下的 index.js 文件内找',
         params: {
           key: 'key',
           msgKey: this.msg

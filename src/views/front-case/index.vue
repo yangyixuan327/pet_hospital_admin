@@ -70,7 +70,6 @@ export default {
     fetchData() {
       this.listLoading = true
       fetchCaseList().then(response => {
-        console.log(response.data.responseMap)
         this.list = response.data.responseMap.result
         this.listLoading = false
       })

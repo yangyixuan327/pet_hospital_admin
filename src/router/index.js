@@ -166,7 +166,9 @@ export const constantRoutes = [
       {
         path: 'caseId/:caseId',
         name: 'CaseDetailInner',
-        component: () => import('@/views/front-case/detail')
+        component: () => import('@/views/front-case/detail'),
+        meta: { title: '病例详情' },
+        breadcrumb: true
       }
     ]
   },

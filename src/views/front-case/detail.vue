@@ -128,21 +128,33 @@ export default {
       const caseId = this.caseId
       fetchCaseZhenDuan(caseId).then(response => {
         this.zhenDuan.videoUrl = 'https://v-cdn.zjol.com.cn/280443.mp4'
-        this.zhenDuan.imageUrl = 'http://' + response.data.responseMap.result.diagImageUrl
+        if (response.data.responseMap.result.diagImageUrl !== null) {
+          this.zhenDuan.imageUrl = 'http://' + response.data.responseMap.result.diagImageUrl
+        } else {
+          this.zhenDuan.imageUrl = ''
+        }
         this.zhenDuan.description = response.data.responseMap.result.diagDescrip
         this.zhenDuan.id = response.data.responseMap.result.caseDiagId
         this.listLoading = false
       })
       fetchCaseJieZhen(caseId).then(response => {
         this.jieZhen.videoUrl = 'https://v-cdn.zjol.com.cn/280443.mp4'
-        this.jieZhen.imageUrl = 'http://' + response.data.responseMap.result.consultImageUrl
+        if (response.data.responseMap.result.consultImageUrl !== null) {
+          this.jieZhen.imageUrl = 'http://' + response.data.responseMap.result.consultImageUrl
+        } else {
+          this.jieZhen.imageUrl = ''
+        }
         this.jieZhen.description = response.data.responseMap.result.consultDescrip
         this.jieZhen.id = response.data.responseMap.result.caseConsultId
         this.listLoading = false
       })
       fetchCaseZhiLiao(caseId).then(response => {
         this.zhiLiao.videoUrl = 'https://v-cdn.zjol.com.cn/280443.mp4'
-        this.zhiLiao.imageUrl = 'http://' + response.data.responseMap.result.therapyImageUrl
+        if (response.data.responseMap.result.therapyImageUrl !== null) {
+          this.zhiLiao.imageUrl = 'http://' + response.data.responseMap.result.therapyImageUrl
+        } else {
+          this.zhiLiao.imageUrl = ''
+        }
         this.zhiLiao.description = response.data.responseMap.result.therapyDescrip
         this.zhiLiao.id = response.data.responseMap.result.caseTherapyId
         this.listLoading = false

@@ -4,15 +4,15 @@
       <el-col :span="6">
         <el-dropdown style="margin-bottom: 8px" @command="handleCommand">
           <el-button type="primary">
-            选择病例类别<i class="el-icon-arrow-down el-icon--right"></i>
+            {{ dropdownTitle }}<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>传染病</el-dropdown-item>
-            <el-dropdown-item>寄生虫病</el-dropdown-item>
-            <el-dropdown-item>内科</el-dropdown-item>
-            <el-dropdown-item>外产科疾病</el-dropdown-item>
-            <el-dropdown-item>常用手术</el-dropdown-item>
-            <el-dropdown-item>免疫</el-dropdown-item>
+            <el-dropdown-item command="传染病">传染病</el-dropdown-item>
+            <el-dropdown-item command="寄生虫病">寄生虫病</el-dropdown-item>
+            <el-dropdown-item command="内科">内科</el-dropdown-item>
+            <el-dropdown-item command="外产科疾病">外产科疾病</el-dropdown-item>
+            <el-dropdown-item command="常用手术">常用手术</el-dropdown-item>
+            <el-dropdown-item command="免疫">免疫</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
@@ -44,6 +44,7 @@
 
 <script>
 import { fetchCaseList } from '@/api/case'
+import { fetchCaseBySearch, fetchCaseByType } from '@/api/case_front'
 
 export default {
   data() {
@@ -75,7 +76,8 @@ export default {
       uploadTip: '',
       uploadParamName: 'image',
       fileList: [],
-      searchText: ''
+      searchText: '',
+      dropdownTitle: '选择病例类别'
     }
   },
   created() {
@@ -87,6 +89,7 @@ export default {
       fetchCaseList().then(response => {
         this.list = response.data.responseMap.result
         this.listLoading = false
+        this.dropdownTitle = '选择病例类别'
       })
     },
     onLearnCaseClicked(caseId) {
@@ -95,10 +98,20 @@ export default {
       })
     },
     onSearchClicked() {
-      console.log('onSearch: ' + this.searchText)
+      this.listLoading = true
+      fetchCaseBySearch(this.searchText).then(response => {
+        this.list = response.data.responseMap.result
+        this.listLoading = false
+        this.dropdownTitle = '选择病例类别'
+      })
     },
     handleCommand(command) {
-      console.log('click on item ' + command)
+      this.listLoading = true
+      fetchCaseByType(command).then(response => {
+        this.list = response.data.responseMap.result
+        this.listLoading = false
+        this.dropdownTitle = command
+      })
     }
   }
 }

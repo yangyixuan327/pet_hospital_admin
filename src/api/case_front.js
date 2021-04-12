@@ -20,3 +20,20 @@ export function fetchCaseZhiLiao(caseId) {
     method: 'get'
   })
 }
+
+export function fetchCaseBySearch(searchText) {
+  return request_admin({
+    url: '/admin/case/search',
+    method: 'get',
+    params: {
+      searchParam: searchText
+    }
+  })
+}
+
+export function fetchCaseByType(type) {
+  return request_admin({
+    url: '/admin/case/tag/' + type,
+    method: 'get',
+  })
+}

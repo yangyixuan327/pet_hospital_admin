@@ -163,6 +163,7 @@ export const constantRoutes = [
     path: '/case_front/detail/',
     name: 'CaseDetail',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: 'caseId/:caseId',

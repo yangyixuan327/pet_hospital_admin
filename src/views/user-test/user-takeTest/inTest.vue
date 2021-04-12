@@ -33,12 +33,29 @@
         <el-button type="primary" icon="el-icon-check" @click="onSubmitClicked">提交试卷</el-button>
       </el-row>
     </el-main>
+    <el-dialog
+      :visible="submitAnswerDialog.visible"
+      :title="submitAnswerDialog.title"
+      width="50%"
+      center
+      @close="submitAnswerDialog.visible = false"
+    >
+      <div style="margin: 0 auto; text-align: center">
+        <span>确认提交？<br>该操作不可回退！</span>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="submitAnswerDialogConfirmOnClicked">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </el-container>
 </template>
 
 <script>
 import {
-  getQuestionList
+  getQuestionList,
+  submitAnswer
 } from '@/api/test/inTest'
 
 export default {
@@ -46,7 +63,11 @@ export default {
     return {
       tests: null,
       judgeOption: ['True', 'False'],
-      choiceOption: ['A', 'B', 'C', 'D']
+      choiceOption: ['A', 'B', 'C', 'D'],
+      submitAnswerDialog: {
+        visible: false,
+        title: ''
+      }
     }
   },
   created() {
@@ -56,6 +77,7 @@ export default {
       const questionList = []
       for (let i = 0; i < resultList.length; i++) {
         questionList.push({
+          id: resultList[i].quesId != null ? resultList[i].descrip : 0,
           title: resultList[i].descrip != null ? resultList[i].descrip : '',
           type: resultList[i].type != null ? resultList[i].type : '',
           answer: resultList[i].answer != null ? resultList[i].answer : ''
@@ -66,7 +88,27 @@ export default {
   },
   methods: {
     onSubmitClicked() {
-    //  to do
+      this.submitAnswerDialog.title = '提示'
+      this.submitAnswerDialog.visible = true
+    },
+    submitAnswerDialogConfirmOnClicked() {
+      const result = []
+      const tempList = this.tests
+      for (let i = 0; i < tempList.length; i++) {
+        result.push({
+          quesId: tempList[i].id,
+          answer: tempList[i].answer
+        })
+      }
+      submitAnswer(result).then(response => {
+        if (response.data.status === '200') {
+          this.$message({
+            type: 'success',
+            message: '提交成功！'
+          })
+          this.$alert('提交成功')
+        }
+      })
     }
   }
 }

@@ -9,3 +9,12 @@ export function getQuestionList() {
     params: null
   })
 }
+
+export function submitAnswer(params) {
+  return request_admin({
+  //  to do: 对接后端
+  //   url: '/admin/structure/hospitalize/',
+  //   method: 'post',
+  //   data: params
+  })
+}

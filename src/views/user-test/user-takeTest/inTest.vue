@@ -6,7 +6,7 @@
           <div class="grid-content bg-purple">
             <div v-for="(test, index) in tests" :key="index">
               <p>{{ index + 1 }}.{{ test.title }}</p>
-              <el-radio-group v-if="test.type == '选择题'" v-model="test.answer">
+              <el-radio-group v-if="test.type === 'select'" v-model="test.answer">
                 <!-- label绑定答案的值,可以绑定索引index,也可以绑定答案内容option -->
                 <el-radio
                   v-for="(option,index) in choiceOption"
@@ -14,14 +14,14 @@
                   :label="index"
                 >{{ option }}</el-radio>
               </el-radio-group>
-              <el-radio-group v-else-if="test.type == '判断题'" v-model="test.answer">
+              <el-radio-group v-else-if="test.type === 'judge'" v-model="test.answer">
                 <el-radio
                   v-for="(option,index) in judgeOption"
                   :key="index"
                   :label="index"
                 >{{ option }}</el-radio>
               </el-radio-group>
-              <div v-else-if="test.type == '简答题'">
+              <div v-else-if="test.type === 'qa'">
                 <el-input v-model="test.answer" type="textarea" :rows="2" placeholder="请输入内容" />
               </div>
             </div>

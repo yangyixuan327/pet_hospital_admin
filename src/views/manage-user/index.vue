@@ -168,6 +168,7 @@ export default {
           this.editDialog.changeMode = 'add'
       },
       onEditClicked(row, index) {
+          this.form.userId = row.userId,
           this.form.index = index
           this.form.name = row.name
           this.form.account = row.account
@@ -178,7 +179,6 @@ export default {
           else{
               this.form.role = false
           }
-
           this.editDialog.title = '修改账户'
           this.editDialog.visible = true
           this.editDialog.changeMode = 'update'
@@ -209,6 +209,12 @@ export default {
           });
         },
       editDialogConfirmOnClicked(index) {
+          if (this.form.role===true){
+              this.form.role = "admin"
+          }
+          else{
+              this.form.role = "user"
+          }
         const params = {
           name: this.form.name,
           account: this.form.account,
@@ -220,17 +226,12 @@ export default {
         submitEditDialogResult(params).then(response => {
           const index = this.form.index
           const changeMode = this.editDialog.changeMode
-          if (this.form.role === true){
-              this.form.role = "admin"
-          }
-          else{
-              this.form.role = "user"
-          }
           const temp = {
               name: this.form.name,
               account: this.form.account,
               password: this.form.password,
-              role: this.form.role
+              role: this.form.role,
+              userId:this.form.userId
           };
           if (changeMode === 'update') {
             if (index != null && index >= 0) {
@@ -239,6 +240,7 @@ export default {
               this.list[index].password = this.form.password
               this.list[index].role = this.form.role
               updateUser(temp).then(response => {
+                  console.log(response)
                   console.log("Updated user" + temp)
               })
 

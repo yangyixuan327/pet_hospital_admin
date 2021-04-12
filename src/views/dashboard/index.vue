@@ -1,15 +1,15 @@
 <template>
   <div class="dashboard-container">
 <!--    <div class="dashboard-text">Hello 你今天开心吗? {{ name }}</div>-->
-    <el-carousel :interval="4000" type="card" height="600px">
+    <el-carousel :interval="4000" type="card" height="500px">
       <el-carousel-item v-for="item in 3" :key="item">
         <h3 class="medium"> <a href="https://sm.ms/image/TIGRwKFNqbMn5QX" target="_blank"><img src="https://i.loli.net/2021/04/12/TIGRwKFNqbMn5QX.png" ></a></h3>
       </el-carousel-item>
     </el-carousel>
-    <el-row type="flex" justify="end">
+    <el-row type="flex" :gutter="20" justify="end" >
       <el-col ><el-button class = "big_button" type="primary" >3D医院导览</el-button></el-col>
-      <el-col ><el-button class = "big_button" type="success" >病例学习</el-button></el-col>
-      <el-col ><el-button class = "big_button" type="warning" >参加考试</el-button></el-col>
+      <el-col ><el-button class = "big_button" type="success" @click="$router.replace({name:'CaseFrontInner'})">病例学习</el-button></el-col>
+      <el-col ><el-button class = "big_button" type="warning" @click="$router.replace({name:'TakeTest'})">参加考试</el-button></el-col>
     </el-row>
   </div>
 </template>
@@ -40,9 +40,8 @@ export default {
   }
 }
   .big_button{
-    height: 300px;
-    width:  400px;
-    margin-left: 150px;
+    height: 600%;
+    width:  100%;
   }
   .el-carousel__item {
     width: 100%;

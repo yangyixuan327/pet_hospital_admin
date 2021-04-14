@@ -100,6 +100,8 @@ export default {
           answer: tempList[i].answer
         })
       }
+      const testId = this.$route.params.id
+      console.log(testId)
       submitAnswer(result).then(response => {
         if (response.data.status === '200') {
           this.$message({

@@ -14,10 +14,10 @@ import { getRoutes} from "@/api/auth";
 //   }
 // }
 function hasPermission(roles, route) {
-  if (route.meta && route.meta.role) {
-    return roles.some(role => route.meta.role.indexOf(role) >= 0)
+  if (route.meta && route.meta.roles) {
+    return roles.some(role => route.meta.roles.includes(role))
   } else {
-    return false
+    return true
   }
 }
 
@@ -62,9 +62,10 @@ const actions = {
       let res = getRoutes()
       let accessedRoutes // 用于存放可以访问的路由
       if (roles.includes('admin')) { //判断当前角色是否包含admin
-        accessedRoutes = res || [] //所有路由都可以被访问
+        accessedRoutes = res
       } else {
-        accessedRoutes = userRoutes || []
+        // accessedRoutes = userRoutes || []
+        accessedRoutes = filterAsyncRoutes(asyncRoutes,["user"])
       }
       //提交路由
       commit('SET_ROUTES', accessedRoutes)

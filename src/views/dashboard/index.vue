@@ -1,13 +1,12 @@
 <template>
   <div class="dashboard-container">
-<!--    <div class="dashboard-text">Hello 你今天开心吗? {{ name }}</div>-->
-    <el-carousel :interval="4000" type="card" height="500px">
+    <el-carousel :interval="4000" type="card" :height="height">
       <el-carousel-item v-for="item in 3" :key="item">
         <h3 class="medium"> <a href="https://sm.ms/image/TIGRwKFNqbMn5QX" target="_blank"><img src="https://i.loli.net/2021/04/12/TIGRwKFNqbMn5QX.png" ></a></h3>
       </el-carousel-item>
     </el-carousel>
     <el-row type="flex" :gutter="20" justify="end" >
-      <el-col ><el-button class = "big_button" type="primary" >3D医院导览</el-button></el-col>
+      <el-col ><el-button class = "big_button" type="primary" @click="$router.replace({name:'HospitalNavigation'})">3D医院导览</el-button></el-col>
       <el-col ><el-button class = "big_button" type="success" @click="$router.replace({name:'CaseFrontInner'})">病例学习</el-button></el-col>
       <el-col ><el-button class = "big_button" type="warning" @click="$router.replace({name:'TakeTest'})">参加考试</el-button></el-col>
     </el-row>
@@ -23,7 +22,10 @@ export default {
       ...mapGetters([
         'name'
       ])
-  }
+  },
+    beforeMount:function(){
+        this.height = $(window).width()*664/1920 + 'px';
+    },
 }
 
 </script>
@@ -31,7 +33,7 @@ export default {
 <style lang="scss" scoped>
 .dashboard {
   &-container {
-    margin: 30px;
+    margin:2%;
     font-family: "微软雅黑";
   }
   &-text {

@@ -34,7 +34,7 @@
             <span>{{ item.caseName }}</span>
           </div>
           <div>
-            <el-button type="primary" @click="onLearnCaseClicked(item.caseId)">学习该病例</el-button>
+            <el-button class = "learn_btn" type="primary" @click="onLearnCaseClicked(item.caseId)">学习该病例</el-button>
           </div>
         </el-card>
       </el-col>
@@ -116,3 +116,9 @@ export default {
   }
 }
 </script>
+<style>
+  .learn_btn{
+    float: right;
+    margin-bottom: 2%;
+  }
+</style>

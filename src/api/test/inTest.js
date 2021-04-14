@@ -1,20 +1,18 @@
 // import request from '@/utils/request'
 import request_admin from '@/utils/request_admin'
 
-export function getQuestionList() {
-  // to do: 修改requst_admin
+export function getQuestionList(testOptionId, userId) {
   return request_admin({
-    url: '/admin/test/question',
-    method: 'get',
-    params: null
+    url: '/exam/' + testOptionId + '/user/' + userId,
+    method: 'put'
   })
 }
 
-export function submitAnswer(params) {
+export function submitAnswer(testId, result) {
   return request_admin({
   //  to do: 对接后端
-  //   url: '/admin/structure/hospitalize/',
-  //   method: 'post',
-  //   data: params
+    url: '/exam/' + testId + '/submit',
+    method: 'post',
+    data: result
   })
 }

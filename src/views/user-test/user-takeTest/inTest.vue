@@ -67,25 +67,39 @@ export default {
       submitAnswerDialog: {
         visible: false,
         title: ''
-      }
+      },
+      testId: -1
     }
   },
   created() {
-    const testId = this.$route.query.id
-    console.log(testId)
-    getQuestionList().then(response => {
-      const resultList = response.data.responseMap.result
-      console.log(resultList)
-      const questionList = []
-      for (let i = 0; i < resultList.length; i++) {
-        questionList.push({
-          id: resultList[i].quesId != null ? resultList[i].descrip : 0,
-          title: resultList[i].descrip != null ? resultList[i].descrip : '',
-          type: resultList[i].type != null ? resultList[i].type : '',
-          answer: resultList[i].answer != null ? resultList[i].answer : ''
-        })
+    // this.testId = this.$route.query.id
+    console.log(this.testId)
+    getQuestionList(7, 6).then(response => {
+      console.log(response)
+      if (response.data.status === 400) {
+        this.$message('你已经进行过该考试！请更换考试！')
+      } else if (response.data.status === 200) {
+        let resultList = []
+        resultList = response.data.responseMap.result
+        this.testId = response.data.responseMap.testId
+        console.log(resultList)
+        const questionList = []
+        for (let i = 0; i < resultList.length; i++) {
+          questionList.push({
+            id: resultList[i].quesId != null ? resultList[i].quesId : 0,
+            title: resultList[i].descrip != null ? resultList[i].descrip : '',
+            type: resultList[i].type != null ? resultList[i].type : '',
+            rightAnswer: resultList[i].answer != null ? resultList[i].answer : '',
+            score: resultList[i].score != null ? resultList[i].score : '',
+            tag: resultList[i].tag != null ? resultList[i].tag : '',
+            image: '',
+            answer: ''
+          })
+        }
+        this.tests = questionList
+      } else {
+        this.$message('Something Went Wrong...')
       }
-      this.tests = questionList
     })
   },
   methods: {
@@ -98,18 +112,17 @@ export default {
       const tempList = this.tests
       for (let i = 0; i < tempList.length; i++) {
         result.push({
-          quesId: tempList[i].id,
+          quesId: tempList[i].quesId,
           answer: tempList[i].answer
         })
       }
-
-      submitAnswer(result).then(response => {
+      submitAnswer(this.testId, result).then(response => {
+        console.log(response)
         if (response.data.status === '200') {
           this.$message({
             type: 'success',
-            message: '提交成功！'
+            message: '提交成功！分数为：'
           })
-          this.$alert('提交成功')
         }
       })
     }

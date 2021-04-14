@@ -71,6 +71,8 @@ export default {
     }
   },
   created() {
+    const testId = this.$route.query.id
+    console.log(testId)
     getQuestionList().then(response => {
       const resultList = response.data.responseMap.result
       console.log(resultList)
@@ -100,8 +102,7 @@ export default {
           answer: tempList[i].answer
         })
       }
-      const testId = this.$route.params.id
-      console.log(testId)
+
       submitAnswer(result).then(response => {
         if (response.data.status === '200') {
           this.$message({

@@ -55,15 +55,14 @@
       :title="showScoreDialog.title"
       width="50%"
       center
-      @close="showScoreDialog.visible = false"
+      @close="showScoreDialogConfirmOnClicked"
     >
       <div style="margin: 0 auto; text-align: center">
-        <span>提交成功！您获得的分数为：<br> </span>
-        <span>{{ resultScore }}</span>
+        <span>提交成功！<br>请前往查看结果页面查看成绩</span>
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button type="primary" @click="showScoreDialogConfirmOnClicked">返 回 首 页</el-button>
+          <el-button type="primary" @click="showScoreDialogConfirmOnClicked">查 看 结 果</el-button>
         </span>
       </template>
     </el-dialog>
@@ -172,20 +171,18 @@ export default {
       console.log(result)
       submitAnswer(this.testId, result).then(response => {
         console.log(response)
+        const tempScore = response.data.responseMap.result
+        console.log(tempScore)
         if (response.data.status === '200') {
-          this.$message({
-            type: 'success',
-            message: '提交成功！'
-          })
+          this.resultScore = tempScore
         }
-        this.resultScore = 6666
       })
       this.submitAnswerDialog.visible = false
       this.showScoreDialog.visible = true
     },
     showScoreDialogConfirmOnClicked() {
       this.$router.push({
-        path: '/test_user/take_test',
+        path: '/test_user/check_result',
         query: {}
       })
     }

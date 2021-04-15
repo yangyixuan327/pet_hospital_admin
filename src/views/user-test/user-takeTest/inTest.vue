@@ -45,7 +45,25 @@
       </div>
       <template #footer>
         <span class="dialog-footer">
+          <el-button @click="submitAnswerDialog.visible = false">取消</el-button>
           <el-button type="primary" @click="submitAnswerDialogConfirmOnClicked">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog
+      :visible="showScoreDialog.visible"
+      :title="showScoreDialog.title"
+      width="50%"
+      center
+      @close="showScoreDialog.visible = false"
+    >
+      <div style="margin: 0 auto; text-align: center">
+        <span>提交成功！您获得的分数为：<br> </span>
+        <span>{{ resultScore }}</span>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="showScoreDialogConfirmOnClicked">返 回 首 页</el-button>
         </span>
       </template>
     </el-dialog>
@@ -68,7 +86,12 @@ export default {
         visible: false,
         title: ''
       },
-      testId: -1
+      testId: -1,
+      showScoreDialog: {
+        visible: false,
+        title: ''
+      },
+      resultScore: 0
     }
   },
   created() {
@@ -152,11 +175,19 @@ export default {
         if (response.data.status === '200') {
           this.$message({
             type: 'success',
-            message: '提交成功！分数为：'
+            message: '提交成功！'
           })
         }
+        this.resultScore = 6666
       })
       this.submitAnswerDialog.visible = false
+      this.showScoreDialog.visible = true
+    },
+    showScoreDialogConfirmOnClicked() {
+      this.$router.push({
+        path: '/test_user/take_test',
+        query: {}
+      })
     }
   }
 }

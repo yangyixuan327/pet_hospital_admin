@@ -56,6 +56,12 @@ function dateFormat(time) {
   return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
 }
 
+function sleep(ms) {
+  return new Promise(resolve =>
+    setTimeout(resolve, ms)
+  )
+}
+
 export default {
   data() {
     return {
@@ -85,15 +91,19 @@ export default {
         }
       })
       getTestOption(this.userId).then(response => {
-        let tempList = []
-        tempList = response.data.responseMap.result
-        for (let i = 0; i < tempList.length; i++) {
-          for (let j = 0; j < this.list.length; j++) {
-            if (this.list[j].testOptionId === tempList[i].testOptionId) {
-              this.list[j].name = tempList[i].testOptionName
+        this.listLoading = true
+        sleep(200).then(() => {
+          this.listLoading = false
+          let tempList = []
+          tempList = response.data.responseMap.result
+          for (let i = 0; i < tempList.length; i++) {
+            for (let j = 0; j < this.list.length; j++) {
+              if (this.list[j].testOptionId === tempList[i].testOptionId) {
+                this.list[j].name = tempList[i].testOptionName
+              }
             }
           }
-        }
+        })
       })
     }
   }

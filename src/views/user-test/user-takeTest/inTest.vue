@@ -75,7 +75,7 @@ export default {
     // this.testId = this.$route.query.id
     console.log(this.testId)
     getQuestionList(7, 6).then(response => {
-      console.log(response)
+      console.log(response.data.status)
       if (response.data.status === 400) {
         this.$message('你已经进行过该考试！请更换考试！')
       } else if (response.data.status === 200) {
@@ -110,12 +110,43 @@ export default {
     submitAnswerDialogConfirmOnClicked() {
       const result = []
       const tempList = this.tests
+      let tempId = -1
+      let tempAnswer = -1
+      let resultAnswer = ''
+      let tempType = ''
       for (let i = 0; i < tempList.length; i++) {
-        result.push({
-          quesId: tempList[i].quesId,
-          answer: tempList[i].answer
-        })
+        tempId = tempList[i].id
+        result.push(tempId.toString())
+        tempAnswer = tempList[i].answer
+        tempType = tempList[i].type
+        if (tempType === 'select') {
+          if (tempAnswer === 0) {
+            resultAnswer = 'A'
+          } else if (tempAnswer === 1) {
+            resultAnswer = 'B'
+          } else if (tempAnswer === 2) {
+            resultAnswer = 'C'
+          } else if (tempAnswer === 3) {
+            resultAnswer = 'D'
+          } else {
+            resultAnswer = ''
+          }
+        } else if (tempType === 'judge') {
+          if (tempAnswer === 0) {
+            resultAnswer = '1'
+          } else if (tempAnswer === 1) {
+            resultAnswer = '0'
+          } else {
+            resultAnswer = '-1'
+          }
+        } else if (tempType === 'qa') {
+          resultAnswer = tempList[i].answer
+        } else {
+          resultAnswer = ''
+        }
+        result.push(resultAnswer)
       }
+      console.log(result)
       submitAnswer(this.testId, result).then(response => {
         console.log(response)
         if (response.data.status === '200') {
@@ -125,6 +156,7 @@ export default {
           })
         }
       })
+      this.submitAnswerDialog.visible = false
     }
   }
 }

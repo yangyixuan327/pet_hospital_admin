@@ -8,11 +8,10 @@ export function getQuestionList(testOptionId, userId) {
   })
 }
 
-export function submitAnswer(testId, result) {
+export function submitAnswer(testId, params) {
   return request_admin({
-  //  to do: 对接后端
     url: '/exam/' + testId + '/submit',
     method: 'post',
-    data: result
+    data: params
   })
 }

@@ -10,27 +10,27 @@
     >
       <el-table-column align="center" label="考试ID" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.row.testOptionId }}
         </template>
       </el-table-column>
       <el-table-column label="考试名称">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.testOptionName }}
         </template>
       </el-table-column>
       <el-table-column label="开始时间" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.pageviews }}</span>
+          <span>{{ scope.row.startDate }}</span>
         </template>
       </el-table-column>
       <el-table-column label="时长" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          {{ scope.row.duration }}
         </template>
       </el-table-column>
       <el-table-column label="总分" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          {{ scope.row.totalScore }}
         </template>
       </el-table-column>
 
@@ -47,12 +47,14 @@
 
 <script>
 
-import { getList } from '@/api/table'
+// import { getList } from '@/api/table'
 import router from "@/router";
+import {getTestOptionByUserId} from "@/api/test/inTest";
 
 export default {
   data() {
     return {
+      userId: this.$store.getters.token,
       list: null,
       listLoading: true,
       wordsDialog: {
@@ -73,10 +75,12 @@ export default {
   },
   methods: {
     fetchData() {
+
       this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
+      getTestOptionByUserId(this.userId).then(response => {
+        this.list = response.data.responseMap.result
         this.listLoading = false
+        console.log(this.list)
       })
     },
     onclick(exam_id, exam_index) {

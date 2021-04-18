@@ -34,10 +34,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="created_at" label="操作" width="200">
+      <el-table-column align="center" prop="created_at" label="进入考试" width="200">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button type="primary" icon="el-icon-reading" @click="onclick(scope.$index, scope.$index)"/>
+            <el-button type="primary" icon="el-icon-reading" @click="onclick(scope.row.testOptionId, scope.$index)"/>
           </el-button-group>
         </template>
       </el-table-column>

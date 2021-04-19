@@ -74,6 +74,7 @@ import {
   getQuestionList,
   submitAnswer
 } from '@/api/test/inTest'
+import store from '@/store'
 
 export default {
   data() {
@@ -86,6 +87,8 @@ export default {
         title: ''
       },
       testId: -1,
+      testOptionId: -1,
+      userId: store.getters.token,
       showScoreDialog: {
         visible: false,
         title: ''
@@ -94,9 +97,9 @@ export default {
     }
   },
   created() {
-    // this.testId = this.$route.query.id
-    console.log(this.testId)
-    getQuestionList(7, 6).then(response => {
+    this.testOptionId = this.$route.query.id
+    console.log(this.testOptionId)
+    getQuestionList(this.testOptionId, this.userId).then(response => {
       console.log(response.data.status)
       if (response.data.status === 400) {
         this.$message('你已经进行过该考试！请更换考试！')

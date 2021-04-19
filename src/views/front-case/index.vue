@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="listLoading">
     <el-row style="margin-bottom: 10px">
       <el-col :span="6">
         <el-dropdown style="margin-bottom: 8px" @command="handleCommand">

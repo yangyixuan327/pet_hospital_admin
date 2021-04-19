@@ -119,6 +119,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('app/toggleSideBar')
     this.caseId = this.$route.params.caseId
     console.log(this.caseId)
     this.fetchData()

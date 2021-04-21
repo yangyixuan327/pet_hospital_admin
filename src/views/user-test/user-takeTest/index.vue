@@ -37,7 +37,7 @@
       <el-table-column align="center" prop="created_at" label="进入考试" width="200">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button type="primary" icon="el-icon-reading" @click="onclick(scope.row.testOptionId, scope.$index)"/>
+            <el-button type="primary" icon="el-icon-reading" :disabled="scope.row.isButtonDisabled" @click="onclick(scope.row.testOptionId, scope.$index)" />
           </el-button-group>
         </template>
       </el-table-column>
@@ -48,14 +48,20 @@
 <script>
 
 // import { getList } from '@/api/table'
-import router from "@/router";
-import {getTestOptionByUserId} from "@/api/test/inTest";
+import { getTestOptionByUserId } from '@/api/test/inTest'
+import { getTestList } from '@/api/test/checkResult'
+
+function sleep(ms) {
+  return new Promise(resolve =>
+    setTimeout(resolve, ms)
+  )
+}
 
 export default {
   data() {
     return {
       userId: this.$store.getters.token,
-      list: null,
+      list: [],
       listLoading: true,
       wordsDialog: {
         visible: false,
@@ -72,15 +78,40 @@ export default {
   },
   created() {
     this.fetchData()
+    sleep(200).then(() => {
+      this.changeButtonMode()
+    })
   },
   methods: {
     fetchData() {
-
       this.listLoading = true
       getTestOptionByUserId(this.userId).then(response => {
-        this.list = response.data.responseMap.result
-        this.listLoading = false
-        console.log(this.list)
+        const tempList = response.data.responseMap.result
+        for (let i = 0; i < tempList.length; i++) {
+          this.list.push({
+            testOptionId: tempList[i].testOptionId,
+            testOptionName: tempList[i].testOptionName,
+            startDate: tempList[i].startDate,
+            duration: tempList[i].duration,
+            totalScore: tempList[i].totalScore,
+            isButtonDisabled: false
+          })
+        }
+      })
+      this.listLoading = false
+    },
+    changeButtonMode() {
+      getTestList(this.userId).then(response => {
+        let tempList = []
+        tempList = response.data.responseMap.result
+        for (let i = 0; i < tempList.length; i++) {
+          for (let j = 0; j < this.list.length; j++) {
+            if (this.list[j].testOptionId === tempList[i].testOptionId) {
+              console.log('disabled: ' + this.list[j].testOptionId + ' successfully')
+              this.list[j].isButtonDisabled = true
+            }
+          }
+        }
       })
     },
     onclick(exam_id, exam_index) {
@@ -89,7 +120,7 @@ export default {
         query: {
           id: exam_id
         }
-        /*query: {
+        /* query: {
             key: 'key',
             msgKey: this.msg
         }*/

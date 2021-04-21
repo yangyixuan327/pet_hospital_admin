@@ -112,51 +112,11 @@ export default {
   methods: {
     fetchData() {
         this.listLoading = false
-      // async getList() {
-      //       this.listLoading = true
-      //       const { data } = await fetchList(this.listQuery)
-      //       const items = data.items
-      //       this.list = items.map(v => {
-      //         this.$set(v, 'edit', false) //
-      //         v.originalTitle = v.title //  will be used when user click the cancel botton
-      //         return v
-      //       })
-      //       this.listLoading = false
-      //     },
-      //   fetchData() {
-      //     this.listLoading = true
-      //     getUserList().then(response => {
-      //       this.list = response.data.items
-      //       this.listLoading = false
-      //     })
-      //   }
         getList().then(response => {
           console.log(response)
           this.list = response.data.responseMap.result
           this.listLoading = false
         })
-        //     const data = [{
-        //         userId: 1,
-        //         name: 'LYX',
-        //         account: 'admin123',
-        //         password: '111111',
-        //         role: 'admin',
-        //     }, {
-        //         userId: 2,
-        //         name: 'GXW',
-        //         account: 'admin456',
-        //         password: '222222',
-        //         role: 'admin',
-        //     },{
-        //         userId: 3,
-        //         name: 'YFF',
-        //         account: 'user123',
-        //         password: '333333',
-        //         role: 'user',
-        //     }]
-        //     this.list = data
-        //     this.listLoading = false
-        // })
     },
       onCreateNewClicked() {
           this.editDialog.visible = true

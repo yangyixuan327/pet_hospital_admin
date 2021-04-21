@@ -1,85 +1,166 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Activity name">
-        <el-input v-model="form.name" />
-      </el-form-item>
-      <el-form-item label="Activity zone">
-        <el-select v-model="form.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Activity time">
-        <el-col :span="11">
-          <el-date-picker v-model="form.date1" type="date" placeholder="Pick a date" style="width: 100%;" />
-        </el-col>
-        <el-col :span="2" class="line">-</el-col>
-        <el-col :span="11">
-          <el-time-picker v-model="form.date2" type="fixed-time" placeholder="Pick a time" style="width: 100%;" />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="Instant delivery">
-        <el-switch v-model="form.delivery" />
-      </el-form-item>
-      <el-form-item label="Activity type">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="Online activities" name="type" />
-          <el-checkbox label="Promotion activities" name="type" />
-          <el-checkbox label="Offline activities" name="type" />
-          <el-checkbox label="Simple brand exposure" name="type" />
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="Resources">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="Sponsor" />
-          <el-radio label="Venue" />
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="Activity form">
-        <el-input v-model="form.desc" type="textarea" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button @click="onCancel">Cancel</el-button>
-      </el-form-item>
-    </el-form>
+    <el-container>
+      <el-container>
+        <el-aside width="1280px" height="728px">
+<!--          <iframe width="1024px" height="728px" allowfullscreen frameborder="0" src="https://orbix360.com/GvdUYnQ35"></iframe>-->
+        </el-aside>
+        <el-main >
+          <template>
+            <div>
+              <el-divider content-position="left">职能业务描述：</el-divider>
+              <span>{{description_by_characters}}</span>
+              <el-divider></el-divider>
+              <span></span>
+            </div>
+          </template>
+        </el-main>
+      </el-container>
+      <el-footer>
+        <el-row type="flex" :gutter="20" justify="end" >
+          <el-col :span="3">
+            <el-select v-model="character" @change=characterChange placeholder="请选择角色" size="medium">
+              <el-option
+                v-for="character in characters"
+                :key="character.character_value"
+                :label="character.character_label"
+                :value="character.character_value"
+              >
+              </el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="3">
+            <el-select v-model="section" @change=sectionChange placeholder="请选择地点" size="medium">
+              <el-option
+                v-for="section in sections"
+                :key="section.sectionId"
+                :label="section.sectionName"
+                :value="section.sectionId"
+              >
+              </el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+      </el-footer>
+    </el-container>
   </div>
 </template>
 
 <script>
+    import {getSectionInfo, getSectionsInfo} from "../../api/3D_navigation";
 export default {
-  data() {
-    return {
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
-    }
-  },
-  methods: {
-    onSubmit() {
-      this.$message('submit!')
+    data() {
+        return {
+            description_by_characters:"青春是一个短暂的美梦, 当你醒来时, 它早已消失无踪",
+            characters: [{
+                character_value: 'rec',
+                character_label: '前台'
+            }, {
+                character_value: 'doc',
+                character_label: '医师'
+            }, {
+                character_value: 'assis',
+                character_label: '医师助理'
+            }],
+            character:"前台",
+            sections: [],
+            section:"大厅", //默认大厅
+            sectionId: 1
+        }
     },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
-      })
+    created() {
+        this.fetchData()
+    },
+    methods: {
+        characterChange(val) {
+            let obj = {}
+            obj = this.characters.find((character) => {
+                return character.character_value === val
+            })
+            this.character = obj.character_value
+
+            let obj2 = {}
+            obj2 = this.sections.find((section) => {
+                return section.sectionId === this.sectionId
+            })
+
+            let description;
+            if (this.character === "rec") {
+                description = obj2.recDescrip
+            } else if (this.character === "doc") {
+                description = obj2.docDescrip
+            } else if (this.character === "assis") {
+                description = obj2.assisDescrip
+            } else{
+                description = obj2.recDescrip //默认前台
+            }
+            this.description_by_characters = description
+            this.$forceUpdate();
+        },
+        sectionChange(val) {
+            let obj = {}
+            obj = this.sections.find((section) => {
+                return section.sectionId === val
+            })
+            this.section = obj.sectionName
+            this.sectionId = obj.sectionId
+            let description;
+            if (this.character === "rec") {
+                description = obj.recDescrip
+            } else if (this.character === "doc") {
+                description = obj.docDescrip
+            } else if (this.character === "assis") {
+                description = obj.assisDescrip
+            } else{
+                description = obj.recDescrip //默认前台
+            }
+            this.description_by_characters = description
+            this.$forceUpdate();
+        },
+        fetchData() {
+            getSectionsInfo().then(response => {
+                this.sections = response.data.responseMap.result
+                console.log(this.sections)
+            })
+            this.description_by_characters = "请选择角色或者地点进行职能学习"
+        }
     }
-  }
 }
 </script>
 
 <style scoped>
-.line{
-  text-align: center;
-}
+  .el-header, .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+  }
+
+  .el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align: center;
+    line-height: 200px;
+  }
+
+  .el-main {
+    /*background-color: #E9EEF3;*/
+    color: #333;
+    text-align: center;
+    line-height: 160px;
+  }
+
+  body > .el-container {
+    margin-bottom: 40px;
+  }
+
+  .el-container:nth-child(5) .el-aside,
+  .el-container:nth-child(6) .el-aside {
+    line-height: 260px;
+  }
+
+  .el-container:nth-child(7) .el-aside {
+    line-height: 320px;
+  }
 </style>
 

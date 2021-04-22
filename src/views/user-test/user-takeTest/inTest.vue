@@ -72,7 +72,8 @@
 <script>
 import {
   getQuestionList,
-  submitAnswer
+  submitAnswer,
+  deleteTest
 } from '@/api/test/inTest'
 import store from '@/store'
 
@@ -93,21 +94,19 @@ export default {
         visible: false,
         title: ''
       },
-      resultScore: 0
+      resultScore: 0,
+      isMidPointSubmitted: false
     }
   },
   created() {
     this.testOptionId = this.$route.query.id
-    console.log(this.testOptionId)
     getQuestionList(this.testOptionId, this.userId).then(response => {
-      console.log(response.data.status)
       if (response.data.status === 400) {
         this.$message('你已经进行过该考试！请更换考试！')
       } else if (response.data.status === 200) {
         let resultList = []
         resultList = response.data.responseMap.result
         this.testId = response.data.responseMap.testId
-        console.log(resultList)
         const questionList = []
         for (let i = 0; i < resultList.length; i++) {
           questionList.push({
@@ -127,7 +126,46 @@ export default {
       }
     })
   },
+  mounted() {
+    if (window.history && window.history.pushState) {
+      history.pushState(null, null, document.URL)
+      window.addEventListener('popstate', this.back, false)
+    }
+    window.addEventListener('beforeunload', this.refresh)
+  },
+  destroyed() {
+    window.removeEventListener('popstate', this.back, false)
+    window.removeEventListener('beforeunload', this.refresh)
+  },
   methods: {
+    back() {
+      this.$confirm('试卷尚未提交，退出页面将视作提交试卷答案！是否确认退出？', '注意', {
+        showClose: false,
+        confirmButtonText: '继续答题',
+        cancelButtonText: '确认离开'
+      }).then(() => {
+        if (window.history && window.history.pushState) {
+          history.pushState(null, null, document.URL)
+          window.addEventListener('popstate', this.back, false)
+        }
+      }).catch(() => {
+        this.isMidPointSubmitted = true
+        this.submitAnswerDialogConfirmOnClicked()
+        this.$router.push('/test_user/take_test')
+      })
+    },
+    refresh(e) {
+      e = e || window.event
+      if (e) {
+        e.returnValue = '关闭提示'
+        const testId = {
+          testId: this.testId
+        }
+        deleteTest(testId).then(response => {
+        })
+      }
+      return '关闭'
+    },
     onSubmitClicked() {
       this.submitAnswerDialog.title = '提示'
       this.submitAnswerDialog.visible = true
@@ -171,23 +209,21 @@ export default {
         }
         result.push(resultAnswer)
       }
-      console.log(result)
       submitAnswer(this.testId, result).then(response => {
-        console.log(response)
         const tempScore = response.data.responseMap.result
-        console.log(tempScore)
         if (response.data.status === '200') {
           this.resultScore = tempScore
         }
       })
       this.submitAnswerDialog.visible = false
-      this.showScoreDialog.visible = true
+      if (this.isMidPointSubmitted === false) {
+        this.showScoreDialog.visible = true
+      } else {
+        this.showScoreDialog.visible = false
+      }
     },
     showScoreDialogConfirmOnClicked() {
-      this.$router.push({
-        path: '/test_user/check_result',
-        query: {}
-      })
+      this.$router.push('/test_user/check_result')
     }
   }
 }

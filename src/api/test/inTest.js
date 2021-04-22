@@ -22,3 +22,11 @@ export function submitAnswer(testId, params) {
     data: params
   })
 }
+
+export function deleteTest(testId) {
+  return request_admin({
+    url: '/admin/test/exams',
+    method: 'delete',
+    params: testId
+  })
+}

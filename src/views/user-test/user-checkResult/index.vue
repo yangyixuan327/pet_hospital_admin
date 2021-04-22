@@ -18,12 +18,12 @@
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column label="开始时间" width="110" align="center">
+      <el-table-column label="开始时间" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.beginDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="提交时间" width="110" align="center">
+      <el-table-column label="提交时间" width="200" align="center">
         <template slot-scope="scope">
           {{ scope.row.endDate }}
         </template>

@@ -1,4 +1,3 @@
-import request from '@/utils/request'
 import request_admin from '@/utils/request_admin'
 
 export function getAllPapers() {
@@ -38,5 +37,13 @@ export function getPaperQuestionsById(paperId) {
     url: '/admin/test/problemSet/' + paperId,
     method: 'get',
     params: null
+  })
+}
+
+export function addQuestionToPaper(paperId, quesIds) {
+  return request_admin({
+    url: '/admin/test/problemSet/' + paperId + '/addQues',
+    method: 'put',
+    data: quesIds
   })
 }

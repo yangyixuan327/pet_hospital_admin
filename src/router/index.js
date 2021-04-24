@@ -110,6 +110,13 @@ export const constantRoutes = [
         meta: { title: '试卷管理' }
       },
       {
+        path: 'select_questions',
+        name: 'SelectQuestions',
+        component: () => import('@/views/manage-test/manage-paper/selectQuestions'),
+        meta: { title: '配置试卷题目' },
+        hidden: true
+      },
+      {
         path: 'exam_manage',
         name: 'ExamManage',
         component: () => import('@/views/manage-test/manage-exam/index'),

@@ -1,54 +1,42 @@
 import request from '@/utils/request'
-import request_admin from "@/utils/request_admin";
+import request_admin from '@/utils/request_admin'
 
-export function getList() {
+export function getAllPapers() {
   return request_admin({
-    url: '/admin/test/paper',
+    url: '/admin/test/problemSet',
     method: 'get',
     params: null
   })
 }
 
-export function changePaperById(paper_id, paper) {
+export function addNewPaper(paperName) {
   return request_admin({
-    url: '/admin/test/paper/' + paper_id,
-    method: 'post',
-    data: paper
-  })
-}
-
-export function addPaper(paper) {
-  return request_admin({
-    url: 'admin/test/paper',
+    url: '/admin/test/problemSet',
     method: 'put',
-    data: paper
+    params: paperName
   })
 }
 
-export function deletePaperById(paper_id) {
+export function changePaperName(paperId, paperName) {
   return request_admin({
-    url: '/admin/test/paper',
-    method: 'delete',
-    params: paper_id
+    url: '/admin/test/problemSet/' + paperId,
+    method: 'post',
+    params: paperName
   })
 }
 
-export function submitWordsDialogResult(params) {
-  if (params.changeMode != null) {
-    if (params.changeMode === 'add') {
-      // 添加病例
-      return request({
-        url: '/vue-admin-template/table/list',
-        method: 'get',
-        params
-      })
-    } else {
-      // 修改病例
-      return request({
-        url: '/vue-admin-template/table/list',
-        method: 'get',
-        params
-      })
-    }
-  }
+export function deletePaperById(paperId) {
+  return request_admin({
+    url: '/admin/test/problemSet',
+    method: 'delete',
+    params: paperId
+  })
+}
+
+export function getPaperQuestionsById(paperId) {
+  return request_admin({
+    url: '/admin/test/problemSet/' + paperId,
+    method: 'get',
+    params: null
+  })
 }

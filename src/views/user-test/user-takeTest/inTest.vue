@@ -1,12 +1,12 @@
 <template>
   <el-container>
     <el-main>
-      <el-row>
+      <el-row style="margin-left: 30px">
         <el-col>
           <div class="grid-content bg-purple">
             <div v-for="(test, index) in tests" :key="index">
-              <p>{{ index + 1 }}.{{ test.title }}</p>
-              <el-radio-group v-if="test.type === 'select'" v-model="test.answer">
+              <p style="height: 35px">{{ index + 1 }}.{{ test.title }}</p>
+              <el-radio-group v-if="test.type === 'select'" v-model="test.answer" style="height: 35px">
                 <!-- label绑定答案的值,可以绑定索引index,也可以绑定答案内容option -->
                 <el-radio
                   v-for="(option,index) in choiceOption"
@@ -14,7 +14,7 @@
                   :label="index"
                 >{{ option }}</el-radio>
               </el-radio-group>
-              <el-radio-group v-else-if="test.type === 'judge'" v-model="test.answer">
+              <el-radio-group v-else-if="test.type === 'judge'" v-model="test.answer" style="height: 35px">
                 <el-radio
                   v-for="(option,index) in judgeOption"
                   :key="index"
@@ -22,16 +22,16 @@
                 >{{ option }}</el-radio>
               </el-radio-group>
               <div v-else-if="test.type === 'qa'">
-                <el-input v-model="test.answer" type="textarea" :rows="2" placeholder="请输入内容" />
+                <el-input v-model="test.answer" type="textarea" :rows="2" placeholder="请输入你的回答" style="height: 70px"/>
               </div>
             </div>
           </div>
           <br>
         </el-col>
       </el-row>
-      <el-row>
+      <div align="center" style="margin-top: 30px; margin-bottom: 20px">
         <el-button type="primary" icon="el-icon-check" @click="onSubmitClicked">提交试卷</el-button>
-      </el-row>
+      </div>
     </el-main>
     <el-dialog
       :visible="submitAnswerDialog.visible"

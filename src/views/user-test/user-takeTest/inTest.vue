@@ -1,38 +1,43 @@
 <template>
-  <el-container>
-    <el-main>
-      <el-row style="margin-left: 30px">
-        <el-col>
-          <div class="grid-content bg-purple">
-            <div v-for="(test, index) in tests" :key="index">
-              <p style="height: 35px">{{ index + 1 }}.{{ test.title }}</p>
-              <el-radio-group v-if="test.type === 'select'" v-model="test.answer" style="height: 35px">
-                <!-- label绑定答案的值,可以绑定索引index,也可以绑定答案内容option -->
-                <el-radio
-                  v-for="(option,index) in choiceOption"
-                  :key="index"
-                  :label="index"
-                >{{ option }}</el-radio>
-              </el-radio-group>
-              <el-radio-group v-else-if="test.type === 'judge'" v-model="test.answer" style="height: 35px">
-                <el-radio
-                  v-for="(option,index) in judgeOption"
-                  :key="index"
-                  :label="index"
-                >{{ option }}</el-radio>
-              </el-radio-group>
-              <div v-else-if="test.type === 'qa'">
-                <el-input v-model="test.answer" type="textarea" :rows="2" placeholder="请输入你的回答" style="height: 70px"/>
+  <div>
+    <el-container>
+      <el-header style="margin-top: 50px; font-size: 40px; text-align: center">
+        <b>{{ paperName }}</b>
+      </el-header>
+      <el-main>
+        <el-row style="margin-left: 30px">
+          <el-col>
+            <div class="grid-content bg-purple">
+              <div v-for="(test, index) in tests" :key="index">
+                <p style="height: 35px">{{ index + 1 }}.{{ test.title }}</p>
+                <el-radio-group v-if="test.type === 'select'" v-model="test.answer" style="height: 35px">
+                  <!-- label绑定答案的值,可以绑定索引index,也可以绑定答案内容option -->
+                  <el-radio
+                    v-for="(option,index) in choiceOption"
+                    :key="index"
+                    :label="index"
+                  >{{ option }}</el-radio>
+                </el-radio-group>
+                <el-radio-group v-else-if="test.type === 'judge'" v-model="test.answer" style="height: 35px">
+                  <el-radio
+                    v-for="(option,index) in judgeOption"
+                    :key="index"
+                    :label="index"
+                  >{{ option }}</el-radio>
+                </el-radio-group>
+                <div v-else-if="test.type === 'qa'">
+                  <el-input v-model="test.answer" type="textarea" :rows="2" placeholder="请输入你的回答" style="height: 70px" />
+                </div>
               </div>
             </div>
-          </div>
-          <br>
-        </el-col>
-      </el-row>
-      <div align="center" style="margin-top: 30px; margin-bottom: 20px">
-        <el-button type="primary" icon="el-icon-check" @click="onSubmitClicked">提交试卷</el-button>
-      </div>
-    </el-main>
+            <br>
+          </el-col>
+        </el-row>
+        <div align="center" style="margin-top: 30px; margin-bottom: 20px">
+          <el-button type="primary" icon="el-icon-check" @click="onSubmitClicked">提交试卷</el-button>
+        </div>
+      </el-main>
+    </el-container>
     <el-dialog
       :visible="submitAnswerDialog.visible"
       :title="submitAnswerDialog.title"
@@ -66,16 +71,24 @@
         </span>
       </template>
     </el-dialog>
-  </el-container>
+  </div>
 </template>
 
 <script>
 import {
   getQuestionList,
   submitAnswer,
-  deleteTest
+  deleteTest,
+  getTestOptionById,
+  getPaperById
 } from '@/api/test/inTest'
 import store from '@/store'
+
+function sleep(ms) {
+  return new Promise(resolve =>
+    setTimeout(resolve, ms)
+  )
+}
 
 export default {
   data() {
@@ -89,6 +102,9 @@ export default {
       },
       testId: -1,
       testOptionId: -1,
+      paperId: -1,
+      isRandom: false,
+      paperName: '',
       userId: store.getters.token,
       showScoreDialog: {
         visible: false,
@@ -115,30 +131,55 @@ export default {
   },
   methods: {
     fetchData() {
-      getQuestionList(this.testOptionId, this.userId).then(response => {
-        if (response.data.status === 400) {
-          this.$message('你已经进行过该考试！请更换考试！')
-        } else if (response.data.status === 200) {
-          let resultList = []
-          resultList = response.data.responseMap.result
-          this.testId = response.data.responseMap.testId
-          const questionList = []
-          for (let i = 0; i < resultList.length; i++) {
-            questionList.push({
-              id: resultList[i].quesId != null ? resultList[i].quesId : 0,
-              title: resultList[i].descrip != null ? resultList[i].descrip : '',
-              type: resultList[i].type != null ? resultList[i].type : '',
-              rightAnswer: resultList[i].answer != null ? resultList[i].answer : '',
-              score: resultList[i].score != null ? resultList[i].score : '',
-              tag: resultList[i].tag != null ? resultList[i].tag : '',
-              image: '',
-              answer: ''
-            })
-          }
-          this.tests = questionList
-        } else if (response.data.status === 500) {
-          this.$message('考试时间已结束或未到考试时间！')
+      getTestOptionById(this.testOptionId).then(response => {
+        this.paperId = response.data.responseMap.result.paperId
+        const totalNum = response.data.responseMap.result.selectNum + response.data.responseMap.result.judgeNum + response.data.responseMap.result.qaNum
+        console.log('totalNum = ' + totalNum)
+        if (totalNum === 0) {
+          this.isRandom = false
+        } else {
+          this.isRandom = true
         }
+        console.log(this.isRandom)
+        console.log(response.data)
+      })
+      sleep(150).then(() => {
+        if (this.isRandom === false) {
+          sleep(150).then(() => {
+            getPaperById(this.paperId).then(response => {
+              this.paperName = response.data.responseMap.result.paperName
+            })
+          })
+        } else {
+          this.paperName = '随机测验'
+        }
+      })
+      sleep(150).then(() => {
+        getQuestionList(this.testOptionId, this.userId).then(response => {
+          if (response.data.status === 400) {
+            this.$message('你已经进行过该考试！请更换考试！')
+          } else if (response.data.status === 200) {
+            let resultList = []
+            resultList = response.data.responseMap.result
+            this.testId = response.data.responseMap.testId
+            const questionList = []
+            for (let i = 0; i < resultList.length; i++) {
+              questionList.push({
+                id: resultList[i].quesId != null ? resultList[i].quesId : 0,
+                title: resultList[i].descrip != null ? resultList[i].descrip : '',
+                type: resultList[i].type != null ? resultList[i].type : '',
+                rightAnswer: resultList[i].answer != null ? resultList[i].answer : '',
+                score: resultList[i].score != null ? resultList[i].score : '',
+                tag: resultList[i].tag != null ? resultList[i].tag : '',
+                image: '',
+                answer: ''
+              })
+            }
+            this.tests = questionList
+          } else if (response.data.status === 500) {
+            this.$message('考试时间已结束或未到考试时间！')
+          }
+        })
       })
     },
     back() {

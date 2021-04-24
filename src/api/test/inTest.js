@@ -8,6 +8,20 @@ export function getTestOptionByUserId(user_id) {
   })
 }
 
+export function getTestOptionById(testOptionId) {
+  return request_admin({
+    url: '/admin/test/paper/' + testOptionId,
+    method: 'get'
+  })
+}
+
+export function getPaperById(paperId) {
+  return request_admin({
+    url: '/admin/test/problemSet/' + paperId,
+    method: 'get'
+  })
+}
+
 export function getQuestionList(testOptionId, userId) {
   return request_admin({
     url: '/exam/' + testOptionId + '/user/' + userId,

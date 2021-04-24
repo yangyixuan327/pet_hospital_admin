@@ -100,31 +100,7 @@ export default {
   },
   created() {
     this.testOptionId = this.$route.query.id
-    getQuestionList(this.testOptionId, this.userId).then(response => {
-      if (response.data.status === 400) {
-        this.$message('你已经进行过该考试！请更换考试！')
-      } else if (response.data.status === 200) {
-        let resultList = []
-        resultList = response.data.responseMap.result
-        this.testId = response.data.responseMap.testId
-        const questionList = []
-        for (let i = 0; i < resultList.length; i++) {
-          questionList.push({
-            id: resultList[i].quesId != null ? resultList[i].quesId : 0,
-            title: resultList[i].descrip != null ? resultList[i].descrip : '',
-            type: resultList[i].type != null ? resultList[i].type : '',
-            rightAnswer: resultList[i].answer != null ? resultList[i].answer : '',
-            score: resultList[i].score != null ? resultList[i].score : '',
-            tag: resultList[i].tag != null ? resultList[i].tag : '',
-            image: '',
-            answer: ''
-          })
-        }
-        this.tests = questionList
-      } else {
-        this.$message('Something Went Wrong...')
-      }
-    })
+    this.fetchData()
   },
   mounted() {
     if (window.history && window.history.pushState) {
@@ -138,6 +114,33 @@ export default {
     window.removeEventListener('beforeunload', this.refresh)
   },
   methods: {
+    fetchData() {
+      getQuestionList(this.testOptionId, this.userId).then(response => {
+        if (response.data.status === 400) {
+          this.$message('你已经进行过该考试！请更换考试！')
+        } else if (response.data.status === 200) {
+          let resultList = []
+          resultList = response.data.responseMap.result
+          this.testId = response.data.responseMap.testId
+          const questionList = []
+          for (let i = 0; i < resultList.length; i++) {
+            questionList.push({
+              id: resultList[i].quesId != null ? resultList[i].quesId : 0,
+              title: resultList[i].descrip != null ? resultList[i].descrip : '',
+              type: resultList[i].type != null ? resultList[i].type : '',
+              rightAnswer: resultList[i].answer != null ? resultList[i].answer : '',
+              score: resultList[i].score != null ? resultList[i].score : '',
+              tag: resultList[i].tag != null ? resultList[i].tag : '',
+              image: '',
+              answer: ''
+            })
+          }
+          this.tests = questionList
+        } else if (response.data.status === 500) {
+          this.$message('考试时间已结束或未到考试时间！')
+        }
+      })
+    },
     back() {
       this.$confirm('试卷尚未提交，退出页面将视作提交试卷答案！是否确认退出？', '注意', {
         showClose: false,

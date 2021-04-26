@@ -1,101 +1,109 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix" style="text-align: center">
-        <span style="font-weight: bold; font-size: x-large">病例接诊</span>
-      </div>
-      <div class="card-content">
-        <el-row :gutter="20" style="margin-top: 10px">
-          <el-col :span="16" style="height: 300px;">
-            <div class="description" style="font-size: large">{{ jieZhen.description }}</div>
-          </el-col>
-          <el-col :span="8" style="text-align: center; height: 300px">
-            <el-image style="margin: 0 auto; width: 100%; height: 100%" :src="jieZhen.imageUrl" lazy fit="contain">
-              <template #error>
-                <div class="image-slot">
-                  <i class="el-icon-picture-outline"/>
-                </div>
-              </template>
-            </el-image>
-          </el-col>
-        </el-row>
-        <el-divider></el-divider>
-        <el-row>
-          <div class="jieZhen-video" style="margin: 0 auto; width: 720px; height: 480px;">
-            <video
-              v-if="jieZhen.videoUrl !== ''"
-              style="width: 100%; height: 100%"
-              :src="jieZhen.videoUrl"
-              controls="controls"
-            />
+    <el-row :gutter="20" style="margin-top: 10px">
+      <el-col :span="12">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix" style="text-align: center">
+            <span style="font-weight: bold; font-size: x-large">病例接诊</span>
           </div>
-        </el-row>
-      </div>
-    </el-card>
-    <el-card class="box-card" style="margin-top: 10px">
-      <div slot="header" class="clearfix" style="text-align: center">
-        <span style="font-weight: bold; font-size: x-large">病例诊断</span>
-      </div>
-      <div class="card-content">
-        <el-row :gutter="20" style="margin-top: 10px">
-          <el-col :span="16" style="height: 300px">
-            <div class="description" style="font-size: large">{{ zhenDuan.description }}</div>
-          </el-col>
-          <el-col :span="8" style="text-align: center; height: 300px">
-            <el-image style="margin: 0 auto; width: 100%; height: 100%" :src="zhenDuan.imageUrl" lazy fit="contain">
-              <template #error>
-                <div class="image-slot">
-                  <i class="el-icon-picture-outline"/>
-                </div>
-              </template>
-            </el-image>
-          </el-col>
-        </el-row>
-        <el-divider></el-divider>
-        <el-row style="margin-top: 10px">
-          <div class="jieZhen-video" style="margin: 0 auto; width: 720px; height: 480px;">
-            <video
-              v-if="zhenDuan.videoUrl !== ''"
-              style="width: 100%; height: 100%"
-              :src="zhenDuan.videoUrl"
-              controls="controls"
-            />
+          <div class="card-content">
+            <el-row :gutter="20" style="margin-top: 10px">
+              <el-col :span="16" style="height: 300px;">
+                <div class="description" style="font-size: large">{{ jieZhen.description }}</div>
+              </el-col>
+              <el-col :span="8" style="text-align: center; height: 300px">
+                <el-image style="margin: 0 auto; width: 100%; height: 100%" :src="jieZhen.imageUrl" lazy fit="contain">
+                  <template #error>
+                    <div class="image-slot">
+                      <i class="el-icon-picture-outline"/>
+                    </div>
+                  </template>
+                </el-image>
+              </el-col>
+            </el-row>
+            <el-divider></el-divider>
+            <el-row>
+              <div class="jieZhen-video" style="margin: 0 auto; width: 720px; height: 480px;">
+                <video
+                  v-if="jieZhen.videoUrl !== ''"
+                  style="width: 100%; height: 100%"
+                  :src="jieZhen.videoUrl"
+                  controls="controls"
+                />
+              </div>
+            </el-row>
           </div>
-        </el-row>
-      </div>
-    </el-card>
-    <el-card class="box-card" style="margin-top: 10px">
-      <div slot="header" class="clearfix" style="text-align: center">
-        <span style="font-weight: bold; font-size: x-large">病例治疗</span>
-      </div>
-      <div class="card-content">
-        <el-row :gutter="20" style="margin-top: 10px">
-          <el-col :span="16" style="height: 300px">
-            <div class="description" style="font-size: large">{{ zhiLiao.description }}</div>
-          </el-col>
-          <el-col :span="8" style="text-align: center; height: 300px">
-            <el-image style="margin: 0 auto; width: 100%; height: 100%" :src="zhiLiao.imageUrl" lazy fit="contain">
-              <template #error>
-                <div class="image-slot">
-                  <i class="el-icon-picture-outline"/>
-                </div>
-              </template>
-            </el-image>
-          </el-col>
-        </el-row>
-        <el-divider></el-divider>
-        <el-row style="margin-top: 10px">
-          <div class="jieZhen-video" style="margin: 0 auto; width: 720px; height: 480px;">
-            <video
-              v-if="zhiLiao.videoUrl !== ''"
-              style="width: 100%; height: 100%"
-              :src="zhiLiao.videoUrl"
-              controls="controls"
-            />
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix" style="text-align: center">
+            <span style="font-weight: bold; font-size: x-large">病例诊断</span>
           </div>
-        </el-row>
-      </div>
-    </el-card>
+          <div class="card-content">
+            <el-row :gutter="20" style="margin-top: 10px">
+              <el-col :span="16" style="height: 300px">
+                <div class="description" style="font-size: large">{{ zhenDuan.description }}</div>
+              </el-col>
+              <el-col :span="8" style="text-align: center; height: 300px">
+                <el-image style="margin: 0 auto; width: 100%; height: 100%" :src="zhenDuan.imageUrl" lazy fit="contain">
+                  <template #error>
+                    <div class="image-slot">
+                      <i class="el-icon-picture-outline"/>
+                    </div>
+                  </template>
+                </el-image>
+              </el-col>
+            </el-row>
+            <el-divider></el-divider>
+            <el-row style="margin-top: 10px">
+              <div class="jieZhen-video" style="margin: 0 auto; width: 720px; height: 480px;">
+                <video
+                  v-if="zhenDuan.videoUrl !== ''"
+                  style="width: 100%; height: 100%"
+                  :src="zhenDuan.videoUrl"
+                  controls="controls"
+                />
+              </div>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card class="box-card" style="margin-top: 10px">
+          <div slot="header" class="clearfix" style="text-align: center">
+            <span style="font-weight: bold; font-size: x-large">病例治疗</span>
+          </div>
+          <div class="card-content">
+            <el-row :gutter="20" style="margin-top: 10px">
+              <el-col :span="16" style="height: 300px">
+                <div class="description" style="font-size: large">{{ zhiLiao.description }}</div>
+              </el-col>
+              <el-col :span="8" style="text-align: center; height: 300px">
+                <el-image style="margin: 0 auto; width: 100%; height: 100%" :src="zhiLiao.imageUrl" lazy fit="contain">
+                  <template #error>
+                    <div class="image-slot">
+                      <i class="el-icon-picture-outline"/>
+                    </div>
+                  </template>
+                </el-image>
+              </el-col>
+            </el-row>
+            <el-divider></el-divider>
+            <el-row style="margin-top: 10px">
+              <div class="jieZhen-video" style="margin: 0 auto; width: 720px; height: 480px;">
+                <video
+                  v-if="zhiLiao.videoUrl !== ''"
+                  style="width: 100%; height: 100%"
+                  :src="zhiLiao.videoUrl"
+                  controls="controls"
+                />
+              </div>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 

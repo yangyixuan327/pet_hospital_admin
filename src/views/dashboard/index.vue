@@ -1,14 +1,14 @@
 <template>
   <div class="dashboard-container">
-    <el-carousel :interval="4000" type="card" :height="height">
+    <el-carousel :interval="4000" arrow="always" :height="height">
       <el-carousel-item v-for="item in 3" :key="item">
-        <h3 class="medium"> <a href="https://sm.ms/image/TIGRwKFNqbMn5QX" target="_blank"><img src="https://i.loli.net/2021/04/12/TIGRwKFNqbMn5QX.png" ></a></h3>
+        <h3 class="medium"> <a><img src="https://i.loli.net/2021/04/26/3L5QCt1EN2uev8X.jpg" ></a></h3>
       </el-carousel-item>
     </el-carousel>
     <el-row type="flex" :gutter="20" justify="end" >
-      <el-col ><el-button class = "big_button" type="primary" @click="$router.replace({name:'HospitalNavigation'})">3D医院导览</el-button></el-col>
-      <el-col ><el-button class = "big_button" type="success" @click="$router.replace({name:'CaseFrontInner'})">病例学习</el-button></el-col>
-      <el-col ><el-button class = "big_button" type="warning" @click="$router.replace({name:'TakeTest'})">参加考试</el-button></el-col>
+      <el-col ><el-button class = "big_button" type="primary" @click="$router.push({name:'HospitalNavigation'})">3D医院导览</el-button></el-col>
+      <el-col ><el-button class = "big_button" type="success" @click="$router.push({name:'CaseFrontInner'})">病例学习</el-button></el-col>
+      <el-col ><el-button class = "big_button" type="warning" @click="$router.push({name:'TakeTest'})">参加考试</el-button></el-col>
     </el-row>
   </div>
 </template>
@@ -44,6 +44,9 @@ export default {
   .big_button{
     height: 600%;
     width:  100%;
+  }
+  .el-carousel{
+    margin-bottom: 5%;
   }
   .el-carousel__item {
     width: 100%;

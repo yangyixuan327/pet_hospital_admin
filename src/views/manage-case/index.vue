@@ -395,18 +395,20 @@ export default {
       }
       getInfoByIdAndType(caseId, type).then(response => {
         console.log(response)
-        this.videoUrl = 'https://v-cdn.zjol.com.cn/280443.mp4'
         var videoUrl = ''
         if (type === 'jieZhen') {
-          videoUrl = 'http://' + response.data.responseMap.result.consultVideoUrl
+          videoUrl = response.data.responseMap.result.consultVideoUrl
         } else if (type === 'zhenDuan') {
-          videoUrl = 'http://' + response.data.responseMap.result.diagVideoUrl
+          videoUrl = response.data.responseMap.result.diagVideoUrl
         } else if (type === 'zhiLiao') {
-          videoUrl = 'http://' + response.data.responseMap.result.therapyVideoUrl
+          videoUrl = response.data.responseMap.result.therapyVideoUrl
         }
-        console.log(videoUrl)
-        // todo 有数据之后注释去掉
-        // this.videoUrl = videoUrl
+        if (videoUrl !== null) {
+          this.videoUrl = 'http://' + videoUrl
+        } else {
+          this.videoUrl = ''
+        }
+        console.log('videoUrl: ' + this.videoUrl)
       })
     },
     handleRemove(file, fileList) {
@@ -419,7 +421,12 @@ export default {
       this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     handleUploadSuccess(res, file) {
-      console.log('upload success')
+      var videoUrl = res.responseMap.result
+      if (videoUrl !== null) {
+        this.videoUrl = 'http://' + videoUrl
+      } else {
+        this.videoUrl = ''
+      }
     }
   }
 }

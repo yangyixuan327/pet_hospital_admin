@@ -2,17 +2,24 @@
   <div class="app-container">
     <el-container>
       <el-container>
-        <el-aside width="1280px" height="728px">
-          <iframe width="1280px" height="728px" allowfullscreen frameborder="0" src="https://orbix360.com/KkS4bhWHw"></iframe>
+        <el-aside width="1024px" height="800px">
+          <el-card class="box-card">
+            <iframe width="1024px" height="800px" allowfullscreen frameborder="0" src="https://orbix360.com/KkS4bhWHw"></iframe>
+          </el-card>
         </el-aside>
         <el-main>
           <template>
-            <div>
-              <el-divider content-position="left">职能业务描述：</el-divider>
-              <span>{{ description_by_characters }}</span>
-              <el-divider></el-divider>
-              <span></span>
-            </div>
+            <el-card class="box-card">
+              <div style="line-height:20px; text-align: left; font-size: 22px ; font-weight:bold">
+                职能描述:
+              </div>
+              <div>
+                <el-divider></el-divider>
+                <span>{{ description_by_characters }}</span>
+                <el-divider></el-divider>
+                <el-image :src=img_url></el-image>
+              </div>
+            </el-card>
           </template>
         </el-main>
       </el-container>
@@ -66,7 +73,8 @@ export default {
       character: '前台',
       sections: [],
       section: '大厅', // 默认大厅
-      sectionId: 1
+      sectionId: 1,
+      img_url:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
     }
   },
   created() {
@@ -105,6 +113,9 @@ export default {
       })
       this.section = obj.sectionName
       this.sectionId = obj.sectionId
+        const base_url = 'http://'
+        this.img_url = base_url + obj.sectionImageUrl
+        console.log(this.img_url)
       let description
       if (this.character === 'rec') {
         description = obj.recDescrip
@@ -141,11 +152,7 @@ export default {
   /*background-color: #E9EEF3;*/
   color: #333;
   text-align: center;
-  line-height: 160px;
-}
-
-body > .el-container {
-  margin-bottom: 40px;
+  line-height: 100px;
 }
 
 .el-container:nth-child(5) .el-aside,
@@ -156,5 +163,6 @@ body > .el-container {
 .el-container:nth-child(7) .el-aside {
   line-height: 320px;
 }
+
 </style>
 

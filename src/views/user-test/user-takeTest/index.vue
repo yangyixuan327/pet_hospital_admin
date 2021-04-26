@@ -7,6 +7,7 @@
       border
       fit
       highlight-current-row
+      :default-sort="{prop: 'startDate', order: 'descending'}"
     >
       <el-table-column align="center" label="考试ID" width="95">
         <template slot-scope="scope">
@@ -18,12 +19,12 @@
           {{ scope.row.testOptionName }}
         </template>
       </el-table-column>
-      <el-table-column label="开始时间" width="200" align="center">
+      <el-table-column prop="startDate" label="开始时间" width="200" align="center" sortable>
         <template slot-scope="scope">
           <span>{{ scope.row.startDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="时长" width="110" align="center">
+      <el-table-column label="时长（分钟）" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.duration }}
         </template>
@@ -105,6 +106,7 @@ export default {
             startDate: dateFormat(tempList[i].startDate),
             duration: tempList[i].duration,
             totalScore: tempList[i].totalScore,
+            startTime: tempList[i].startDate,
             isButtonDisabled: false
           })
         }
@@ -118,7 +120,6 @@ export default {
         for (let i = 0; i < tempList.length; i++) {
           for (let j = 0; j < this.list.length; j++) {
             if (this.list[j].testOptionId === tempList[i].testOptionId) {
-              console.log('disabled: ' + this.list[j].testOptionId + ' successfully')
               this.list[j].isButtonDisabled = true
             }
           }
@@ -126,10 +127,18 @@ export default {
       })
     },
     onclick(exam_id, exam_index) {
+      let duration = 0
+      for (let i = 0; i < this.list.length; i++) {
+        if (exam_id === this.list[i].testOptionId) {
+          duration = this.list[i].duration
+        }
+      }
       this.$router.push({
         path: '/test_user/inTest',
         query: {
-          id: exam_id
+          id: exam_id,
+          duration: duration,
+          startTime: this.list[exam_index].startTime
         }
         /* query: {
             key: 'key',

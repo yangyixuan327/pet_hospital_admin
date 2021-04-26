@@ -1,43 +1,76 @@
 <template>
   <div>
     <el-container>
-      <el-header style="margin-top: 50px; font-size: 40px; text-align: center">
-        <b>{{ paperName }}</b>
-      </el-header>
-      <el-main>
-        <el-row style="margin-left: 30px">
-          <el-col>
-            <div class="grid-content bg-purple">
-              <div v-for="(test, index) in tests" :key="index">
-                <p style="height: 35px">{{ index + 1 }}.{{ test.title }}</p>
-                <el-radio-group v-if="test.type === 'select'" v-model="test.answer" style="height: 35px">
-                  <!-- label绑定答案的值,可以绑定索引index,也可以绑定答案内容option -->
-                  <el-radio
-                    v-for="(option,index) in choiceOption"
-                    :key="index"
-                    :label="index"
-                  >{{ option }}</el-radio>
-                </el-radio-group>
-                <el-radio-group v-else-if="test.type === 'judge'" v-model="test.answer" style="height: 35px">
-                  <el-radio
-                    v-for="(option,index) in judgeOption"
-                    :key="index"
-                    :label="index"
-                  >{{ option }}</el-radio>
-                </el-radio-group>
-                <div v-else-if="test.type === 'qa'">
-                  <el-input v-model="test.answer" type="textarea" :rows="2" placeholder="请输入你的回答" style="height: 70px" />
-                </div>
+      <el-aside style="text-align: center">
+        <el-card shadow="hover" style="margin-top: 50px; height: 390px; text-align: center">
+          <div style="position: relative; text-align: center">
+            <p style="text-align: center; color: darkred; font-size: 20px; margin-top: 50px"><b>剩余时间</b></p>
+            <el-progress type="circle" :percentage="timeLeftPercentage" :show-text="false" style="position: absolute; top: 110px; left: 70px">
+              <template>
+                <span>当前进度</span>
+              </template>
+            </el-progress>
+            <p style="position: absolute; top: 148px; left: 100px; text-align: center">{{ timeLeft }}</p>
+          </div>
+        </el-card>
+      </el-aside>
+      <el-container>
+        <el-header style="margin-top: 50px; font-size: 40px; text-align: center">
+          <el-card shadow="always">
+            <b>{{ paperName }}</b>
+          </el-card>
+        </el-header>
+        <el-main>
+          <el-card shadow="hover" style="height: 300px; margin-top: 10px">
+            <template #header>
+              <div style="text-align: center">
+                <span>第  {{ questionIndex + 1 }}  题  ({{ tests[questionIndex].score }}  分)</span>
               </div>
+            </template>
+            <p>{{ tests[questionIndex].title }}</p>
+            <div v-if="tests[questionIndex].type === 'select'" style="text-align: center; height: 40px">
+              <el-radio-group v-model="tests[questionIndex].answer">
+                <el-radio
+                  v-for="(option,index) in choiceOption"
+                  :key="index"
+                  :label="index"
+                >{{ option }}</el-radio>
+              </el-radio-group>
             </div>
-            <br>
-          </el-col>
-        </el-row>
-        <div align="center" style="margin-top: 30px; margin-bottom: 20px">
-          <el-button type="primary" icon="el-icon-check" @click="onSubmitClicked">提交试卷</el-button>
-        </div>
-      </el-main>
+            <div v-else-if="tests[questionIndex].type === 'judge'" style="text-align: center; height: 40px">
+              <el-radio-group v-model="tests[questionIndex].answer">
+                <el-radio
+                  v-for="(option,index) in judgeOption"
+                  :key="index"
+                  :label="index"
+                >{{ option }}</el-radio>
+              </el-radio-group>
+            </div>
+            <div v-else-if="tests[questionIndex].type === 'qa'" style="height: 70px">
+              <el-input v-model="tests[questionIndex].answer" type="textarea" :rows="2" placeholder="请输入你的回答"/>
+            </div>
+            <div style="text-align: center">
+              <el-button-group>
+                <el-button type="primary" icon="el-icon-arrow-left" :disabled="isPreDisabled" @click="onPreQuestionClicked">上一题</el-button>
+                <el-button type="primary" :disabled="isNextDisabled" @click="onNextQuestionClicked">下一题<i class="el-icon-arrow-right el-icon--right" /></el-button>
+              </el-button-group>
+            </div>
+          </el-card>
+        </el-main>
+      </el-container>
     </el-container>
+    <el-card shadow="hover">
+      <el-steps :active="questionIndex">
+        <el-step
+          v-for="(quesIndex, index) in tests"
+          :key="index"
+          :label="index"
+        />
+      </el-steps>
+    </el-card>
+    <div align="center" style="margin-top: 30px; margin-bottom: 20px">
+      <el-button type="primary" icon="el-icon-check" @click="onSubmitClicked">提交试卷</el-button>
+    </div>
     <el-dialog
       :visible="submitAnswerDialog.visible"
       :title="submitAnswerDialog.title"
@@ -93,7 +126,19 @@ function sleep(ms) {
 export default {
   data() {
     return {
+      isErrorIn: true,
+      interval: setInterval(null, null, null),
       tests: null,
+      secondsLeftTotal: 0,
+      timeLeftPercentage: 100,
+      haveDoneQuestionNumber: 1,
+      timeLeft: '00:00:00',
+      duration: 0,
+      hourLeft: 0,
+      minuteLeft: 0,
+      secondLeft: 0,
+      startTime: '',
+      questionIndex: 0,
       judgeOption: ['True', 'False'],
       choiceOption: ['A', 'B', 'C', 'D'],
       submitAnswerDialog: {
@@ -103,6 +148,8 @@ export default {
       testId: -1,
       testOptionId: -1,
       paperId: -1,
+      isPreDisabled: false,
+      isNextDisabled: false,
       isRandom: false,
       paperName: '',
       userId: store.getters.token,
@@ -116,14 +163,22 @@ export default {
   },
   created() {
     this.testOptionId = this.$route.query.id
+    this.duration = this.$route.query.duration
+    this.startTime = this.$route.query.startTime
+    this.isPreDisabled = true
+    this.setTimeLeft()
     this.fetchData()
   },
   mounted() {
-    if (window.history && window.history.pushState) {
-      history.pushState(null, null, document.URL)
-      window.addEventListener('popstate', this.back, false)
-    }
-    window.addEventListener('beforeunload', this.refresh)
+    sleep(1500).then(() => {
+      if (this.isErrorIn === false) {
+        if (window.history && window.history.pushState) {
+          history.pushState(null, null, document.URL)
+          window.addEventListener('popstate', this.back, false)
+        }
+        window.addEventListener('beforeunload', this.refresh)
+      }
+    })
   },
   destroyed() {
     window.removeEventListener('popstate', this.back, false)
@@ -134,18 +189,15 @@ export default {
       getTestOptionById(this.testOptionId).then(response => {
         this.paperId = response.data.responseMap.result.paperId
         const totalNum = response.data.responseMap.result.selectNum + response.data.responseMap.result.judgeNum + response.data.responseMap.result.qaNum
-        console.log('totalNum = ' + totalNum)
         if (totalNum === 0) {
           this.isRandom = false
         } else {
           this.isRandom = true
         }
-        console.log(this.isRandom)
-        console.log(response.data)
       })
-      sleep(150).then(() => {
+      sleep(200).then(() => {
         if (this.isRandom === false) {
-          sleep(150).then(() => {
+          sleep(200).then(() => {
             getPaperById(this.paperId).then(response => {
               this.paperName = response.data.responseMap.result.paperName
             })
@@ -154,11 +206,13 @@ export default {
           this.paperName = '随机测验'
         }
       })
-      sleep(150).then(() => {
+      sleep(200).then(() => {
         getQuestionList(this.testOptionId, this.userId).then(response => {
           if (response.data.status === 400) {
+            this.isErrorIn = true
             this.$message('你已经进行过该考试！请更换考试！')
           } else if (response.data.status === 200) {
+            this.isErrorIn = false
             let resultList = []
             resultList = response.data.responseMap.result
             this.testId = response.data.responseMap.testId
@@ -168,19 +222,74 @@ export default {
                 id: resultList[i].quesId != null ? resultList[i].quesId : 0,
                 title: resultList[i].descrip != null ? resultList[i].descrip : '',
                 type: resultList[i].type != null ? resultList[i].type : '',
-                rightAnswer: resultList[i].answer != null ? resultList[i].answer : '',
                 score: resultList[i].score != null ? resultList[i].score : '',
                 tag: resultList[i].tag != null ? resultList[i].tag : '',
                 image: '',
-                answer: ''
+                answer: '',
+                quesIndex: i
               })
             }
             this.tests = questionList
           } else if (response.data.status === 500) {
+            this.isErrorIn = true
             this.$message('考试时间已结束或未到考试时间！')
           }
         })
       })
+    },
+    setTimeLeft() {
+      this.hourLeft = Math.floor(this.duration / 60)
+      this.minuteLeft = Math.floor(this.duration % 60)
+      this.secondsLeftTotal = (this.hourLeft * 3600) + (this.minuteLeft * 60) + this.secondLeft
+      this.timeLeftPercentage = 100 * ((this.secondsLeftTotal / 60) / this.duration)
+      let hours = this.hourLeft < 10 ? '0' + this.hourLeft : this.hourLeft
+      let minutes = this.minuteLeft < 10 ? '0' + this.minuteLeft : this.minuteLeft
+      let seconds = this.secondLeft < 10 ? '0' + this.secondLeft : this.secondLeft
+      this.timeLeft = hours + ':' + minutes + ':' + seconds
+      this.interval = setInterval(() => {
+        if (this.secondLeft === 0) {
+          if (this.minuteLeft === 0) {
+            if (this.hourLeft === 0) {
+              this.$alert('已自动为您交卷！', '考试时间结束', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.isMidPointSubmitted = true
+                  this.submitAnswerDialogConfirmOnClicked()
+                }
+              })
+            } else {
+              this.hourLeft -= 1
+              this.minuteLeft = 59
+              this.secondLeft = 59
+            }
+          } else {
+            this.minuteLeft -= 1
+            this.secondLeft = 59
+          }
+        } else {
+          this.secondLeft -= 1
+        }
+        this.secondsLeftTotal = (this.hourLeft * 3600) + (this.minuteLeft * 60) + this.secondLeft
+        this.timeLeftPercentage = 100 * ((this.secondsLeftTotal / 60) / this.duration)
+        hours = this.hourLeft < 10 ? '0' + this.hourLeft : this.hourLeft
+        minutes = this.minuteLeft < 10 ? '0' + this.minuteLeft : this.minuteLeft
+        seconds = this.secondLeft < 10 ? '0' + this.secondLeft : this.secondLeft
+        this.timeLeft = hours + ':' + minutes + ':' + seconds
+      }, 1000)
+    },
+    onPreQuestionClicked() {
+      this.questionIndex = this.questionIndex - 1
+      this.isNextDisabled = false
+      if (this.questionIndex === 0) {
+        this.isPreDisabled = true
+      }
+    },
+    onNextQuestionClicked() {
+      this.questionIndex = this.questionIndex + 1
+      this.isPreDisabled = false
+      if (this.questionIndex === (this.tests.length - 1)) {
+        this.isNextDisabled = true
+      }
     },
     back() {
       this.$confirm('试卷尚未提交，退出页面将视作提交试卷答案！是否确认退出？', '注意', {
@@ -206,6 +315,7 @@ export default {
           testId: this.testId
         }
         deleteTest(testId).then(response => {
+          clearInterval(this.interval)
         })
       }
       return '关闭'
@@ -259,6 +369,7 @@ export default {
           this.resultScore = tempScore
         }
       })
+      clearInterval(this.interval)
       this.submitAnswerDialog.visible = false
       if (this.isMidPointSubmitted === false) {
         this.showScoreDialog.visible = true

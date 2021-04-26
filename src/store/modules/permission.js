@@ -62,7 +62,8 @@ const actions = {
       let res = getRoutes()
       let accessedRoutes // 用于存放可以访问的路由
       if (roles.includes('admin')) { //判断当前角色是否包含admin
-        accessedRoutes = res
+        // accessedRoutes = res
+        accessedRoutes = filterAsyncRoutes(asyncRoutes,["admin"])
       } else {
         // accessedRoutes = userRoutes || []
         accessedRoutes = filterAsyncRoutes(asyncRoutes,["user"])

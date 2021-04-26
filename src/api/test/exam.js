@@ -1,5 +1,21 @@
 import request from '@/utils/request'
 import request_admin from "@/utils/request_admin";
+export function getAllUser() {
+  return request_admin({
+    url: '/admin/user/getAll',
+    method: 'get',
+    params: null
+  })
+}
+
+export function addUserToOption(testOptionId, userIds) {
+  return request_admin({
+    url: '/admin/test/paper/' + testOptionId + '/addUser',
+    method: 'put',
+    data: userIds
+  })
+}
+
 export function getList() {
   return request_admin({
     url: '/admin/test/paper',
@@ -8,7 +24,7 @@ export function getList() {
   })
 }
 
-export function getAllUser(testOptionId) {
+export function pickUserBytestOptionId(testOptionId) {
   return request_admin({
     url: '/admin/test/paper/' + testOptionId + '/parUsers',
     method: 'get',

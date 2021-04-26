@@ -62,9 +62,10 @@
     <el-card shadow="hover">
       <el-steps :active="questionIndex">
         <el-step
-          v-for="(quesIndex, index) in tests"
+          v-for="(test, index) in tests"
           :key="index"
           :label="index"
+          @click.native="onQuesClicked(test)"
         />
       </el-steps>
     </el-card>
@@ -134,8 +135,8 @@ export default {
       haveDoneQuestionNumber: 1,
       timeLeft: '00:00:00',
       duration: 0,
-      hourLeft: 0,
-      minuteLeft: 0,
+      hourLeft: 1,
+      minuteLeft: 1,
       secondLeft: 0,
       startTime: '',
       questionIndex: 0,
@@ -236,6 +237,9 @@ export default {
           }
         })
       })
+    },
+    onQuesClicked(test) {
+      this.questionIndex = test.quesIndex
     },
     setTimeLeft() {
       this.hourLeft = Math.floor(this.duration / 60)

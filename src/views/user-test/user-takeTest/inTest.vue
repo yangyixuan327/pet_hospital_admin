@@ -250,11 +250,13 @@ export default {
         if (this.secondLeft === 0) {
           if (this.minuteLeft === 0) {
             if (this.hourLeft === 0) {
+              clearInterval(this.interval)
               this.$alert('已自动为您交卷！', '考试时间结束', {
                 confirmButtonText: '确定',
                 callback: action => {
                   this.isMidPointSubmitted = true
                   this.submitAnswerDialogConfirmOnClicked()
+                  this.$router.push('/test_user/take_test')
                 }
               })
             } else {

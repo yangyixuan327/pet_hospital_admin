@@ -51,6 +51,7 @@
       :title="editDialog.title"
       width="50%"
       center
+      @close="editDialog.visible = false"
     >
       <el-form :model="form">
         <el-form-item label="账号" label-width="120px">
@@ -66,7 +67,7 @@
           <el-switch v-model="form.role"></el-switch>
         </el-form-item>
       </el-form>
-      <template #footer >
+      <template #footer>
         <span class="dialog-footer">
           <el-button @click="editDialog.visible = false">取 消</el-button>
           <el-button type="primary" @click="editDialogConfirmOnClicked">确 定</el-button>
@@ -79,8 +80,8 @@
 
 <script>
 
-    import {deleteUser, newUser, submitEditDialogResult, updateUser} from "../../api/user";
-import {getList} from "../../api/user";
+import { deleteUser, newUser, submitEditDialogResult, updateUser } from '../../api/user'
+import { getList } from '../../api/user'
 
 export default {
   data() {
@@ -92,135 +93,130 @@ export default {
         limit: 10
       },
       editDialog: {
-          visible: false,
-          contentVisible: true,
-          title: ''
+        visible: false,
+        contentVisible: true,
+        title: ''
       },
       form: {
-          userId: -1,
-          index: -1,
-          name: '',
-          account: '',
-          password: '',
-          role: ''
-      },
+        userId: -1,
+        index: -1,
+        name: '',
+        account: '',
+        password: '',
+        role: ''
+      }
     }
   },
-    created() {
-        this.fetchData()
-    },
+  created() {
+    this.fetchData()
+  },
   methods: {
     fetchData() {
+      this.listLoading = false
+      getList().then(response => {
+        console.log(response)
+        this.list = response.data.responseMap.result
         this.listLoading = false
-        getList().then(response => {
-          console.log(response)
-          this.list = response.data.responseMap.result
-          this.listLoading = false
-        })
+      })
     },
-      onCreateNewClicked() {
-          this.editDialog.visible = true
-          this.editDialog.title = '新建账户'
-          this.form.name = ''
-          this.form.account = ''
-          this.form.password = ''
-          this.form.role = false
-          this.editDialog.changeMode = 'add'
-      },
-      onEditClicked(row, index) {
-          this.form.userId = row.userId,
-          this.form.index = index
-          this.form.name = row.name
-          this.form.account = row.account
-          this.form.password = row.password
-          if(row.role === "admin"){
-              this.form.role = true
-          }
-          else{
-              this.form.role = false
-          }
-          this.editDialog.title = '修改账户'
-          this.editDialog.visible = true
-          this.editDialog.changeMode = 'update'
-      },
-      onDeleteClicked(row, index) {
-          const temp = {
-              userId: row.userId
-          };
-          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            deleteUser(temp).then(response => {
-                console.log(response)
-                console.log(temp)
-                this.list.splice(index, 1)
-            })
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
-            });
-          });
-        },
-      editDialogConfirmOnClicked(index) {
-          if (this.form.role===true){
-              this.form.role = "admin"
-          }
-          else{
-              this.form.role = "user"
-          }
-        const params = {
+    onCreateNewClicked() {
+      this.editDialog.visible = true
+      this.editDialog.title = '新建账户'
+      this.form.name = ''
+      this.form.account = ''
+      this.form.password = ''
+      this.form.role = false
+      this.editDialog.changeMode = 'add'
+    },
+    onEditClicked(row, index) {
+      this.form.userId = row.userId
+      this.form.index = index
+      this.form.name = row.name
+      this.form.account = row.account
+      this.form.password = row.password
+      if (row.role === 'admin') {
+        this.form.role = true
+      } else {
+        this.form.role = false
+      }
+      this.editDialog.title = '修改账户'
+      this.editDialog.visible = true
+      this.editDialog.changeMode = 'update'
+    },
+    onDeleteClicked(row, index) {
+      const temp = {
+        userId: row.userId
+      }
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteUser(temp).then(response => {
+          console.log(response)
+          console.log(temp)
+          this.list.splice(index, 1)
+        })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    editDialogConfirmOnClicked(index) {
+      if (this.form.role === true) {
+        this.form.role = 'admin'
+      } else {
+        this.form.role = 'user'
+      }
+      const params = {
+        name: this.form.name,
+        account: this.form.account,
+        password: this.form.password,
+        role: this.form.role,
+        index: this.form.index,
+        changeMode: this.editDialog.changeMode
+      }
+      submitEditDialogResult(params).then(response => {
+        const index = this.form.index
+        const changeMode = this.editDialog.changeMode
+        const temp = {
           name: this.form.name,
           account: this.form.account,
           password: this.form.password,
           role: this.form.role,
-          index: this.form.index,
-          changeMode: this.editDialog.changeMode
+          userId: this.form.userId
         }
-        submitEditDialogResult(params).then(response => {
-          const index = this.form.index
-          const changeMode = this.editDialog.changeMode
-          const temp = {
-              name: this.form.name,
-              account: this.form.account,
-              password: this.form.password,
-              role: this.form.role,
-              userId:this.form.userId
-          };
-          if (changeMode === 'update') {
-            if (index != null && index >= 0) {
-              this.list[index].name = this.form.name
-              this.list[index].account = this.form.account
-              this.list[index].password = this.form.password
-              this.list[index].role = this.form.role
-              updateUser(temp).then(response => {
-                  console.log(response)
-                  console.log("Updated user" + temp)
-              })
-
-            }
-          } else if (changeMode === 'add') {
-              newUser(temp).then(response => {
-                  console.log("Create new user" + temp)
-              })
-            this.list.push({
-                name: this.form.name,
-                account: this.form.account,
-                password: this.form.password,
-                role: this.form.role
-              }
-            )
+        if (changeMode === 'update') {
+          if (index != null && index >= 0) {
+            this.list[index].name = this.form.name
+            this.list[index].account = this.form.account
+            this.list[index].password = this.form.password
+            this.list[index].role = this.form.role
+            updateUser(temp).then(response => {
+              console.log(response)
+              console.log('Updated user' + temp)
+            })
           }
-          this.editDialog.visible = false
-        })
-      }
-
+        } else if (changeMode === 'add') {
+          newUser(temp).then(response => {
+            console.log('Create new user' + temp)
+          })
+          this.list.push({
+            name: this.form.name,
+            account: this.form.account,
+            password: this.form.password,
+            role: this.form.role }
+          )
+        }
+        this.editDialog.visible = false
+      })
+    }
   }
 }
 </script>

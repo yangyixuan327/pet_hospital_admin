@@ -232,6 +232,10 @@ export default {
               })
             }
             this.tests = questionList
+            if (this.tests.length === 1) {
+              this.isPreDisabled = true
+              this.isNextDisabled = true
+            }
           } else if (response.data.status === 500) {
             this.isErrorIn = true
             this.$message('考试时间已结束或未到考试时间！')
@@ -240,6 +244,23 @@ export default {
       })
     },
     onQuesClicked(test) {
+      if (this.tests.length - 1 === test.quesIndex && this.questionIndex !== 0) {
+        this.isNextDisabled = true
+      } else if (test.quesIndex === 0 && this.questionIndex !== this.tests.length - 1) {
+        this.isPreDisabled = true
+      } else if (this.tests.length - 1 === test.quesIndex && this.questionIndex === 0) {
+        this.isNextDisabled = true
+        this.isPreDisabled = false
+      } else if (test.quesIndex === 0 && this.questionIndex === this.tests.length - 1) {
+        this.isPreDisabled = true
+        this.isNextDisabled = false
+      } else if (this.tests.length === 1) {
+        this.isPreDisabled = true
+        this.isNextDisabled = true
+      } else if (test.quesIndex !== 0 && test.quesIndex !== this.tests.length) {
+        this.isNextDisabled = false
+        this.isPreDisabled = false
+      }
       this.questionIndex = test.quesIndex
     },
     setTimeLeft() {

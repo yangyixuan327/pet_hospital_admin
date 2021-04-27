@@ -112,6 +112,7 @@
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-success="handleUploadSuccess"
+        :before-upload="handleBeforeUpload"
         multiple
         :limit="1"
         :on-exceed="handleExceed"
@@ -384,7 +385,7 @@ export default {
       this.mediaDialog.imageVisible = false
       this.mediaDialog.videoVisible = true
       this.mediaDialog.title = '病例视频'
-      this.uploadTip = '上传视频please，太大了不收'
+      this.uploadTip = '上传mp4格式please，100M以内'
       this.uploadParamName = 'video'
       const base_url = 'http://47.101.217.16:8080'
       if (type === 'jieZhen') {
@@ -427,6 +428,13 @@ export default {
         this.videoUrl = 'http://' + videoUrl
       } else {
         this.videoUrl = ''
+      }
+    },
+    handleBeforeUpload(file) {
+      const fileSizeInMB = file.size / 1024 / 1024
+      if (fileSizeInMB > 100) {
+        this.$alert('文件大小不能超过100M')
+        return false
       }
     }
   }

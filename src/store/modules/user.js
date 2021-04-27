@@ -11,7 +11,7 @@ const getDefaultState = () => {
     role: ''
   }
 }
-
+import Vue from 'vue'
 const state = getDefaultState()
 
 const mutations = {
@@ -19,16 +19,20 @@ const mutations = {
     Object.assign(state, getDefaultState())
   },
   SET_TOKEN: (state, token) => {
-    state.token = token
+    // state.token = token
+    Vue.set(state,"token",token)
   },
   SET_NAME: (state, name) => {
-    state.name = name
+    // state.name = name
+    Vue.set(state,"name",name)
   },
   SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+    // state.avatar = avatar
+    Vue.set(state,"avatar",avatar)
   },
   SET_ROLE: (state, role) => {
-    state.roles = role
+    // state.roles = role
+    Vue.set(state,"roles",role)
   }
 }
 

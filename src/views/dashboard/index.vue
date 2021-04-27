@@ -24,7 +24,7 @@
       </el-carousel-item>
     </el-carousel>
 
-  <template v-if="roles === 'admin'">
+  <template v-if="this.roles === 'admin'">
     <el-row  type="flex" :gutter="20" justify="end" >
       <el-col ><el-button class = "big_button" type="primary" @click="$router.push({name:'UserManageIndex'})">用户管理</el-button></el-col>
       <el-col ><el-button class = "big_button" type="success" @click="$router.push({name:'QuestionManage'})">测试管理</el-button></el-col>
@@ -33,7 +33,7 @@
     </el-row>
   </template>
 
-    <template v-if="roles === 'user'">
+    <template v-if="this.roles === 'user'">
       <el-row  type="flex" :gutter="20" justify="end" >
         <el-col ><el-button class = "big_button" type="primary" @click="$router.push({name:'HospitalNavigation'})">3D医院导览</el-button></el-col>
         <el-col ><el-button class = "big_button" type="success" @click="$router.push({name:'CaseFrontInner'})">病例学习</el-button></el-col>
@@ -56,7 +56,7 @@ export default {
   },
     beforeMount:function(){
         this.height = $(window).width()*664/1920 + 'px';
-    },
+    }
 }
 
 </script>

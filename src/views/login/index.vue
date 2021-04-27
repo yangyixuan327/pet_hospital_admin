@@ -56,7 +56,6 @@
         <template #footer >
         <span class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
-
           <el-button type="primary" @click="dialogConfirmOnClicked">确 定</el-button>
         </span>
         </template>

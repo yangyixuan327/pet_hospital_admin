@@ -47,3 +47,12 @@ export function addQuestionToPaper(paperId, quesIds) {
     data: quesIds
   })
 }
+
+export function fetchQuesByUnionSearch(searchText) {
+  return request_admin({
+    url: '/admin/test/question/search',
+    method: 'post',
+    data: searchText
+  })
+}
+

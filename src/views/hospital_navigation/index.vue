@@ -2,8 +2,8 @@
   <div class="app-container">
     <el-container>
       <el-container>
-        <el-aside width="1024px" height="800px">
-          <el-card class="box-card">
+        <el-aside style= "margin-top: 20px" width="1024px" height="800px">
+          <el-card  class="box-card">
             <iframe width="1024px" height="800px" allowfullscreen frameborder="0" src="https://orbix360.com/KkS4bhWHw"></iframe>
           </el-card>
         </el-aside>
@@ -74,7 +74,7 @@ export default {
       sections: [],
       section: '大厅', // 默认大厅
       sectionId: 1,
-      img_url:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+      img_url:""
     }
   },
   created() {
@@ -154,7 +154,13 @@ export default {
   text-align: center;
   line-height: 100px;
 }
-
+.el-aside {
+  margin-bottom: 2%;
+}
+.box-card{
+  min-height: 100%;
+  height: 100%;
+}
 .el-container:nth-child(5) .el-aside,
 .el-container:nth-child(6) .el-aside {
   line-height: 260px;
@@ -163,6 +169,7 @@ export default {
 .el-container:nth-child(7) .el-aside {
   line-height: 320px;
 }
+
 
 </style>
 

@@ -42,6 +42,13 @@ export function newUser(user) {
     data: user //user
   })
 }
+export function sign_up(user) {
+  return request_admin({
+    url: '/sign-up',
+    method: 'put',
+    data: user //user
+  })
+}
 export function updateUser(user) {
   return request_admin({
     url: '/admin/user/updateInfo',

@@ -1,12 +1,9 @@
-<template>
-  <div class="login-container">
+<template xmlns="http://www.w3.org/1999/html">
+    <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-
       <div class="title-container">
         <h3 class="title">Login Form</h3>
       </div>
-
-
       <el-form-item prop="userName">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -41,25 +38,35 @@
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
-
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-
-<!--      <div style="margin-top: 0px; margin-bottom: 20px">-->
-<!--        <el-radio v-model="userType" label="user" border size="medium" class="chooseUser">普通用户</el-radio>-->
-<!--        <el-radio v-model="userType" label="admin" border size="medium" class="chooseUser">管理员</el-radio>-->
-<!--      </div>-->
-
-<!--      <div class="tips">-->
-<!--        <span style="margin-right:20px;">userName: admin</span>-->
-<!--        <span> password: any</span>-->
-<!--      </div>-->
-
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:20px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button style="width:100%; margin-left: 0px "type="primary" @click=" showDialog= true ">Register</el-button>
     </el-form>
+      <el-dialog class = "register" title="注册" :visible.sync="showDialog" width="50%" center>
+        <el-form :model="form">
+          <el-form-item class="form-item" label="账号" label-width="120px">
+            <el-input v-model="form.account" autocomplete="off"/>
+          </el-form-item>
+          <el-form-item class="form-item" label="用户名" label-width="120px">
+            <el-input v-model="form.name" autocomplete="off"/>
+          </el-form-item>
+          <el-form-item class="form-item" label="密码" label-width="120px">
+            <el-input v-model="form.password" autocomplete="off"/>
+          </el-form-item>
+        </el-form>
+        <template #footer >
+        <span class="dialog-footer">
+          <el-button @click="showDialog = false">取 消</el-button>
+
+          <el-button type="primary" @click="dialogConfirmOnClicked">确 定</el-button>
+        </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
+import {sign_up} from "@/api/user";
 
 export default {
   name: 'Login',
@@ -90,7 +97,13 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      userType: 'user'
+      userType: 'user',
+      showDialog: false,
+      form: {
+        name: '',
+        account: '',
+        password: ''
+      }
     }
   },
   watch: {
@@ -127,14 +140,29 @@ export default {
           return false
         }
       })
+    },
+    dialogConfirmOnClicked() {
+      const user = {
+        name: this.form.name,
+        account: this.form.account,
+        password: this.form.password,
+        role : 'user'
+      }
+      sign_up(user).then(response => {
+        console.log("Create new user" + response)
+        this.$message({
+          message: '注册成功',
+          type: 'success'
+        });
+        this.form=[]
+      })
+      this.showDialog=false
     }
   }
 }
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg:#283443;
 $light_gray:#fff;
@@ -169,7 +197,14 @@ $cursor: #fff;
       }
     }
   }
-
+  .register {
+    .form-item {
+      input {
+        color: black;
+        caret-color: black;
+      }
+    }
+  }
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);

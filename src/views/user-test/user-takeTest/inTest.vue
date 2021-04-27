@@ -184,6 +184,7 @@ export default {
   destroyed() {
     window.removeEventListener('popstate', this.back, false)
     window.removeEventListener('beforeunload', this.refresh)
+    clearInterval(this.interval)
   },
   methods: {
     fetchData() {

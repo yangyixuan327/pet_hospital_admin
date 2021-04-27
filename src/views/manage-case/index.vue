@@ -282,29 +282,29 @@ export default {
           console.log(response)
           if (response.data.status === 200) {
             params.caseId = response.data.responseMap.result
+            console.log(params.caseId)
             addNewCaseInfo(params).then(this_.$axios.spread(function(responseJieZhen, responseZhenDuan, responseZhiLiao) {
               if (responseJieZhen.data.status === 200 &&
                 responseZhenDuan.data.status === 200 &&
                 responseZhiLiao.data.status === 200) {
                 this_.$message('添加成功')
-                console.log('add success')
                 this_.list.push(
                   {
-                    caseId: response.data.responseMap.caseId,
+                    caseId: params.caseId,
                     type: 'words',
                     caseName: this_.form.caseName,
                     jieZhen: this_.form.jieZhen,
                     zhenDuan: this_.form.zhenDuan,
                     zhiLiao: this_.form.zhiLiao
                   }, {
-                    caseId: response.data.responseMap.caseId,
+                    caseId: params.caseId,
                     type: 'image',
                     caseName: this_.form.caseName,
                     jieZhen: '',
                     zhenDuan: '',
                     zhiLiao: ''
                   }, {
-                    caseId: response.data.responseMap.caseId,
+                    caseId: params.caseId,
                     type: 'video',
                     caseName: this_.form.caseName,
                     jieZhen: '',
@@ -313,6 +313,7 @@ export default {
                   }
                 )
               } else {
+                console.log(responseJieZhen, responseZhenDuan, responseZhiLiao)
                 this_.$message('病例文字信息添加失败 请重试')
               }
             }))

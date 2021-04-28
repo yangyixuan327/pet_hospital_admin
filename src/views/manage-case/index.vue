@@ -301,16 +301,16 @@ export default {
                     caseId: params.caseId,
                     type: 'image',
                     caseName: this_.form.caseName,
-                    jieZhen: '',
-                    zhenDuan: '',
-                    zhiLiao: ''
+                    jieZhen: 'jieZhen',
+                    zhenDuan: 'zhenDuan',
+                    zhiLiao: 'zhiLiao'
                   }, {
                     caseId: params.caseId,
                     type: 'video',
                     caseName: this_.form.caseName,
-                    jieZhen: '',
-                    zhenDuan: '',
-                    zhiLiao: ''
+                    jieZhen: 'jieZhen',
+                    zhenDuan: 'zhenDuan',
+                    zhiLiao: 'zhiLiao'
                   }
                 )
               } else {
@@ -388,6 +388,7 @@ export default {
       this.uploadTip = '上传mp4格式please，100M以内'
       this.uploadParamName = 'video'
       const base_url = 'http://47.101.217.16:8080'
+      console.log('type: ' + type)
       if (type === 'jieZhen') {
         this.postUrl = base_url + '/admin/case/' + caseId + '/consult/video'
       } else if (type === 'zhenDuan') {
@@ -396,7 +397,7 @@ export default {
         this.postUrl = base_url + '/admin/case/' + caseId + '/therapy/video'
       }
       getInfoByIdAndType(caseId, type).then(response => {
-        console.log(response)
+        console.log('video response:', response)
         var videoUrl = ''
         if (type === 'jieZhen') {
           videoUrl = response.data.responseMap.result.consultVideoUrl
@@ -411,6 +412,7 @@ export default {
           this.videoUrl = ''
         }
         console.log('videoUrl: ' + this.videoUrl)
+        console.log('postUrl: ' + this.postUrl)
       })
     },
     handleRemove(file, fileList) {

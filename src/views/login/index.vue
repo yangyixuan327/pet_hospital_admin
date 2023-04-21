@@ -2,8 +2,9 @@
     <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">欢迎来到虚拟宠物医院学习系统</h3>
       </div>
+      /** 用户名 */
       <el-form-item prop="userName">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -19,6 +20,7 @@
         />
       </el-form-item>
 
+      /** 密码 */
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
@@ -38,9 +40,12 @@
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
+
+
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:20px;" @click.native.prevent="handleLogin">Login</el-button>
-      <el-button style="width:100%; margin-left: 0px "type="primary" @click=" showDialog= true ">Register</el-button>
+      <el-button style="width:100%; margin-left: 0px" type="primary" @click=" showDialog= true ">Register</el-button>
     </el-form>
+
       <el-dialog class = "register" title="注册" :visible.sync="showDialog" width="50%" center>
         <el-form :model="form">
           <el-form-item class="form-item" label="账号" label-width="120px">
@@ -131,6 +136,7 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: '/' })
             this.loading = false
+            console.log('login succeeded!!')
           }).catch(() => {
             this.loading = false
           })

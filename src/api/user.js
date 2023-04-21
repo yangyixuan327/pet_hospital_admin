@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import request_admin from "@/utils/request_admin";
+import request_admin from '@/utils/request_admin';
 
 export function getUserList() {
   return request_admin({
@@ -25,7 +25,7 @@ export function login(userInfo) {
   return request_admin({
     url: '/login',
     method: 'post',
-    data:userInfo
+    data: userInfo
   })
 }
 export function getInfo(userInfo) {
@@ -39,14 +39,14 @@ export function newUser(user) {
   return request_admin({
     url: '/admin/user/newUser',
     method: 'put',
-    data: user //user
+    data: user // user
   })
 }
 export function sign_up(user) {
   return request_admin({
-    url: '/sign-up',
+    url: '/admin/user/newUser',
     method: 'put',
-    data: user //user
+    data: user // user
   })
 }
 export function updateUser(user) {

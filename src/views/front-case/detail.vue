@@ -92,12 +92,12 @@ export default {
       const caseId = this.caseId
       fetchCaseZhenDuan(caseId).then(response => {
         if (response.data.responseMap.result.diagImageUrl !== null) {
-          this.zhenDuan.imageUrl = 'http://' + response.data.responseMap.result.diagImageUrl
+          this.zhenDuan.imageUrl = response.data.responseMap.result.diagImageUrl
         } else {
           this.zhenDuan.imageUrl = ''
         }
         if (response.data.responseMap.result.diagVideoUrl !== null) {
-          this.zhenDuan.videoUrl = 'http://' + response.data.responseMap.result.diagVideoUrl
+          this.zhenDuan.videoUrl = response.data.responseMap.result.diagVideoUrl
         } else {
           this.zhenDuan.videoUrl = ''
         }
@@ -107,12 +107,12 @@ export default {
       })
       fetchCaseJieZhen(caseId).then(response => {
         if (response.data.responseMap.result.consultImageUrl !== null) {
-          this.jieZhen.imageUrl = 'http://' + response.data.responseMap.result.consultImageUrl
+          this.jieZhen.imageUrl = response.data.responseMap.result.consultImageUrl
         } else {
           this.jieZhen.imageUrl = ''
         }
         if (response.data.responseMap.result.consultVideoUrl !== null) {
-          this.jieZhen.videoUrl = 'http://' + response.data.responseMap.result.consultVideoUrl
+          this.jieZhen.videoUrl = response.data.responseMap.result.consultVideoUrl
         } else {
           this.jieZhen.videoUrl = ''
         }
@@ -129,12 +129,12 @@ export default {
       })
       fetchCaseZhiLiao(caseId).then(response => {
         if (response.data.responseMap.result.therapyImageUrl !== null) {
-          this.zhiLiao.imageUrl = 'http://' + response.data.responseMap.result.therapyImageUrl
+          this.zhiLiao.imageUrl = response.data.responseMap.result.therapyImageUrl
         } else {
           this.zhiLiao.imageUrl = ''
         }
         if (response.data.responseMap.result.therapyVideoUrl !== null) {
-          this.zhiLiao.videoUrl = 'http://' + response.data.responseMap.result.therapyVideoUrl
+          this.zhiLiao.videoUrl = response.data.responseMap.result.therapyVideoUrl
         } else {
           this.zhiLiao.videoUrl = ''
         }

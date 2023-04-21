@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" style="margin-bottom: 10px;" @click="onCreateNewClicked">新建<i
-      class="el-icon-plus el-icon--right"
-    /></el-button>
+    <el-button type="primary" style="margin-bottom: 10px;" @click="onCreateNewClicked">新建
+      <i class="el-icon-plus el-icon--right"/>
+    </el-button>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -120,7 +120,9 @@
       >
         <el-button size="small" type="primary" style="margin-left: auto; margin-top: 40px">点击上传</el-button>
         <template #tip>
-          <div class="el-upload__tip">{{ uploadTip }}</div>
+          <div class="el-upload__tip">
+            {{ uploadTip }}
+          </div>
         </template>
       </el-upload>
       <template #footer>
@@ -358,7 +360,7 @@ export default {
       this.mediaDialog.title = '病例图片'
       this.uploadTip = '上传图片please，太大了不收'
       this.uploadParamName = 'image'
-      const base_url = 'http://47.101.217.16:8080'
+      const base_url = 'http://localhost:8080/Users/leonie_yang/Pictures'
       if (type === 'jieZhen') {
         this.postUrl = base_url + '/admin/case/' + caseId + '/consult/image'
       } else if (type === 'zhenDuan') {
@@ -370,11 +372,11 @@ export default {
         console.log(response)
         var imageUrl = ''
         if (type === 'jieZhen') {
-          imageUrl = 'http://' + response.data.responseMap.result.consultImageUrl
+          imageUrl = response.data.responseMap.result.consultImageUrl
         } else if (type === 'zhenDuan') {
-          imageUrl = 'http://' + response.data.responseMap.result.diagImageUrl
+          imageUrl = response.data.responseMap.result.diagImageUrl
         } else if (type === 'zhiLiao') {
-          imageUrl = 'http://' + response.data.responseMap.result.therapyImageUrl
+          imageUrl = response.data.responseMap.result.therapyImageUrl
         }
         console.log(imageUrl)
         this.imageUrls = [imageUrl]
@@ -427,8 +429,8 @@ export default {
     handleUploadSuccess(res, file) {
       var url = res.responseMap.result
       if (url !== null) {
-        this.videoUrl = 'http://' + url
-        this.imageUrls = ['http://' + url]
+        this.videoUrl = url
+        this.imageUrls = [url]
       } else {
         this.videoUrl = ''
         this.imageUrls = []

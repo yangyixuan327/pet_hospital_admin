@@ -18,7 +18,7 @@ export function addUserToOption(testOptionId, userIds) {
 
 export function getAllPaper() {
   return request_admin({
-    url: '/admin/test/problemSet',
+    url: '/admin/structure/examination',
     method: 'get',
     params: null
   })
@@ -48,7 +48,7 @@ export function getPaperIdByTestOptionId(testOptionId) {
 
 export function getPaperNameByPaperId(paper_id) {
   return request_admin({
-    url: '/admin/test/problemSet/' + paper_id,
+    url: '/admin/structure/examination/' + paper_id,
     method: 'get'
   })
 }

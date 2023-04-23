@@ -42,7 +42,6 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
   {
     path: '/',
     component: Layout,
@@ -51,51 +50,42 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '主页', icon: 'el-icon-s-home' }
     }]
-  },
+  }
+]
 
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
+// 异步挂载的路由
+// 动态需要根据权限加载的路由表
+export const asyncRoutes = [
   {
     path: '/user_manage',
     component: Layout,
     name: 'UserManage',
+    meta: {
+      roles: ['admin']
+    },
     children: [
       {
         path: 'index',
-        name: 'UserManage',
+        name: 'UserManageIndex',
         component: () => import('@/views/manage-user/index'),
-        meta: { title: '用户管理', icon: 'user' }
+        meta: {
+          title: '用户管理',
+          icon: 'user'
+        }
       }
     ]
   },
-
   {
     path: '/test_manage',
     component: Layout,
     name: 'TestManage',
-    meta: { title: '测试管理', icon: 'form' },
+    meta: {
+      title: '测试管理',
+      icon: 'form',
+      roles: ['admin']
+    },
     children: [
       {
         path: 'question_manage',
@@ -124,77 +114,109 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/case_manage',
     component: Layout,
     name: 'CaseManage',
-    meta: { title: '测试管理', icon: 'form' },
+    meta: {
+      roles: ['admin']
+    },
     children: [
       {
         path: 'index',
-        name: 'CaseManage',
+        name: 'CaseManageIndex',
         component: () => import('@/views/manage-case/index'),
-        meta: { title: '病例管理', icon: 'table' }
+        meta: { title: '病例管理', icon: 'el-icon-s-management' }
       }
     ]
   },
-
   {
     path: '/structure_manage',
     component: Layout,
     name: 'StructureManage',
+    meta: {
+      roles: ['admin']
+    },
     children: [
       {
         path: 'index',
-        name: 'StructureManage',
+        name: 'StructureManageIndex',
         component: () => import('@/views/manage-structure/index'),
-        meta: { title: '结构管理', icon: 'table' }
+        meta: { title: '结构管理', icon: 'tree' }
       }
     ]
+  },
+  {
+    path: '/test_user',
+    component: Layout,
+    name: 'TestUser',
+    meta: { title: '进行考试', icon: 'el-icon-document-checked', roles: ['user'] },
+    children: [
+      {
+        path: 'take_test',
+        name: 'TakeTest',
+        component: () => import('@/views/user-test/user-takeTest/index'),
+        meta: { title: '参加考试' }
+      },
+      {
+        path: 'check_result',
+        name: 'CheckResult',
+        component: () => import('@/views/user-test/user-checkResult/index'),
+        meta: { title: '查看结果' }
+      }
+    ]
+  },
+  {
+    path: '/test_user/inTest',
+    component: () => import('@/views/user-test/user-takeTest/inTest')
+  },
+  {
+    path: '/test_manage/exam_manage/pick_user',
+    component: () => import('@/views/manage-test/manage-exam/pickUser')
   },
   {
     path: '/case_front',
     component: Layout,
     name: 'CaseFront',
+    redirect: '/case_front',
+    meta: { title: '病例学习', icon: 'el-icon-first-aid-kit' ,roles: ['user']},
     children: [
       {
         path: 'index',
         name: 'CaseFrontInner',
         component: () => import('@/views/front-case/index'),
-        meta: { title: '病例学习', icon: 'table' }
-      }
-    ]
-  },
-  {
-    path: '/case_front/detail/',
-    name: 'CaseDetail',
-    component: Layout,
-    hidden: true,
-    children: [
+        meta: { title: '病例学习', breadcrumb: false }
+      },
       {
-        path: 'caseId/:caseId',
+        path: 'detail/caseId/:caseId',
         name: 'CaseDetailInner',
         component: () => import('@/views/front-case/detail'),
-        meta: { title: '病例详情' },
-        breadcrumb: true
+        meta: { title: '病例详情', breadcrumb: true },
+        hidden: true
       }
     ]
   },
-
   {
-    path: 'external-link',
+    path: '/hospital_navigation',
     component: Layout,
+    name: 'HospitalNavigation',
+    redirect: '/hospital_navigation/index',
+    meta: { roles: ['user']},
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'index',
+        name: 'HospitalNavigationIndex',
+        component: () => import('@/views/hospital_navigation/index'),
+        meta: { title: '3D医院导览',icon:"el-icon-guide" }
       }
     ]
   },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // 404一定要放在最后!
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  }
 ]
 
 const createRouter = () => new Router({
@@ -212,3 +234,4 @@ export function resetRouter() {
 }
 
 export default router
+

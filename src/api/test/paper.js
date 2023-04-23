@@ -2,7 +2,7 @@ import request_admin from '@/utils/request_admin'
 
 export function getAllPapers() {
   return request_admin({
-    url: '/admin/test/problemSet',
+    url: '/admin/structure/examination',
     method: 'get',
     params: null
   })
@@ -10,7 +10,7 @@ export function getAllPapers() {
 
 export function addNewPaper(paperName) {
   return request_admin({
-    url: '/admin/test/problemSet',
+    url: '/admin/structure/examination',
     method: 'put',
     params: paperName
   })
@@ -18,15 +18,15 @@ export function addNewPaper(paperName) {
 
 export function changePaperName(paperId, paperName) {
   return request_admin({
-    url: '/admin/test/problemSet/' + paperId,
+    url: '/admin/structure/examination/' + paperId,
     method: 'post',
-    params: paperName
+    data: paperName
   })
 }
 
 export function deletePaperById(paperId) {
   return request_admin({
-    url: '/admin/test/problemSet',
+    url: '/admin/structure/examination',
     method: 'delete',
     params: paperId
   })
@@ -34,7 +34,7 @@ export function deletePaperById(paperId) {
 
 export function getPaperQuestionsById(paperId) {
   return request_admin({
-    url: '/admin/test/problemSet/' + paperId,
+    url: '/admin/structure/examination/' + paperId,
     method: 'get',
     params: null
   })
@@ -42,7 +42,7 @@ export function getPaperQuestionsById(paperId) {
 
 export function addQuestionToPaper(paperId, quesIds) {
   return request_admin({
-    url: '/admin/test/problemSet/' + paperId + '/addQues',
+    url: '/admin/test/paper/' + paperId + '/addQues',
     method: 'put',
     data: quesIds
   })

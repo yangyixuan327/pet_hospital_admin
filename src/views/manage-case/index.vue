@@ -360,7 +360,7 @@ export default {
       this.mediaDialog.title = '病例图片'
       this.uploadTip = '上传图片please，太大了不收'
       this.uploadParamName = 'image'
-      const base_url = 'http://localhost:8080/Users/leonie_yang/Pictures'
+      const base_url = 'http://59.110.174.202:8080'
       if (type === 'jieZhen') {
         this.postUrl = base_url + '/admin/case/' + caseId + '/consult/image'
       } else if (type === 'zhenDuan') {
@@ -372,11 +372,14 @@ export default {
         console.log(response)
         var imageUrl = ''
         if (type === 'jieZhen') {
-          imageUrl = response.data.responseMap.result.consultImageUrl
+          imageUrl =  response.data.responseMap.result.consultImageUrl
         } else if (type === 'zhenDuan') {
           imageUrl = response.data.responseMap.result.diagImageUrl
         } else if (type === 'zhiLiao') {
           imageUrl = response.data.responseMap.result.therapyImageUrl
+        }
+        if (imageUrl !== 'NULL') {
+          imageUrl = 'http://' + imageUrl
         }
         console.log(imageUrl)
         this.imageUrls = [imageUrl]
@@ -389,7 +392,7 @@ export default {
       this.mediaDialog.title = '病例视频'
       this.uploadTip = '上传mp4格式please，100M以内'
       this.uploadParamName = 'video'
-      const base_url = 'http://47.101.217.16:8080'
+      const base_url = 'http://59.110.174.202:8080'
       console.log('type: ' + type)
       if (type === 'jieZhen') {
         this.postUrl = base_url + '/admin/case/' + caseId + '/consult/video'
@@ -408,7 +411,7 @@ export default {
         } else if (type === 'zhiLiao') {
           videoUrl = response.data.responseMap.result.therapyVideoUrl
         }
-        if (videoUrl !== null) {
+        if (videoUrl !== 'NULL') {
           this.videoUrl = 'http://' + videoUrl
         } else {
           this.videoUrl = ''

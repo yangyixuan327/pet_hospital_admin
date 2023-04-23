@@ -16,9 +16,14 @@
           {{ scope.row.paperId }}
         </template>
       </el-table-column>
-      <el-table-column label="试卷名称">
+      <el-table-column align="center" label="试卷名称">
         <template slot-scope="scope">
           {{ scope.row.paperName }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="备注">
+        <template slot-scope="scope">
+          {{scope.row.paperDescrip}}
         </template>
       </el-table-column>
 
@@ -62,6 +67,7 @@ import {
   changePaperName,
   deletePaperById
 } from '@/api/test/paper'
+import {getPaperNameByPaperId} from "@/api/test/exam";
 
 export default {
   data() {
@@ -90,8 +96,9 @@ export default {
         const responseResult = response.data.responseMap.result
         for (let i = 0; i < responseResult.length; i++) {
           this.list.push({
-            paperId: responseResult[i].paperId,
-            paperName: responseResult[i].paperName
+            paperId: responseResult[i].examId,
+            paperName: responseResult[i].examName,
+            paperDescrip: responseResult[i].examDescrip
           })
         }
       })
@@ -145,7 +152,7 @@ export default {
     wordsDialogConfirmOnClicked() {
       if (this.wordsDialog.changeMode === 'add') {
         const paperName = {
-          paperName: this.form.paperName
+          examName: this.form.paperName
         }
         addNewPaper(paperName).then(response => {
           this.list.push({
@@ -156,10 +163,12 @@ export default {
         this.wordsDialog.visible = false
       } else if (this.wordsDialog.changeMode === 'update') {
         const paperName = {
-          paperName: this.form.paperName
+          examId: this.form.paperId,
+          examName: this.form.paperName,
+          examDescrip: this.list[this.form.paperIndex].paperDescrip
         }
         changePaperName(this.form.paperId, paperName).then(response => {
-          this.list[this.form.paperIndex].paperName = paperName.paperName
+          this.list[this.form.paperIndex].paperName = paperName.examName
         })
         this.wordsDialog.visible = false
       }

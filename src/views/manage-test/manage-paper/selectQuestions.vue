@@ -145,7 +145,7 @@ export default {
       })
       sleep(200).then(() => {
         getPaperQuestionsById(this.paperId).then(response => {
-          const responseResult = response.data.responseMap.questions
+          const responseResult = response.data.responseMap.result
           for (let i = 0; i < responseResult.length; i++) {
             for (let j = 0; j < this.list.length; j++) {
               if (responseResult[i].quesId === this.list[j].quesId) {
@@ -266,6 +266,7 @@ export default {
         const params = {
           type: command
         }
+        console.log(params)
         this.unionSearch(params)
       } else {
         const params = {

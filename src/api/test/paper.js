@@ -34,9 +34,11 @@ export function deletePaperById(paperId) {
 
 export function getPaperQuestionsById(paperId) {
   return request_admin({
-    url: '/admin/structure/examination/' + paperId,
+    url: '/admin/test/question/searchByTestOption',
     method: 'get',
-    params: null
+    params: {
+      testOptionId: paperId
+    }
   })
 }
 

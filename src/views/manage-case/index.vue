@@ -372,7 +372,7 @@ export default {
         console.log(response)
         var imageUrl = ''
         if (type === 'jieZhen') {
-          imageUrl =  response.data.responseMap.result.consultImageUrl
+          imageUrl = response.data.responseMap.result.consultImageUrl
         } else if (type === 'zhenDuan') {
           imageUrl = response.data.responseMap.result.diagImageUrl
         } else if (type === 'zhiLiao') {
@@ -392,7 +392,7 @@ export default {
       this.mediaDialog.title = '病例视频'
       this.uploadTip = '上传mp4格式please，100M以内'
       this.uploadParamName = 'video'
-      const base_url = 'http://59.110.174.202:8080'
+      const base_url = 'http://59.110.174.202:8080' // 59.110.174.202
       console.log('type: ' + type)
       if (type === 'jieZhen') {
         this.postUrl = base_url + '/admin/case/' + caseId + '/consult/video'
@@ -432,6 +432,8 @@ export default {
     handleUploadSuccess(res, file) {
       var url = res.responseMap.result
       if (url !== null) {
+        url = 'http://' + url
+        console.log(url)
         this.videoUrl = url
         this.imageUrls = [url]
       } else {

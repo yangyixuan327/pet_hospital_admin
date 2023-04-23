@@ -88,7 +88,7 @@
       <div style="margin-top: 5px" v-show="examType==='随机生成'">
         <el-form :model="form">
           <el-form-item label="考试名称" label-width="120px">
-            <el-input v-model="form.examName" autocomplete="off" />
+            <el-input v-model="examName" autocomplete="off" />
           </el-form-item>
           <el-form-item label="选择题数目" label-width="120px">
             <el-input v-model="form.examSelectNum" autocomplete="off" />
@@ -155,7 +155,6 @@ import {
   addPaper,
   changePaperById,
   deletePaperById,
-  submitWordsDialogResult,
   getAllPaper, getPaperIdByTestOptionId, getPaperNameByPaperId
 } from '@/api/test/exam'
 
@@ -220,8 +219,8 @@ export default {
         const exams = response.data.responseMap.result
         for (let i = 0; i < exams.length; i++) {
           this.options.push({
-            value: exams[i].paperId,
-            label: exams[i].paperName
+            value: exams[i].examId,
+            label: exams[i].examName
           })
         }
       })
@@ -280,6 +279,7 @@ export default {
       // console.log(this.list[paper_index].paperSelectNum)
       if (sum > 0) {
         // this.examType = '随机生成'
+        this.examName = this.list[exam_index].testOptionName
         this.form.examSelectNum = this.list[exam_index].selectNum
         this.form.examJudgeNum = this.list[exam_index].judgeNum
         this.form.examQaNum = this.list[exam_index].qaNum
@@ -293,10 +293,10 @@ export default {
         this.index = exam_index
         this.examName = this.list[exam_index].testOptionName
         getPaperIdByTestOptionId(exam_id).then(response => {
-          this.paperId = response.data.responseMap.result.paperId
+          this.paperId = response.data.responseMap.result.testOptionId
           // console.log("id" + this.paperId)
           getPaperNameByPaperId(this.paperId).then(response => {
-            this.paperName = response.data.responseMap.result.paperName
+            this.paperName = response.data.responseMap.result.testOptionName
             // console.log("name" + this.paperName)
             this.value = this.paperId
             // console.log("value" + this.value)

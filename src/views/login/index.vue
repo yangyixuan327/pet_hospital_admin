@@ -184,7 +184,7 @@ export default {
       } else if (!this.validateCheck) {
         this.$message({
           message: '请注意格式规范',
-          type: 'warning'
+          type: 'info'
         })
       } else {
         this.$message({

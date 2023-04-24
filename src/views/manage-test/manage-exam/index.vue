@@ -50,21 +50,17 @@
           <span>{{ scope.row.duration }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="总分" width="110" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.totalScore }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="created_at" label="操作" width="200">
         <template slot-scope="scope">
           <el-button-group>
             <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.row.testOptionId, scope.$index)" />
             <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.row.testOptionId, scope.$index)" />
             <el-button type="warning" icon="el-icon-s-custom" @click="onPickClicked(scope.row.testOptionId, scope.$index)" />
-          </el-button-group>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" prop="created_at" label="操作" width="200">
-        <template slot-scope="scope">
-          <el-button-group>
-            <el-button type="primary" icon="el-icon-edit" @click="onEditClicked(scope.$index, scope.$index)" />
-            <el-button type="danger" icon="el-icon-delete" @click="onDeleteClicked(scope.$index, scope.$index)" />
           </el-button-group>
         </template>
       </el-table-column>
@@ -77,6 +73,7 @@
       center
       @close="wordsDialog.visible = false"
     >
+      <!--
       <el-row>
         <el-col :span="24" align="center">
           <el-radio-group v-model="examType">
@@ -103,8 +100,8 @@
             <el-input v-model="form.duration" autocomplete="off" />
           </el-form-item>
         </el-form>
-      </div>
-      <div style="margin-top: 8px" align="center" v-show="examType==='勾选生成'">
+      </div> -->
+      <div style="margin-top: 8px" align="center" >  <!--v-show="examType==='勾选生成'"-->
         <el-form>
           <el-form-item label="考卷名称" label-width="120px">
             <el-select v-model="value" placeholder="请选择" :popper-append-to-body="false">

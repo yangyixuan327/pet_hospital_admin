@@ -5,7 +5,7 @@ import axios from 'axios'
 
 // create an axios instance
 const service_admin = axios.create({
-  baseURL: 'http://127.0.0.1:8080', // url = base url + request url,http://59.110.174.202:8080
+  baseURL: 'http://59.110.174.202:8080', // url = base url + request url,http://59.110.174.202:8080
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 10000 // request timeout
 })

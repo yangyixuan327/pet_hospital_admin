@@ -4,7 +4,6 @@
       <div class="title-container">
         <h3 class="title">欢迎来到虚拟宠物医院学习系统</h3>
       </div>
-      /** 用户名 */
       <el-form-item prop="userName">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -19,8 +18,6 @@
           auto-complete="on"
         />
       </el-form-item>
-
-      /** 密码 */
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
@@ -40,31 +37,29 @@
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
-
-
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:20px;" @click.native.prevent="handleLogin">Login</el-button>
       <el-button style="width:100%; margin-left: 0px" type="primary" @click=" showDialog= true ">Register</el-button>
     </el-form>
 
-      <el-dialog class = "register" title="注册" :visible.sync="showDialog" width="50%" center>
-        <el-form :model="form">
-          <el-form-item class="form-item" label="账号" label-width="120px">
-            <el-input v-model="form.account" autocomplete="off"/>
-          </el-form-item>
-          <el-form-item class="form-item" label="用户名" label-width="120px">
-            <el-input v-model="form.name" autocomplete="off"/>
-          </el-form-item>
-          <el-form-item class="form-item" label="密码" label-width="120px">
-            <el-input v-model="form.password" autocomplete="off"/>
-          </el-form-item>
-        </el-form>
-        <template #footer >
+    <el-dialog class = "register" title="注册" :visible.sync="showDialog" width="50%" center>
+      <el-form :model="form" status-icon :rules="registerRules" ref="form">
+        <el-form-item class="form-item" label="账号 Username" label-width="120px" prop="account">
+          <el-input v-model="form.account" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item class="form-item" label="姓名 Name" label-width="120px" prop="name">
+          <el-input v-model="form.name" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item class="form-item" label="密码 Password" label-width="120px" prop="password">
+          <el-input v-model="form.password" autocomplete="off"/>
+        </el-form-item>
+      </el-form>
+      <template #footer >
         <span class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
           <el-button type="primary" @click="dialogConfirmOnClicked">确 定</el-button>
         </span>
-        </template>
-      </el-dialog>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -77,22 +72,35 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('Please enter the correct username'))
+        this.validateCheck = false
       } else {
         callback()
+        this.validateCheck = true
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('The password can not be less than 6 digits'))
+        this.validateCheck = false
       } else {
         callback()
+        this.validateCheck = true
+      }
+    }
+    const validatePassword2 = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('The password can not be less than 6 digits'))
+        this.validateCheck = false
+      } else {
+        callback()
+        this.validateCheck = true
       }
     }
     return {
       loginForm: {
-        userName: 'admin',
-        password: '111111'
+        userName: '',
+        password: ''
       },
       loginRules: {
         userName: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -107,7 +115,13 @@ export default {
         name: '',
         account: '',
         password: ''
-      }
+      },
+      registerRules: {
+        name: [{ trigger: 'blur', validator: validateUsername }],
+        account: [{ trigger: 'blur', validator: validateUsername }],
+        password: [{ trigger: 'blur', validator: validatePassword2 }]
+      },
+      validateCheck: false
     }
   },
   watch: {
@@ -136,7 +150,11 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: '/' })
             this.loading = false
-            console.log('login succeeded!!')
+            this.$message({
+              message: '登录成功',
+              type: 'success'
+            })
+            console.log('登录成功!!')
           }).catch(() => {
             this.loading = false
           })
@@ -147,21 +165,33 @@ export default {
       })
     },
     dialogConfirmOnClicked() {
-      const user = {
-        name: this.form.name,
-        account: this.form.account,
-        password: this.form.password,
-        role : 'user'
-      }
-      sign_up(user).then(response => {
-        console.log("Create new user" + response)
+      if (this.form.account && this.form.name && this.form.password && this.validateCheck) {
+        const user = {
+          name: this.form.name,
+          account: this.form.account,
+          password: this.form.password,
+          role: 'user'
+        }
+        sign_up(user).then(response => {
+          console.log('Create new user' + response)
+          this.$message({
+            message: '注册成功',
+            type: 'success'
+          })
+          this.form = []
+        })
+        this.showDialog = false
+      } else if (!this.validateCheck) {
         this.$message({
-          message: '注册成功',
-          type: 'success'
-        });
-        this.form=[]
-      })
-      this.showDialog=false
+          message: '请注意格式规范',
+          type: 'warning'
+        })
+      } else {
+        this.$message({
+          message: '请填入完整信息',
+          type: 'warning'
+        })
+      }
     }
   }
 }

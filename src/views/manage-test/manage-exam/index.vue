@@ -152,8 +152,13 @@ import {
   addPaper,
   changePaperById,
   deletePaperById,
-  getAllPaper, getPaperIdByTestOptionId, getPaperNameByPaperId
+  getAllPaper,
+  getPaperIdByTestOptionId,
+  getPaperNameByPaperId,
+  getExamListByTestOptionId
 } from '@/api/test/exam'
+import { getPaperQuestionsById } from '@/api/test/paper'
+import {some} from "core-js/internals/array-iteration";
 
 function dateFormat(time) {
   const date = new Date(time)
@@ -195,11 +200,11 @@ export default {
       examId: -1,
       examName: '',
       index: -1,
+      calTotalScore: 0
     }
   },
   created() {
     this.fetchData()
-
   },
   methods: {
     fetchData() {
@@ -289,7 +294,14 @@ export default {
         // this.examType = '勾选生成'
         this.index = exam_index
         this.examName = this.list[exam_index].testOptionName
-        getPaperIdByTestOptionId(exam_id).then(response => {
+        // edited by yyx
+        getExamListByTestOptionId(exam_id).then(response => {
+          const len = response.data.responseMap.result.length
+          this.paperId = response.data.responseMap.result[len - 1].examId
+          this.paperName = response.data.responseMap.result[len - 1].examName
+          this.value = this.paperId
+        })
+        /* getPaperIdByTestOptionId(exam_id).then(response => {
           this.paperId = response.data.responseMap.result.testOptionId
           // console.log("id" + this.paperId)
           getPaperNameByPaperId(this.paperId).then(response => {
@@ -298,7 +310,7 @@ export default {
             this.value = this.paperId
             // console.log("value" + this.value)
           })
-        })
+        })*/
         this.duration = this.list[exam_index].duration
       }
       this.wordsDialog.visible = true
@@ -316,7 +328,8 @@ export default {
 
     wordsDialogConfirmOnClicked() {
       if (this.wordsDialog.changeMode === 'add') {
-        if (this.examType === '随机生成') {
+        console.log('add')
+        /* if (this.examType === '随机生成') {
           const params = {
             testOptionName: this.form.examName,
             selectNum: this.form.examSelectNum,
@@ -340,34 +353,50 @@ export default {
             })
           })
           // this.wordsDialog.visible = false
-        } else if (this.examType === '勾选生成') {
-          // for (let i = 0; i < this.options.length; i++) {
-          //   if (this.options[i].value === this.value) {
-          //     this.paperName = this.options[i].label
-          //   }
-          // }
+        } else if (this.examType === '勾选生成') {*/
+        // for (let i = 0; i < this.options.length; i++) {
+        //   if (this.options[i].value === this.value) {
+        //     this.paperName = this.options[i].label
+        //   }
+        // }
+        const list = []
+        getPaperQuestionsById(this.value).then(response => {
+          const responseResult = response.data.responseMap.result
+          for (let i = 0; i < responseResult.length; i++) {
+            if (!list.some(item => item === responseResult[i].quesId)) {
+              // console.log(responseResult[i].score)
+              this.calTotalScore += parseInt(responseResult[i].score)
+              list.push(responseResult[i].quesId)
+              console.log('totalScore: ', this.calTotalScore)
+            }
+          }
+          console.log('final: ', this.calTotalScore)
           const params = {
             testOptionName: this.examName,
+            examId: this.value,
             selectNum: 0,
             judgeNum: 0,
             qaNum: 0,
             duration: this.duration,
-            paperId: this.value,
+            totalScore: this.calTotalScore,
             startDate: this.timeValue
           }
           addPaper(params).then(response => {
             this.list.push({
               testOptionId: response.data.responseMap.result,
               testOptionName: this.examName,
+              paperId: this.paperId,
               duration: this.duration,
               startDate: this.timeValue
             })
+            location.reload()
           })
-          // this.wordsDialog.visible = false
-        }
-        location.reload();
+        })
+        // this.wordsDialog.visible = false
+        // }
       } else if (this.wordsDialog.changeMode === 'update') {
-        if (this.examType === '随机生成') {
+        console.log('update')
+        /* if (this.examType === '随机生成') {
           const exam_data = {
             testOptionName: this.form.examName,
             selectNum: this.form.examSelectNum,
@@ -382,24 +411,43 @@ export default {
             this.list[this.form.index].startDate = exam_data.startDate
           })
           // this.wordsDialog.visible = false
-        } else if (this.examType === '勾选生成') {
+        } else if (this.examType === '勾选生成') {*/
+        const list = []
+        getPaperQuestionsById(this.value).then(response => {
+          const responseResult = response.data.responseMap.result
+          for (let i = 0; i < responseResult.length; i++) {
+            if (!list.some(item => item === responseResult[i].quesId)) {
+              // console.log(responseResult[i].score)
+              this.calTotalScore += parseInt(responseResult[i].score)
+              list.push(responseResult[i].quesId)
+              console.log('totalScore: ', this.calTotalScore)
+            }
+          }
+          console.log('final: ', this.calTotalScore)
           const exam_data = {
+            testOptionId: this.examId,
             testOptionName: this.examName,
+            examId: this.value,
             selectNum: 0,
             judgeNum: 0,
             qaNum: 0,
+            totalScore: this.calTotalScore,
             paperId: this.value,
             duration: this.duration,
             startDate: this.timeValue
           }
           changePaperById(this.examId, exam_data).then(response => {
             this.list[this.index].testOptionName = exam_data.testOptionName
+            this.list[this.index].paperId = exam_data.paperId
             this.list[this.index].duration = exam_data.duration
             this.list[this.index].startDate = exam_data.startDate
+            this.wordsDialog.visible = false
+            location.reload()
           })
-        }
+        })
       }
-      this.wordsDialog.visible = false
+      // }
+
     }
     // wordsDialogConfirmOnClicked() {
     //   const params = {

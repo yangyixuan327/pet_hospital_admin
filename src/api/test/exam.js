@@ -46,6 +46,16 @@ export function getPaperIdByTestOptionId(testOptionId) {
   })
 }
 
+export function getExamListByTestOptionId(testOptionId) {
+  return request_admin({
+    url: '/admin/test/examByOption',
+    method: 'get',
+    params: {
+      testOptionId: testOptionId
+    }
+  })
+}
+
 export function getPaperNameByPaperId(paper_id) {
   return request_admin({
     url: '/admin/structure/examination/' + paper_id,

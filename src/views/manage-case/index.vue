@@ -358,7 +358,7 @@ export default {
       this.mediaDialog.imageVisible = true
       this.mediaDialog.videoVisible = false
       this.mediaDialog.title = '病例图片'
-      this.uploadTip = '上传图片please，太大了不收'
+      this.uploadTip = '上传图片please'
       this.uploadParamName = 'image'
       const base_url = 'http://59.110.174.202:8080'
       if (type === 'jieZhen') {

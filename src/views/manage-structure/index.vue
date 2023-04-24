@@ -641,7 +641,7 @@ export default {
       this.sectionImageDialog.title = '科室图片'
       this.uploadTip = '上传图片'
       this.uploadParamName = 'image'
-      const base_url = 'http://47.101.217.16:8080'
+      const base_url = 'http://59.110.174.202:8080'
       this.postUrl = base_url + '/admin/structure/section/' + sectionId + '/image'
       console.log(index + '' + sectionId)
       getImageById(sectionId).then(response => {
@@ -937,14 +937,21 @@ export default {
       this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     handleSuccess(response) {
-      if (response.status === 200) {
+      /* if (response.status === 200) {
         this.$message({
           message: '上传成功',
           type: 'success'
         })
-        console.log(response)
-        // const imageUrl = response.responseMap.result
-        // this.imageUrls = [imageUrl]
+      }*/
+      var url = response.responseMap.result
+      if (url !== null) {
+        url = 'http://' + url
+        console.log(url)
+        this.videoUrl = url
+        this.imageUrls = [url]
+      } else {
+        this.videoUrl = ''
+        this.imageUrls = []
       }
     },
     handleCommand(command) {

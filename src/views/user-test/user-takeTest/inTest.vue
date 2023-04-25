@@ -114,7 +114,7 @@ import {
   submitAnswer,
   deleteTest,
   getTestOptionById,
-  getPaperById
+  getPaperById, getExamListByTestOptionId, getPaperQuestionsById
 } from '@/api/test/inTest'
 import store from '@/store'
 
@@ -189,57 +189,55 @@ export default {
   methods: {
     fetchData() {
       getTestOptionById(this.testOptionId).then(response => {
-        this.paperId = response.data.responseMap.result.paperId
+        this.paperName = response.data.responseMap.result.testOptionName
         const totalNum = response.data.responseMap.result.selectNum + response.data.responseMap.result.judgeNum + response.data.responseMap.result.qaNum
         if (totalNum === 0) {
           this.isRandom = false
         } else {
           this.isRandom = true
         }
-      })
-      sleep(200).then(() => {
-        if (this.isRandom === false) {
-          sleep(200).then(() => {
-            getPaperById(this.paperId).then(response => {
-              this.paperName = response.data.responseMap.result.paperName
-            })
-          })
-        } else {
-          this.paperName = '随机测验'
-        }
-      })
-      sleep(200).then(() => {
-        getQuestionList(this.testOptionId, this.userId).then(response => {
-          if (response.data.status === 400) {
-            this.isErrorIn = true
-            this.$message('你已经进行过该考试！请更换考试！')
-          } else if (response.data.status === 200) {
-            this.isErrorIn = false
-            let resultList = []
-            resultList = response.data.responseMap.result
-            this.testId = response.data.responseMap.testId
-            const questionList = []
-            for (let i = 0; i < resultList.length; i++) {
-              questionList.push({
-                id: resultList[i].quesId != null ? resultList[i].quesId : 0,
-                title: resultList[i].descrip != null ? resultList[i].descrip : '',
-                type: resultList[i].type != null ? resultList[i].type : '',
-                score: resultList[i].score != null ? resultList[i].score : '',
-                tag: resultList[i].tag != null ? resultList[i].tag : '',
-                image: '',
-                answer: '',
-                quesIndex: i
+        getExamListByTestOptionId(response.data.responseMap.result.testOptionId).then(res => {
+          const len = res.data.responseMap.result.length
+          this.paperId = res.data.responseMap.result[len - 1].examId
+          console.log(this.paperId)
+          getQuestionList(this.testOptionId, this.userId).then(resp => {
+            if (resp.data.status === 400) {
+              this.isErrorIn = true
+              this.$message('你已经进行过该考试！请更换考试！')
+            } else if (resp.data.status === 200) {
+              this.isErrorIn = false
+              this.testId = resp.data.responseMap.testId
+              getPaperQuestionsById(this.paperId).then(r => {
+                const resultList = r.data.responseMap.result
+                const questionList = []
+                const qIdList = []
+                for (let i = 0; i < resultList.length; i++) {
+                  if (qIdList.some(item => item === resultList[i].quesId)) {
+                    continue
+                  }
+                  questionList.push({
+                    id: resultList[i].quesId != null ? resultList[i].quesId : 0,
+                    title: resultList[i].descrip != null ? resultList[i].descrip : '',
+                    type: resultList[i].type != null ? resultList[i].type : '',
+                    score: resultList[i].score != null ? resultList[i].score : '',
+                    tag: resultList[i].tag != null ? resultList[i].tag : '',
+                    image: '',
+                    answer: '',
+                    quesIndex: i
+                  })
+                  qIdList.push(resultList[i].quesId)
+                }
+                this.tests = questionList
+                if (this.tests.length === 1) {
+                  this.isPreDisabled = true
+                  this.isNextDisabled = true
+                }
               })
+            } else if (resp.data.status === 500) {
+              this.isErrorIn = true
+              this.$message('考试时间已结束或未到考试时间！')
             }
-            this.tests = questionList
-            if (this.tests.length === 1) {
-              this.isPreDisabled = true
-              this.isNextDisabled = true
-            }
-          } else if (response.data.status === 500) {
-            this.isErrorIn = true
-            this.$message('考试时间已结束或未到考试时间！')
-          }
+          })
         })
       })
     },

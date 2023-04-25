@@ -15,10 +15,23 @@ export function getTestOptionById(testOptionId) {
   })
 }
 
-export function getPaperById(paperId) {
+export function getExamListByTestOptionId(testOptionId) {
   return request_admin({
-    url: '/admin/test/problemSet/' + paperId,
-    method: 'get'
+    url: '/admin/test/examByOption',
+    method: 'get',
+    params: {
+      testOptionId: testOptionId
+    }
+  })
+}
+
+export function getPaperQuestionsById(paperId) {
+  return request_admin({
+    url: '/admin/test/question/searchByTestOption',
+    method: 'get',
+    params: {
+      testOptionId: paperId
+    }
   })
 }
 

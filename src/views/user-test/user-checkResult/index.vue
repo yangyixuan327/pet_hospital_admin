@@ -33,6 +33,15 @@
           {{ scope.row.score }}
         </template>
       </el-table-column>
+      <el-table-column label="正确答案" width="100" align="center">
+        <template slot-scope="scope">
+          <el-button
+            type="primary"
+            @click="onCheckClicked(scope.row.testOptionId)">
+            查看
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -104,6 +113,11 @@ export default {
             }
           }
         })
+      })
+    },
+    onCheckClicked(testOptionId) {
+      this.$router.push({
+        path: '/test_user/check_answers/' + testOptionId
       })
     }
   }

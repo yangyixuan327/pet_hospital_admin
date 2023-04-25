@@ -163,6 +163,13 @@ export const asyncRoutes = [
         name: 'CheckResult',
         component: () => import('@/views/user-test/user-checkResult/index'),
         meta: { title: '查看结果' }
+      },
+      {
+        path: 'check_answers/:testOptionId',
+        name: 'CheckAnswers',
+        component: () => import('@/views/user-test/user-checkResult/checkAnswers'),
+        meta: { title: '查看正确答案' },
+        hidden: true
       }
     ]
   },
@@ -179,7 +186,7 @@ export const asyncRoutes = [
     component: Layout,
     name: 'CaseFront',
     redirect: '/case_front',
-    meta: { title: '病例学习', icon: 'el-icon-first-aid-kit' ,roles: ['user']},
+    meta: { title: '病例学习', icon: 'el-icon-first-aid-kit', roles: ['user'] },
     children: [
       {
         path: 'index',
@@ -201,13 +208,13 @@ export const asyncRoutes = [
     component: Layout,
     name: 'HospitalNavigation',
     redirect: '/hospital_navigation/index',
-    meta: { roles: ['user']},
+    meta: { roles: ['user'] },
     children: [
       {
         path: 'index',
         name: 'HospitalNavigationIndex',
         component: () => import('@/views/hospital_navigation/index'),
-        meta: { title: '3D医院导览',icon:"el-icon-guide" }
+        meta: { title: '3D医院导览', icon: 'el-icon-guide' }
       }
     ]
   },

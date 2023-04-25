@@ -2,9 +2,9 @@
   <div class="app-container">
     <el-container>
       <el-container>
-        <el-aside style= "margin-top: 20px" width="1024px" height="800px">
+        <el-aside style= "margin-top: 20px" width="800px" height="650px">
           <el-card  class="box-card">
-            <iframe width="1024px" height="800px" allowfullscreen frameborder="0" src="https://orbix360.com/KkS4bhWHw"></iframe>
+            <iframe width="768px" height="600px" allowfullscreen frameborder="0" src="https://orbix360.com/t/W9GePKp52ZUPWPGPtuKEKFpz1P03/4539399484211200/pthost3d#"></iframe>
           </el-card>
         </el-aside>
         <el-main>
@@ -13,11 +13,13 @@
               <div style="line-height:20px; text-align: left; font-size: 22px ; font-weight:bold">
                 职能描述:
               </div>
-              <div>
+              <div style="text-align: left">
                 <el-divider></el-divider>
-                <span>{{ description_by_characters }}</span>
+                {{ description_by_characters }}
                 <el-divider></el-divider>
-                <el-image :src=img_url></el-image>
+                <el-image
+                  v-if="img_url !== 'http://NULL'"
+                  :src="img_url"></el-image>
               </div>
             </el-card>
           </template>
@@ -103,7 +105,11 @@ export default {
       } else {
         description = obj2.recDescrip // 默认前台
       }
-      this.description_by_characters = description
+      if (description === 'NULL') {
+        this.description_by_characters = '当前角色在该科室无职责，请选择其他科室或切换角色。'
+      } else {
+        this.description_by_characters = description
+      }
       this.$forceUpdate()
     },
     sectionChange(val) {
@@ -113,9 +119,9 @@ export default {
       })
       this.section = obj.sectionName
       this.sectionId = obj.sectionId
-        const base_url = 'http://'
-        this.img_url = base_url + obj.sectionImageUrl
-        console.log(this.img_url)
+      const base_url = 'http://'
+      this.img_url = base_url + obj.sectionImageUrl
+      console.log(this.img_url)
       let description
       if (this.character === 'rec') {
         description = obj.recDescrip
@@ -126,7 +132,11 @@ export default {
       } else {
         description = obj.recDescrip // 默认前台
       }
-      this.description_by_characters = description
+      if (description === 'NULL') {
+        this.description_by_characters = '当前角色在该科室无职责，请选择其他科室或切换角色。'
+      } else {
+        this.description_by_characters = description
+      }
       this.$forceUpdate()
     },
     fetchData() {

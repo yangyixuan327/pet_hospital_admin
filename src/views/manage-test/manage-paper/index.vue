@@ -49,6 +49,9 @@
         <el-form-item label="试卷名称" label-width="120px">
           <el-input v-model="form.paperName" autocomplete="off" />
         </el-form-item>
+        <el-form-item label="备注信息" label-width="120px">
+          <el-input v-model="form.paperDesc" auto-complete="off" />
+        </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -82,7 +85,8 @@ export default {
       form: {
         paperName: '',
         paperId: 0,
-        paperIndex: 0
+        paperIndex: 0,
+        paperDesc: ''
       }
     }
   },
@@ -152,12 +156,14 @@ export default {
     wordsDialogConfirmOnClicked() {
       if (this.wordsDialog.changeMode === 'add') {
         const paperName = {
-          examName: this.form.paperName
+          examName: this.form.paperName,
+          examDescrip: this.form.paperDesc
         }
         addNewPaper(paperName).then(response => {
           this.list.push({
             paperId: response.data.responseMap.result,
-            paperName: this.form.paperName
+            paperName: this.form.paperName,
+            paperDescrip: this.form.paperDesc
           })
         })
         this.wordsDialog.visible = false

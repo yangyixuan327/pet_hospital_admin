@@ -8,11 +8,11 @@ export function getAllPapers() {
   })
 }
 
-export function addNewPaper(paperName) {
+export function addNewPaper(paper) {
   return request_admin({
     url: '/admin/structure/examination',
     method: 'put',
-    params: paperName
+    params: paper
   })
 }
 

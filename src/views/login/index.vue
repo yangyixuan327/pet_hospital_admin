@@ -11,7 +11,7 @@
         <el-input
           ref="userName"
           v-model="loginForm.userName"
-          placeholder="userName"
+          placeholder="Account"
           name="userName"
           type="text"
           tabindex="1"
@@ -43,13 +43,13 @@
 
     <el-dialog class = "register" title="注册" :visible.sync="showDialog" width="50%" center>
       <el-form :model="form" status-icon :rules="registerRules" ref="form">
-        <el-form-item class="form-item" label="账号 Username" label-width="120px" prop="account">
+        <el-form-item class="form-item" label="账号 Account" label-width="130px" prop="account">
           <el-input v-model="form.account" autocomplete="off"/>
         </el-form-item>
-        <el-form-item class="form-item" label="姓名 Name" label-width="120px" prop="name">
+        <el-form-item class="form-item" label="用户名 Username" label-width="130px" prop="name">
           <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
-        <el-form-item class="form-item" label="密码 Password" label-width="120px" prop="password">
+        <el-form-item class="form-item" label="密码 Password" label-width="130px" prop="password">
           <el-input v-model="form.password" autocomplete="off"/>
         </el-form-item>
       </el-form>

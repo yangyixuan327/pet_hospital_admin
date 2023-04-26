@@ -23,7 +23,7 @@
       </el-table-column>
       <el-table-column align="center" label="备注">
         <template slot-scope="scope">
-          {{scope.row.paperDescrip}}
+          {{scope.row.paperDesc}}
         </template>
       </el-table-column>
 
@@ -102,7 +102,7 @@ export default {
           this.list.push({
             paperId: responseResult[i].examId,
             paperName: responseResult[i].examName,
-            paperDescrip: responseResult[i].examDescrip
+            paperDesc: responseResult[i].examDescrip
           })
         }
       })
@@ -148,6 +148,7 @@ export default {
     onEditClicked(paperId, paperIndex) {
       this.wordsDialog.title = '编辑试卷'
       this.form.paperName = this.list[paperIndex].paperName
+      this.form.paperDesc = this.list[paperIndex].paperDesc
       this.form.paperId = paperId
       this.form.paperIndex = paperIndex
       this.wordsDialog.visible = true
@@ -163,7 +164,7 @@ export default {
           this.list.push({
             paperId: response.data.responseMap.result,
             paperName: this.form.paperName,
-            paperDescrip: this.form.paperDesc
+            paperDesc: this.form.paperDesc
           })
         })
         this.wordsDialog.visible = false
@@ -171,10 +172,11 @@ export default {
         const paperName = {
           examId: this.form.paperId,
           examName: this.form.paperName,
-          examDescrip: this.list[this.form.paperIndex].paperDescrip
+          examDescrip: this.form.paperDesc
         }
         changePaperName(this.form.paperId, paperName).then(response => {
           this.list[this.form.paperIndex].paperName = paperName.examName
+          this.list[this.form.paperIndex].paperDesc = paperName.examDescrip
         })
         this.wordsDialog.visible = false
       }

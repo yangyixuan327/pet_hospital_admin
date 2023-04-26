@@ -16,22 +16,22 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="UserName">
+      <el-table-column label="用户名 Username">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Account" width="200" align="center">
+      <el-table-column label="账号 Account" width="200" align="center">
         <template slot-scope="scope">
           {{ scope.row.account }}
         </template>
       </el-table-column>
-      <el-table-column label="Password" width="200" align="center">
+      <el-table-column label="密码 Password" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.password }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Role" width="200" align="center">
+      <el-table-column label="权限 Role" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.role }}</span>
         </template>
@@ -54,16 +54,16 @@
       @close="editDialog.visible = false"
     >
       <el-form :model="form">
-        <el-form-item label="账号" label-width="120px">
+        <el-form-item label="账号Account" label-width="130px">
           <el-input v-model="form.account" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="用户名" label-width="120px">
+        <el-form-item label="用户名Username" label-width="130px">
           <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="密码" label-width="120px">
+        <el-form-item label="密码Password" label-width="130px">
           <el-input v-model="form.password" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="管理员" label-width="120px">
+        <el-form-item label="管理员Admin" label-width="130px">
           <el-switch v-model="form.role"></el-switch>
         </el-form-item>
       </el-form>

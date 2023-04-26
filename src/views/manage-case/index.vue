@@ -21,6 +21,13 @@
           {{ scope.row.caseName }}
         </template>
       </el-table-column>
+      <el-table-column
+        label="类别"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.caseTag }}
+        </template>
+      </el-table-column>
       <el-table-column label="接诊">
         <template slot-scope="scope">
           <span v-if="scope.row.type==='words'">{{ scope.row.jieZhen }}</span>
@@ -63,13 +70,16 @@
         <el-form-item label="病例名称" label-width="120px">
           <el-input v-model="form.caseName" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="接诊文字A" label-width="120px">
+        <el-form-item label="类别" v-if="wordsDialog.changeMode === 'add'" label-width="120px">
+          <el-input v-model="form.caseTag" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item label="接诊文字" label-width="120px">
           <el-input v-model="form.jieZhen" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="诊断文字A" label-width="120px">
+        <el-form-item label="诊断文字" label-width="120px">
           <el-input v-model="form.zhenDuan" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="治疗文字A" label-width="120px">
+        <el-form-item label="治疗文字" label-width="120px">
           <el-input v-model="form.zhiLiao" autocomplete="off"/>
         </el-form-item>
       </el-form>
@@ -158,6 +168,7 @@ export default {
         caseId: -1,
         caseIndex: -1,
         caseName: '',
+        caseTag: '',
         jieZhen: '',
         zhenDuan: '',
         zhiLiao: ''
@@ -182,13 +193,14 @@ export default {
         const description = response.data.responseMap.descrip
         const itemCount = response.data.responseMap.count
         console.log('item count: ' + itemCount)
-        var data = []
+        const data = [];
         for (let i = 0; i < result.length; i++) {
           const item = result[i]
           data.push({
             caseId: item.caseId,
             type: 'words',
             caseName: item.caseName,
+            caseTag: item.caseTag,
             jieZhen: description[i][0],
             zhenDuan: description[i][1],
             zhiLiao: description[i][2]
@@ -197,6 +209,7 @@ export default {
             caseId: item.caseId,
             type: 'image',
             caseName: item.caseName,
+            caseTag: item.caseTag,
             jieZhen: 'jieZhen',
             zhenDuan: 'zhenDuan',
             zhiLiao: 'zhiLiao'
@@ -205,6 +218,7 @@ export default {
             caseId: item.caseId,
             type: 'video',
             caseName: item.caseName,
+            caseTag: item.caseTag,
             jieZhen: 'jieZhen',
             zhenDuan: 'zhenDuan',
             zhiLiao: 'zhiLiao'
@@ -215,7 +229,7 @@ export default {
       })
     },
     rowSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0 || columnIndex === 1 || columnIndex === 5) {
+      if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 6) {
         if (rowIndex % 3 === 0) {
           return {
             rowspan: 3,
@@ -252,6 +266,7 @@ export default {
       this.wordsDialog.visible = true
       this.wordsDialog.title = '创建病例'
       this.form.caseName = ''
+      this.form.caseTag = ''
       this.form.jieZhen = ''
       this.form.zhenDuan = ''
       this.form.zhiLiao = ''
@@ -262,6 +277,7 @@ export default {
       this.form.caseId = case_id
       this.form.caseIndex = case_index
       this.form.caseName = this.list[case_index].caseName
+      this.form.caseTag = this.list[case_index].caseTag
       this.form.jieZhen = this.list[case_index].jieZhen
       this.form.zhenDuan = this.list[case_index].zhenDuan
       this.form.zhiLiao = this.list[case_index].zhiLiao
@@ -275,6 +291,7 @@ export default {
         caseId: this.form.caseId,
         caseIndex: this.form.caseIndex,
         caseName: this.form.caseName,
+        caseTag: this.form.caseTag,
         jieZhen: this.form.jieZhen,
         zhenDuan: this.form.zhenDuan,
         zhiLiao: this.form.zhiLiao,
@@ -296,6 +313,7 @@ export default {
                     caseId: params.caseId,
                     type: 'words',
                     caseName: this_.form.caseName,
+                    caseTag: this_.form.caseTag,
                     jieZhen: this_.form.jieZhen,
                     zhenDuan: this_.form.zhenDuan,
                     zhiLiao: this_.form.zhiLiao
@@ -303,6 +321,7 @@ export default {
                     caseId: params.caseId,
                     type: 'image',
                     caseName: this_.form.caseName,
+                    caseTag: this_.form.caseTag,
                     jieZhen: 'jieZhen',
                     zhenDuan: 'zhenDuan',
                     zhiLiao: 'zhiLiao'
@@ -310,6 +329,7 @@ export default {
                     caseId: params.caseId,
                     type: 'video',
                     caseName: this_.form.caseName,
+                    caseTag: this_.form.caseTag,
                     jieZhen: 'jieZhen',
                     zhenDuan: 'zhenDuan',
                     zhiLiao: 'zhiLiao'
@@ -332,6 +352,7 @@ export default {
             this_.$message('更新成功')
             if (caseIndex != null && caseIndex >= 0) {
               this_.list[caseIndex].caseName = this_.form.caseName
+              this_.list[caseIndex].caseTag = this_.form.caseTag
               this_.list[caseIndex].jieZhen = this_.form.jieZhen
               this_.list[caseIndex].zhenDuan = this_.form.zhenDuan
               this_.list[caseIndex].zhiLiao = this_.form.zhiLiao

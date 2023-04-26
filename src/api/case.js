@@ -64,7 +64,8 @@ export function addNewCase(params) {
     url: '/admin/case',
     method: 'put',
     params: {
-      caseName: params.caseName
+      caseName: params.caseName,
+      caseTag: params.caseTag
     }
   })
 }

@@ -147,14 +147,22 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: '/' })
-            this.loading = false
-            this.$message({
-              message: '登录成功',
-              type: 'success'
-            })
-            console.log('登录成功!!')
+          this.$store.dispatch('user/login', this.loginForm).then(res => {
+            if (res === 404) {
+              this.$message({
+                message: '登录失败，请检查用户名和密码',
+                type: 'error'
+              })
+              console.log('登录失败!!')
+            } else {
+              this.$router.push({ path: '/' })
+              this.loading = false
+              this.$message({
+                message: '登录成功',
+                type: 'success'
+              })
+              console.log('登录成功!!')
+            }
           }).catch(() => {
             this.loading = false
           })

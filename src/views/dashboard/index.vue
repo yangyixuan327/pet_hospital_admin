@@ -47,16 +47,16 @@
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Dashboard',
-    computed: {
-      ...mapGetters([
-        'name',
-        'roles'
-      ])
+  name: 'Dashboard',
+  computed: {
+    ...mapGetters([
+      'name',
+      'roles'
+    ])
   },
-    beforeMount:function(){
-        this.height = $(window).width()*664/1920 + 'px';
-    }
+  beforeMount: function() {
+    this.height = $(window).width() * 664 / 1920 + 'px'
+  }
 }
 
 </script>

@@ -43,13 +43,20 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({userName : userName.trim() , password:password}).then(response => {
         const { data } = response
-        data.token = data.responseMap.result// 临时先设置token为id
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        console.log(data)
-        resolve()
+        if (data.status === 404) {
+          reject('failed')
+          console.log(data.status)
+          return data.status
+        } else {
+          data.token = data.responseMap.result// 临时先设置token为id
+          commit('SET_TOKEN', data.token)
+          setToken(data.token)
+          console.log(data)
+          resolve()
+        }
       }).catch(error => {
         reject(error)
+        return 404
       })
     })
   },
@@ -57,9 +64,12 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
+      if (state.token === null) {
+        return reject('Verification failed, please Login again.')
+      }
       getInfo({userId:state.token}).then(response => {
         const { data } = response
-        if (!data) {
+        if (!data || response.status === 400) {
           return reject('Verification failed, please Login again.')
         }
         const { name, avatar , role } = data.responseMap.result

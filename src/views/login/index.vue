@@ -132,6 +132,9 @@ export default {
       immediate: true
     }
   },
+  created() {
+    document.title = '虚拟宠物医院学习系统'
+  },
   methods: {
     showPwd() {
       if (this.passwordType === 'password') {
